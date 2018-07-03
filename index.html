@@ -1,24 +1,79 @@
-<!DOCTYPE html>
-<html lang=zh-cn>
-<head>
-<meta charset="utf-8">
-<meta http-equiv=X-UA-Compatible content="IE=edge">
-<meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=3,minimum-scale=1,maximum-scale=1,user-scalable=no">
-
-<title>Moonlight</title>
-
-<link href="static/img/favicon.ico" rel="icon" type="image/x-icon" />
-<link href="static/img/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-<link href="static/img/favicon.ico" rel="bookmark" type="image/x-icon" />
-<link href="static/css/app.b40bdc59b4c4c557d6b7d89671dca067.css" rel="stylesheet" />
-</head>
-
-<body>
-
-	<div id="app"></div>
-	<script type="text/javascript" src="static/js/manifest.3b0c6383191309195b69.js"></script>
-	<script type="text/javascript" src="static/js/vendor.9f503f2ef09aa8c7393d.js"></script>
-	<script type="text/javascript" src="static/js/app.86ac397ecac1270955de.js"></script>
+---
+layout: default
+title: "首页：Home"
+---
+<!-- 
+<h1 class="page-header">
+  <small>
+    {{ site.description }}
+  </small>
+</h1>
+-->
+<!-- Loop output paged posts -->
+<div id="index" class="row">
+    <div class="post-area">
+     	 <div class="post-list-body">
+        <div post-cate="All">
+        <ul class="posts">
+	{% for post in paginator.posts %}
+	<li>	
+	<h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
+	<span class="date">{{ post.date | date_to_string }}</span>
 	
-</body>
-</html>
+	<hr>
+	<p>{% if post.excerpt.size > 32 %}{{ post.excerpt }}{% else %}{{ post.content | strip_html | strip_newlines | truncate: 160 }}{% endif %}</p>
+		<p> <a href="{{ post.url }}"><span >阅读全文 &raquo; </span></a></p>
+	<hr>
+	</li>
+	{% endfor %}
+	</ul>
+	<!-- Pager indicator -->
+	<ul class="pager">
+	  {% if paginator.previous_page %} {% if paginator.previous_page == 1 %}
+	  <li class="previous">
+	    <a href="{{ site.url }}/">
+	      &larr; Older
+	    </a>
+	  </li>
+	  {% else %}
+	  <li class="previous">
+	    <a href="{{ site.url }}/page{{ paginator.previous_page }}">
+	      &larr; Older
+	    </a>
+	  </li>
+	  {% endif %} {% endif %} {% if paginator.next_page %}
+	  <li class="next">
+	    <a href="{{ site.url }}/page{{ paginator.next_page }}">
+	      Newer &rarr;
+	    </a>
+	  </li>
+	  {% endif %}
+	</ul>
+	</div>
+	
+
+	 
+       {% for category in site.categories %}
+	<div post-cate="{{category | first}}">
+
+          <ul class="posts">
+            {% for posts in category  %}
+              {% for post in posts %}
+                {% if post.url %}
+		<li>
+                  <a href="{{ post.url }}" class="post-list-item">
+                    <h2>{{ post.title }}</h2>
+                    <span class="date">{{ post.date | date: "%b %-d, %Y" }}</span>
+                  </a>
+		</li>
+                {% endif %}
+              {% endfor %}
+            {% endfor %}
+          </ul>
+	</div>
+        {% endfor %}
+	
+	 </div>
+
+</div>
+</div>
