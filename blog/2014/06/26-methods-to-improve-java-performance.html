@@ -1,0 +1,1400 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|consolas:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="java" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="EZLippi-浮生志" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Java编程中“为了性能”尽量要做到的一些地方">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java编程Tips">
+<meta property="og:url" content="http://www.ezlippi.com/blog/2014/06/26-methods-to-improve-java-performance.html">
+<meta property="og:site_name" content="EZLippi-浮生志">
+<meta property="og:description" content="Java编程中“为了性能”尽量要做到的一些地方">
+<meta property="og:updated_time" content="2016-02-29T12:32:17.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java编程Tips">
+<meta name="twitter:description" content="Java编程中“为了性能”尽量要做到的一些地方">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.ezlippi.com/blog/2014/06/26-methods-to-improve-java-performance.html"/>
+
+
+
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "d1b06a58"
+    });
+  daovoice('update');
+  </script>
+
+
+  <title> Java编程Tips | EZLippi-浮生志 </title>
+</head>
+
+  	 <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("kJ2sJuSJeByLioULSXrJ5CSq-9Nh9j0Va", "uBWeNxCbFEWsOVDTmAInrDq3");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = $(document.getElementById(url)).text() + ': 0';
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = $(document.getElementById(url)).text() + ': ' + object.get('time');
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content = $(document.getElementById(url)).text() + ': ' + counter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = $(document.getElementById(url)).text() + ': ' + newcounter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+});
+</script>
+  
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?340874ba9357cbe81570aa4ac1185941";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta custom-logo">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">EZLippi-浮生志</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description"></h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://www.ezlippi.com/blog/2014/06/26-methods-to-improve-java-performance.html">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="EZLippi">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="EZLippi-浮生志">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="EZLippi-浮生志" src="/images/avatar.jpg">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                Java编程Tips
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2014-06-18T00:00:00+08:00">
+                2014-06-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+		  
+			 
+          
+          
+             <span id="/blog/2014/06/26-methods-to-improve-java-performance.html" class="leancloud_visitors" data-flag-title="Java编程Tips">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">热度 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+				 <span>℃</span>
+             </span>
+          
+		   
+          
+
+		  
+            <div class="post-wordcount">
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  2,688
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  10
+                </span>
+              
+            </div>
+          
+		  
+          
+              <div class="post-description">
+                  Java编程中“为了性能”尽量要做到的一些地方
+              </div>
+          
+ 
+        
+
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>原文： <a href="http://www.iteye.com/magazines/66" target="_blank" rel="external">Java编程中“为了性能”尽量要做到的一些地方</a></p>
+<p>作者： <a href="http://javatgo.iteye.com/" target="_blank" rel="external">javatgo</a></p>
+<hr>
+<p>最近的机器内存又爆满了，除了新增机器内存外，还应该好好review一下我们的代码，有很多代码编写过于随意化，这些不好的习惯或对程序语言的不了解是应该好好打压打压了。</p>
+<p>下面是参考网络资源总结的一些在Java编程中尽可能要做到的一些地方。<br><a id="more"></a></p>
+<h2 id="1-尽量在合适的场合使用单例"><a href="#1-尽量在合适的场合使用单例" class="headerlink" title="1. 尽量在合适的场合使用单例"></a>1. 尽量在合适的场合使用单例</h2><p>使用单例可以减轻加载的负担，缩短加载的时间，提高加载的效率，但并不是所有地方都适用于单例，简单来说，单例主要适用于以下三个方面：</p>
+<ol><br><li>控制资源的使用，通过线程同步来控制资源的并发访问；</li><br><li>控制实例的产生，以达到节约资源的目的；</li><br><li>控制数据共享，在不建立直接关联的条件下，让多个不相关的进程或线程之间实现通信。</li><br></ol>
+
+<h2 id="2-尽量避免随意使用静态变量"><a href="#2-尽量避免随意使用静态变量" class="headerlink" title="2. 尽量避免随意使用静态变量"></a>2. 尽量避免随意使用静态变量</h2><p>要知道，当某个对象被定义为stataic变量所引用，那么gc通常是不会回收这个对象所占有的内存，如</p>
+<pre><code>public class A{  
+    static B b = new B();  
+}  
+</code></pre><p>此时静态变量b的生命周期与A类同步，如果A类不会卸载，那么b对象会常驻内存，直到程序终止。</p>
+<h2 id="3-尽量避免过多过常的创建Java对象"><a href="#3-尽量避免过多过常的创建Java对象" class="headerlink" title="3. 尽量避免过多过常的创建Java对象"></a>3. 尽量避免过多过常的创建Java对象</h2><p>尽量避免在经常调用的方法，循环中new对象，由于系统不仅要花费时间来创建对象，而且还要花时间对这些对象进行垃圾回收和处理，在我们可以控制的范围内，最大限度的重用对象，最好能用基本的数据类型或数组来替代对象。</p>
+<h2 id="4-尽量使用final修饰符"><a href="#4-尽量使用final修饰符" class="headerlink" title="4. 尽量使用final修饰符"></a>4. 尽量使用final修饰符</h2><p>带有final修饰符的类是不可派生的。</p>
+<p>在Java核心API中，有许多应用final的例子，例如java.lang.String。为String类指定final防止了使用者覆盖length()方法。</p>
+<p>另外，如果一个类是final的，则该类所有方法都是final的。Java编译器会寻找机会内联（inline）所有的final方法（这和具体的编译器实现有关）。此举能够使性能平均提高50%。</p>
+<h2 id="5-尽量使用局部变量"><a href="#5-尽量使用局部变量" class="headerlink" title="5. 尽量使用局部变量"></a>5. 尽量使用局部变量</h2><p>调用方法时传递的参数以及在调用中创建的临时变量都保存在栈（Stack）中，速度较快。</p>
+<p>其他变量，如静态变量、实例变量等，都在堆（Heap）中创建，速度较慢。</p>
+<h2 id="6-尽量处理好包装类型和基本类型两者的使用场所"><a href="#6-尽量处理好包装类型和基本类型两者的使用场所" class="headerlink" title="6. 尽量处理好包装类型和基本类型两者的使用场所"></a>6. 尽量处理好包装类型和基本类型两者的使用场所</h2><p>虽然包装类型和基本类型在使用过程中是可以相互转换，但它们两者所产生的内存区域是完全不同的，基本类型数据产生和处理都在栈中处理，包装类型是对象，是在堆中产生实例。</p>
+<p>在集合类对象，有对象方面需要的处理适用包装类型，其他的处理提倡使用基本类型。</p>
+<h2 id="7-慎用synchronized，尽量减小synchronize的方法"><a href="#7-慎用synchronized，尽量减小synchronize的方法" class="headerlink" title="7. 慎用synchronized，尽量减小synchronize的方法"></a>7. 慎用synchronized，尽量减小synchronize的方法</h2><p>都知道，实现同步是要很大的系统开销作为代价的，甚至可能造成死锁，所以尽量避免无谓的同步控制。</p>
+<p>synchronize方法被调用时，直接会把当前对象锁 了，在方法执行完之前其他线程无法调用当前对象的其他方法。</p>
+<p>所以synchronize的方法尽量小，并且应尽量使用方法同步代替代码块同步。</p>
+<h2 id="8-尽量使用StringBuilder和StringBuffer进行字符串连接"><a href="#8-尽量使用StringBuilder和StringBuffer进行字符串连接" class="headerlink" title="8. 尽量使用StringBuilder和StringBuffer进行字符串连接"></a>8. 尽量使用StringBuilder和StringBuffer进行字符串连接</h2><p>这个就不多讲了。</p>
+<h2 id="9-尽量不要使用finalize方法"><a href="#9-尽量不要使用finalize方法" class="headerlink" title="9. 尽量不要使用finalize方法"></a>9. 尽量不要使用finalize方法</h2><p>实际上，将资源清理放在finalize方法中完成是非常不好的选择，由于GC的工作量很大，尤其是回收Young代内存时，大都会引起应用程序暂停，所以再选择使用finalize方法进行资源清理，会导致GC负担更大，程序运行效率更差。</p>
+<h2 id="10-尽量使用基本数据类型代替对象"><a href="#10-尽量使用基本数据类型代替对象" class="headerlink" title="10. 尽量使用基本数据类型代替对象"></a>10. 尽量使用基本数据类型代替对象</h2><pre><code>String str = &quot;hello&quot;;
+</code></pre><p>上面这种方式会创建一个“hello”字符串，而且JVM的字符缓存池还会缓存这个字符串；</p>
+<pre><code>String str = new String(&quot;hello&quot;);
+</code></pre><p>此时程序除创建字符串外，str所引用的String对象底层还包含一个char[]数组，这个char[]数组依次存放了h,e,l,l,o</p>
+<h2 id="11-单线程应尽量使用HashMap、ArrayList"><a href="#11-单线程应尽量使用HashMap、ArrayList" class="headerlink" title="11. 单线程应尽量使用HashMap、ArrayList"></a>11. 单线程应尽量使用HashMap、ArrayList</h2><p>HashTable、Vector等使用了同步机制，降低了性能。</p>
+<h2 id="12-尽量合理的创建HashMap"><a href="#12-尽量合理的创建HashMap" class="headerlink" title="12. 尽量合理的创建HashMap"></a>12. 尽量合理的创建HashMap</h2><p>当你要创建一个比较大的hashMap时，充分利用另一个构造函数<br>public HashMap(int initialCapacity, float loadFactor)<br>避免HashMap多次进行了hash重构,扩容是一件很耗费性能的事，在默认中initialCapacity只有16，而loadFactor是 0.75，需要多大的容量，你最好能准确的估计你所需要的最佳大小，同样的Hashtable，Vectors也是一样的道理。</p>
+<h2 id="13-尽量减少对变量的重复计算"><a href="#13-尽量减少对变量的重复计算" class="headerlink" title="13. 尽量减少对变量的重复计算"></a>13. 尽量减少对变量的重复计算</h2><p>如</p>
+<pre><code>for(int i=0;i&lt;list.size();i++)
+</code></pre><p>应该改为</p>
+<pre><code>for(int i=0,len=list.size();i&lt;len;i++)
+</code></pre><p>并且在循环中应该避免使用复杂的表达式，在循环中，循环条件会被反复计算，如果不使用复杂表达式，而使循环条件值不变的话，程序将会运行的更快。 </p>
+<h2 id="14-尽量避免不必要的创建"><a href="#14-尽量避免不必要的创建" class="headerlink" title="14. 尽量避免不必要的创建"></a>14. 尽量避免不必要的创建</h2><p>如</p>
+<pre><code>A a = new A();
+if(i==1){list.add(a);}
+</code></pre><p>应该改为</p>
+<pre><code>if(i==1){
+A a = new A();
+list.add(a);}
+</code></pre><h2 id="15-尽量在finally块中释放资源"><a href="#15-尽量在finally块中释放资源" class="headerlink" title="15. 尽量在finally块中释放资源"></a>15. 尽量在finally块中释放资源</h2><p>程序中使用到的资源应当被释放，以避免资源泄漏。</p>
+<p>这最好在finally块中去做。不管程序执行的结果如何，finally块总是会执行的，以确保资源的正确关闭。 </p>
+<h2 id="16-尽量使用移位来代替’a-b’的操作"><a href="#16-尽量使用移位来代替’a-b’的操作" class="headerlink" title="16. 尽量使用移位来代替’a/b’的操作"></a>16. 尽量使用移位来代替’a/b’的操作</h2><p>“/“是一个代价很高的操作，使用移位的操作将会更快和更有效</p>
+<p>如</p>
+<pre><code>int num = a / 4;
+int num = a / 8;
+</code></pre><p>应该改为</p>
+<pre><code>int num = a &gt;&gt; 2;
+int num = a &gt;&gt; 3;
+</code></pre><p>但注意的是使用移位应添加注释，因为移位操作不直观，比较难理解</p>
+<h2 id="17-尽量使用移位来代替’a-b’的操作"><a href="#17-尽量使用移位来代替’a-b’的操作" class="headerlink" title="17.尽量使用移位来代替’a*b’的操作"></a>17.尽量使用移位来代替’a*b’的操作</h2><p>同样的，对于’*‘操作，使用移位的操作将会更快和更有效</p>
+<p>如</p>
+<pre><code>int num = a * 4;
+int num = a * 8;
+</code></pre><p>应该改为</p>
+<pre><code>int num = a &lt;&lt; 2;
+int num = a &lt;&lt; 3;
+</code></pre><h2 id="18-尽量确定StringBuffer的容量"><a href="#18-尽量确定StringBuffer的容量" class="headerlink" title="18. 尽量确定StringBuffer的容量"></a>18. 尽量确定StringBuffer的容量</h2><p>StringBuffer 的构造器会创建一个默认大小（通常是16）的字符数组。在使用中，如果超出这个大小，就会重新分配内存，创建一个更大的数组，并将原先的数组复制过来，再 丢弃旧的数组。</p>
+<p>在大多数情况下，你可以在创建 StringBuffer的时候指定大小，这样就避免了在容量不够的时候自动增长，以提高性能。 </p>
+<p>如：</p>
+<pre><code>StringBuffer buffer = new StringBuffer(1000);  
+</code></pre><h2 id="19-尽量早释放无用对象的引用"><a href="#19-尽量早释放无用对象的引用" class="headerlink" title="19. 尽量早释放无用对象的引用"></a>19. 尽量早释放无用对象的引用</h2><p>大部分时，方法局部引用变量所引用的对象 会随着方法结束而变成垃圾，因此，大部分时候程序无需将局部，引用变量显式设为null。</p>
+<p>例如：</p>
+<pre><code>Public void test(){  
+    Object obj = new Object();  
+    ……  
+    Obj=null;  
+}  
+</code></pre><p>上面这个就没必要了，随着方法test()的执行完成，程序中obj引用变量的作用域就结束了。</p>
+<p>但是如果是改成下面：</p>
+<pre><code>Public void test(){  
+    Object obj = new Object();  
+    ……  
+    Obj=null;  
+    //执行耗时，耗内存操作；或调用耗时，耗内存的方法  
+    ……  
+}  
+</code></pre><p>这时候就有必要将obj赋值为null，可以尽早的释放对Object对象的引用。</p>
+<h2 id="20-尽量避免使用二维数组"><a href="#20-尽量避免使用二维数组" class="headerlink" title="20. 尽量避免使用二维数组"></a>20. 尽量避免使用二维数组</h2><p>二维数据占用的内存空间比一维数组多得多，大概10倍以上。</p>
+<h2 id="21-尽量避免使用split"><a href="#21-尽量避免使用split" class="headerlink" title="21. 尽量避免使用split"></a>21. 尽量避免使用split</h2><p>除非是必须的，否则应该避免使用split，split由于支持正则表达式，所以效率比较低，如果是频繁的几十，几百万的调用将会耗费大量资源，如果确实需 要频繁的调用split，可以考虑使用apache的StringUtils.split(string,char)，频繁split的可以缓存结果。</p>
+<h2 id="22-ArrayList-amp-LinkedList"><a href="#22-ArrayList-amp-LinkedList" class="headerlink" title="22. ArrayList &amp; LinkedList"></a>22. ArrayList &amp; LinkedList</h2><p>一个是线性表，一个是链表，一句话，随机查询尽量使用ArrayList，ArrayList优于LinkedList，LinkedList还要移动指 针，添加删除的操作LinkedList优于ArrayList，ArrayList还要移动数据，不过这是理论性分析，事实未必如此，重要的是理解好2 者得数据结构，对症下药。</p>
+<h2 id="23-尽量使用System-arraycopy-代替通过来循环复制数组"><a href="#23-尽量使用System-arraycopy-代替通过来循环复制数组" class="headerlink" title="23. 尽量使用System.arraycopy ()代替通过来循环复制数组"></a>23. 尽量使用System.arraycopy ()代替通过来循环复制数组</h2><p>System.arraycopy() 要比通过循环来复制数组快的多 </p>
+<h2 id="24-尽量缓存经常使用的对象"><a href="#24-尽量缓存经常使用的对象" class="headerlink" title="24. 尽量缓存经常使用的对象"></a>24. 尽量缓存经常使用的对象</h2><p>尽可能将经常使用的对象进行缓存，可以使用数组，或HashMap的容器来进行缓存，但这种方式可能导致系统占用过多的缓存，性能下降，推荐可以使用一些第三方的开源工具，如EhCache，Oscache进行缓存，他们基本都实现了FIFO/FLU等缓存算法。</p>
+<h2 id="25-尽量避免非常大的内存分配"><a href="#25-尽量避免非常大的内存分配" class="headerlink" title="25. 尽量避免非常大的内存分配"></a>25. 尽量避免非常大的内存分配</h2><p>有时候问题不是由当时的堆状态造成的，而是因为分配失败造成的。分配的内存块都必须是连续的，而随着堆越来越满，找到较大的连续块越来越困难。</p>
+<h2 id="26-慎用异常"><a href="#26-慎用异常" class="headerlink" title="26. 慎用异常"></a>26. 慎用异常</h2><p>当创建一个异常时，需要收集一个栈跟踪(stack track)，这个栈跟踪用于描述异常是在何处创建的。<br>构建这些栈跟踪时需要为运行时栈做一份快照，正是这一部分开销很大。</p>
+<p>当需要创建一个 Exception 时，JVM 不得不说：先别动，我想就您现在的样子存一份快照，所以暂时停止入栈和出栈操作。<br>栈跟踪不只包含运行时栈中的一两个元素，而是包含这个栈中的每一个元素。</p>
+<p>如果您创建一个 Exception ，就得付出代价。好在捕获异常开销不大，因此可以使用 try-catch 将核心内容包起来。<br>从技术上讲，您甚至可以随意地抛出异常，而不用花费很大的代价。<br>招致性能损失的并不是 throw 操作——尽管在没有预先创建异常的情况下就抛出异常是有点不寻常。<br>真正要花代价的是创建异常。</p>
+<p>幸运的是，好的编程习惯已教会我们，不应该不管三七二十一就抛出异常。</p>
+<p>异常是为异常的情况而设计的，使用时也应该牢记这一原则。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+  
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/性能/" rel="tag"># 性能</a>
+          
+        </div>
+      
+
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>🐶 您的支持将鼓励我继续创作 🐶</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赞赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat-reward-img.jpg" alt="EZLippi WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay-reward-img.jpg" alt="EZLippi Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+        
+     <div>    
+      
+      <ul class="post-copyright">
+         <li class="post-copyright-link">
+          <strong>本文作者：</strong>
+          <a href="/" title="欢迎访问 EZLippi 的个人博客">EZLippi</a>
+        </li>
+
+        <li class="post-copyright-link">
+          <strong>本文标题：</strong>
+          <a href="http://www.ezlippi.com/blog/2014/06/26-methods-to-improve-java-performance.html" title="Java编程Tips">Java编程Tips</a>
+        </li>
+
+        <li class="post-copyright-link">
+          <strong>本文链接：</strong>
+          <a href="http://www.ezlippi.com/blog/2014/06/26-methods-to-improve-java-performance.html" title="Java编程Tips">http://www.ezlippi.com/blog/2014/06/26-methods-to-improve-java-performance.html</a>
+        </li>
+
+        <li class="post-copyright-date">
+            <strong>发布时间：</strong>2014年6月18日 - 00时06分
+        </li>  
+
+        <li class="post-copyright-license">
+          <strong>版权声明： </strong>
+          本文由 EZLippi 原创，采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh" rel="license" target="_blank">保留署名-非商业性使用-禁止演绎 4.0-国际许可协议</a> </br>转载请保留以上声明信息！
+        </li>
+      </ul>
+    
+  </div>  
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2014/06/blog/2014/06/15/in-the-rain.html.html" rel="next" title="在雨中">
+                <i class="fa fa-chevron-left"></i> 在雨中
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2014/07/c-advaced-programming.html" rel="prev" title="C语言高级编程指南">
+                C语言高级编程指南 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjI4My84ODQ3"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="EZLippi" />
+          <p class="site-author-name" itemprop="name">EZLippi</p>
+          <p class="site-description motion-element" itemprop="description">Easy Lippi</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">95</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">103</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/EZLippi" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/ouyanglip" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/lippi-ouyang" target="_blank" title="zhihu">
+                  
+                    <i class="fa fa-fw fa-battery-3"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.woaitqs.cc/" title="Qisen Tang" target="_blank">Qisen Tang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://szhshp.org" title="szhshp的博客" target="_blank">szhshp的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://python.zhangwei.website" title="JuniorCoder" target="_blank">JuniorCoder</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hippo-jessy.com" title="Hippo" target="_blank">Hippo</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.zhihu.com/people/lippi-ouyang" title="友链出租" target="_blank">友链出租</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-尽量在合适的场合使用单例"><span class="nav-number">1.</span> <span class="nav-text">1. 尽量在合适的场合使用单例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-尽量避免随意使用静态变量"><span class="nav-number">2.</span> <span class="nav-text">2. 尽量避免随意使用静态变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-尽量避免过多过常的创建Java对象"><span class="nav-number">3.</span> <span class="nav-text">3. 尽量避免过多过常的创建Java对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-尽量使用final修饰符"><span class="nav-number">4.</span> <span class="nav-text">4. 尽量使用final修饰符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-尽量使用局部变量"><span class="nav-number">5.</span> <span class="nav-text">5. 尽量使用局部变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-尽量处理好包装类型和基本类型两者的使用场所"><span class="nav-number">6.</span> <span class="nav-text">6. 尽量处理好包装类型和基本类型两者的使用场所</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-慎用synchronized，尽量减小synchronize的方法"><span class="nav-number">7.</span> <span class="nav-text">7. 慎用synchronized，尽量减小synchronize的方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-尽量使用StringBuilder和StringBuffer进行字符串连接"><span class="nav-number">8.</span> <span class="nav-text">8. 尽量使用StringBuilder和StringBuffer进行字符串连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-尽量不要使用finalize方法"><span class="nav-number">9.</span> <span class="nav-text">9. 尽量不要使用finalize方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-尽量使用基本数据类型代替对象"><span class="nav-number">10.</span> <span class="nav-text">10. 尽量使用基本数据类型代替对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-单线程应尽量使用HashMap、ArrayList"><span class="nav-number">11.</span> <span class="nav-text">11. 单线程应尽量使用HashMap、ArrayList</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12-尽量合理的创建HashMap"><span class="nav-number">12.</span> <span class="nav-text">12. 尽量合理的创建HashMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-尽量减少对变量的重复计算"><span class="nav-number">13.</span> <span class="nav-text">13. 尽量减少对变量的重复计算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#14-尽量避免不必要的创建"><span class="nav-number">14.</span> <span class="nav-text">14. 尽量避免不必要的创建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#15-尽量在finally块中释放资源"><span class="nav-number">15.</span> <span class="nav-text">15. 尽量在finally块中释放资源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#16-尽量使用移位来代替’a-b’的操作"><span class="nav-number">16.</span> <span class="nav-text">16. 尽量使用移位来代替’a/b’的操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#17-尽量使用移位来代替’a-b’的操作"><span class="nav-number">17.</span> <span class="nav-text">17.尽量使用移位来代替’a*b’的操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#18-尽量确定StringBuffer的容量"><span class="nav-number">18.</span> <span class="nav-text">18. 尽量确定StringBuffer的容量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#19-尽量早释放无用对象的引用"><span class="nav-number">19.</span> <span class="nav-text">19. 尽量早释放无用对象的引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#20-尽量避免使用二维数组"><span class="nav-number">20.</span> <span class="nav-text">20. 尽量避免使用二维数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#21-尽量避免使用split"><span class="nav-number">21.</span> <span class="nav-text">21. 尽量避免使用split</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#22-ArrayList-amp-LinkedList"><span class="nav-number">22.</span> <span class="nav-text">22. ArrayList & LinkedList</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#23-尽量使用System-arraycopy-代替通过来循环复制数组"><span class="nav-number">23.</span> <span class="nav-text">23. 尽量使用System.arraycopy ()代替通过来循环复制数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#24-尽量缓存经常使用的对象"><span class="nav-number">24.</span> <span class="nav-text">24. 尽量缓存经常使用的对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#25-尽量避免非常大的内存分配"><span class="nav-number">25.</span> <span class="nav-text">25. 尽量避免非常大的内存分配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#26-慎用异常"><span class="nav-number">26.</span> <span class="nav-text">26. 慎用异常</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">EZLippi</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io" rel="external nofollow">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">
+    NexT.Mist
+  </a>| Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a>
+</div>
+
+
+
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.lazyload/1.9.3/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("kJ2sJuSJeByLioULSXrJ5CSq-9Nh9j0Va", "uBWeNxCbFEWsOVDTmAInrDq3");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+	<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+
+</body>
+</html>

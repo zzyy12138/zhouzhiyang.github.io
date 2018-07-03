@@ -1,0 +1,1457 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|consolas:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android, openSource" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="EZLippi-浮生志" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1、volley项目地址https://github.com/smanikandan14/Volley-demo
+
+(1)  JSON，图像等的异步下载；
+(2)  网络请求的排序（scheduling）
+(3)  网络请求的优先级处理
+(4)  缓存
+(5)  多级别取消请求
+(6)  和Activity和生命周期的联动（Activity结束时同时取消所有网络请求）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="值得推荐的android开源框架">
+<meta property="og:url" content="http://www.ezlippi.com/blog/2014/10/android-opensource.html">
+<meta property="og:site_name" content="EZLippi-浮生志">
+<meta property="og:description" content="1、volley项目地址https://github.com/smanikandan14/Volley-demo
+
+(1)  JSON，图像等的异步下载；
+(2)  网络请求的排序（scheduling）
+(3)  网络请求的优先级处理
+(4)  缓存
+(5)  多级别取消请求
+(6)  和Activity和生命周期的联动（Activity结束时同时取消所有网络请求）">
+<meta property="og:updated_time" content="2016-02-29T12:34:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="值得推荐的android开源框架">
+<meta name="twitter:description" content="1、volley项目地址https://github.com/smanikandan14/Volley-demo
+
+(1)  JSON，图像等的异步下载；
+(2)  网络请求的排序（scheduling）
+(3)  网络请求的优先级处理
+(4)  缓存
+(5)  多级别取消请求
+(6)  和Activity和生命周期的联动（Activity结束时同时取消所有网络请求）">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.ezlippi.com/blog/2014/10/android-opensource.html"/>
+
+
+
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "d1b06a58"
+    });
+  daovoice('update');
+  </script>
+
+
+  <title> 值得推荐的android开源框架 | EZLippi-浮生志 </title>
+</head>
+
+  	 <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("kJ2sJuSJeByLioULSXrJ5CSq-9Nh9j0Va", "uBWeNxCbFEWsOVDTmAInrDq3");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = $(document.getElementById(url)).text() + ': 0';
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = $(document.getElementById(url)).text() + ': ' + object.get('time');
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content = $(document.getElementById(url)).text() + ': ' + counter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = $(document.getElementById(url)).text() + ': ' + newcounter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+});
+</script>
+  
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?340874ba9357cbe81570aa4ac1185941";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta custom-logo">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">EZLippi-浮生志</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description"></h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://www.ezlippi.com/blog/2014/10/android-opensource.html">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="EZLippi">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="EZLippi-浮生志">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="EZLippi-浮生志" src="/images/avatar.jpg">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                值得推荐的android开源框架
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2014-10-01T00:00:00+08:00">
+                2014-10-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+		  
+			 
+          
+          
+             <span id="/blog/2014/10/android-opensource.html" class="leancloud_visitors" data-flag-title="值得推荐的android开源框架">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">热度 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+				 <span>℃</span>
+             </span>
+          
+		   
+          
+
+		  
+            <div class="post-wordcount">
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  2,518
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  9
+                </span>
+              
+            </div>
+          
+		  
+          
+ 
+        
+
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1、volley"><a href="#1、volley" class="headerlink" title="1、volley"></a>1、volley</h2><p>项目地址<a href="https://github.com/smanikandan14/Volley-demo" target="_blank" rel="external">https://github.com/smanikandan14/Volley-demo</a></p>
+<ul>
+<li>(1)  JSON，图像等的异步下载；</li>
+<li>(2)  网络请求的排序（scheduling）</li>
+<li>(3)  网络请求的优先级处理</li>
+<li>(4)  缓存</li>
+<li>(5)  多级别取消请求</li>
+<li>(6)  和Activity和生命周期的联动（Activity结束时同时取消所有网络请求）<a id="more"></a>
+<h2 id="2、android-async-http"><a href="#2、android-async-http" class="headerlink" title="2、android-async-http"></a>2、android-async-http</h2>项目地址：<a href="https://github.com/loopj/android-async-http" target="_blank" rel="external">https://github.com/loopj/android-async-http</a></li>
+</ul>
+<p>文档介绍：<a href="http://loopj.com/android-async-http/" target="_blank" rel="external">http://loopj.com/android-async-http/ </a></p>
+<ul>
+<li>(1) 在匿名回调中处理请求结果</li>
+<li>(2) 在UI线程外进行http请求</li>
+<li>(3) 文件断点上传</li>
+<li>(4) 智能重试</li>
+<li>(5) 默认gzip压缩</li>
+<li>(6) 支持解析成Json格式</li>
+<li>(7) 可将Cookies持久化到SharedPreferences</li>
+</ul>
+<h2 id="3、Afinal框架"><a href="#3、Afinal框架" class="headerlink" title="3、Afinal框架"></a>3、Afinal框架</h2><p>项目地址：<a href="https://github.com/yangfuhai/afinal" target="_blank" rel="external">https://github.com/yangfuhai/afinal</a></p>
+<p>主要有四大模块：</p>
+<ul>
+<li>(1) 数据库模块：android中的orm框架，使用了线程池对sqlite进行操作。<ul>
+<li>(2) 注解模块：android中的ioc框架，完全注解方式就可以进行UI绑定和事件绑定。无需findViewById和setClickListener等。</li>
+<li>(3) 网络模块：通过httpclient进行封装http数据请求，支持ajax方式加载，支持下载、上传文件功能。</li>
+<li>(4) 图片缓存模块：通过FinalBitmap，imageview加载bitmap的时候无需考虑bitmap加载过程中出现的oom和android容器快速滑动时候出现的图片错位等现象。</li>
+</ul>
+</li>
+</ul>
+<p>FinalBitmap可以配置线程加载线程数量，缓存大小，缓存路径，加载显示动画等。FinalBitmap的内存管理使用lru算法，<br>没有使用弱引用（android2.3以后google已经不建议使用弱引用，android2.3后强行回收软引用和弱引用，详情查看android官方文档），<br>更好的管理bitmap内存。</p>
+<p>FinalBitmap可以自定义下载器，用来扩展其他协议显示网络图片，比如ftp等。同时可以自定义bitmap显示器，<br>在imageview显示图片的时候播放动画等（默认是渐变动画显示）。</p>
+<h2 id="4、xUtils框架"><a href="#4、xUtils框架" class="headerlink" title="4、xUtils框架"></a>4、xUtils框架</h2><p>项目地址：<a href="https://github.com/wyouflf/xUtils" target="_blank" rel="external">https://github.com/wyouflf/xUtils</a></p>
+<p>主要有四大模块：</p>
+<p> (1) 数据库模块：android中的orm框架，一行代码就可以进行增删改查；</p>
+<ul>
+<li>支持事务，默认关闭；</li>
+<li>可通过注解自定义表名，列名，外键，唯一性约束，NOT NULL约束，CHECK约束等（需要混淆的时候请注解表名和列名）；</li>
+<li>支持绑定外键，保存实体时外键关联实体自动保存或更新；</li>
+<li>自动加载外键关联实体，支持延时加载；</li>
+<li>支持链式表达查询，更直观的查询语义，参考下面的介绍或sample中的例子. </li>
+</ul>
+<p> (2) 注解模块：android中的ioc框架，完全注解方式就可以进行UI，资源和事件绑定；</p>
+<ul>
+<li>新的事件绑定方式，使用混淆工具混淆后仍可正常工作；</li>
+<li>目前支持常用的20种事件绑定，参见ViewCommonEventListener类和包com.lidroid.xutils.view.annotation.event。</li>
+</ul>
+<p>(3) 网络模块：支持同步，异步方式的请求；</p>
+<ul>
+<li>支持大文件上传，上传大文件不会oom；</li>
+<li>支持GET，POST，PUT，MOVE，COPY，DELETE，HEAD，OPTIONS，TRACE，CONNECT请求；</li>
+<li>下载支持301/302重定向，支持设置是否根据Content-Disposition重命名下载的文件；</li>
+<li><p>返回文本内容的请求(默认只启用了GET请求)支持缓存，可设置默认过期时间和针对当前请求的过期时间。  </p>
+<p>(4) 图片缓存模块：加载bitmap的时候无需考虑bitmap加载过程中出现的oom和android容器快速滑动时候出现的图片错位等现象；</p>
+</li>
+<li><p>支持加载网络图片和本地图片；</p>
+</li>
+<li>内存管理使用lru算法，更好的管理bitmap内存；</li>
+<li>可配置线程加载线程数量，缓存大小，缓存路径，加载显示动画等…</li>
+</ul>
+<h2 id="5、ThinkAndroid"><a href="#5、ThinkAndroid" class="headerlink" title="5、ThinkAndroid"></a>5、ThinkAndroid</h2><p>项目地址：<a href="https://github.com/white-cat/ThinkAndroid" target="_blank" rel="external">https://github.com/white-cat/ThinkAndroid</a></p>
+<p>主要有以下模块：</p>
+<ul>
+<li>(1)  MVC模块：实现视图与模型的分离。</li>
+<li>(2)  ioc模块：android中的ioc模块，完全注解方式就可以进行UI绑定、res中的资源的读取、以及对象的初始化。 </li>
+<li>(3)  数据库模块：android中的orm框架，使用了线程池对sqlite进行操作。  </li>
+<li>(4)  http模块：通过httpclient进行封装http数据请求，支持异步及同步方式加载。</li>
+<li>(5)  缓存模块：通过简单的配置及设计可以很好的实现缓存，对缓存可以随意的配置</li>
+<li>(6)  图片缓存模块：imageview加载图片的时候无需考虑图片加载过程中出现的oom和android容器快速滑动时候出现的图片错位等现象。</li>
+<li>(7)  配置器模块：可以对简易的实现配对配置的操作，目前配置文件可以支持Preference、Properties对配置进行存取。</li>
+<li>(8)  日志打印模块：可以较快的轻易的是实现日志打印，支持日志打印的扩展，目前支持对sdcard写入本地打印、以及控制台打印</li>
+<li>(9)  下载器模块:可以简单的实现多线程下载、后台下载、断点续传、对下载进行控制、如开始、暂停、删除等等。</li>
+<li>(10) 网络状态检测模块：当网络状态改变时，对其进行检</li>
+</ul>
+<h2 id="6、LoonAndroid"><a href="#6、LoonAndroid" class="headerlink" title="6、LoonAndroid"></a>6、LoonAndroid</h2><p>项目地址：<a href="https://github.com/gdpancheng/LoonAndroid" target="_blank" rel="external">https://github.com/gdpancheng/LoonAndroid</a></p>
+<p>主要有以下模块：</p>
+<ul>
+<li>(1)  自动注入框架（只需要继承框架内的application既可）<ul>
+<li>(2)  图片加载框架（多重缓存，自动回收，最大限度保证内存的安全性）</li>
+<li>(3)  网络请求模块（继承了基本上现在所有的http请求）</li>
+<li>(4)  eventbus（集成一个开源的框架）</li>
+<li>(5)  验证框架（集成开源框架）</li>
+<li>(6)  json解析（支持解析成集合或者对象）</li>
+<li>(7)  数据库（不知道是哪位写的 忘记了）</li>
+<li>(8)  多线程断点下载（自动判断是否支持多线程，判断是否是重定向）</li>
+<li>(9)  自动更新模块</li>
+<li>(10) 一系列工具类</li>
+</ul>
+</li>
+</ul>
+<p>其中的 volley扩展性非常好，个人比较喜欢的风格。其他如 android-async-http、Afinal 也相当不错。 </p>
+<h2 id="7、AndroidAnnotations"><a href="#7、AndroidAnnotations" class="headerlink" title="7、AndroidAnnotations"></a>7、AndroidAnnotations</h2><p>项目地址：</p>
+<p><a href="http://androidannotations.org/" target="_blank" rel="external">AndroidAnnotations首页</a></p>
+<p><a href="https://github.com/excilys/androidannotations/wiki" target="_blank" rel="external">github上的项目地址</a></p>
+<p>主要有以下特点：</p>
+<ul>
+<li>使用依赖注入(DI)、控制反转(IOC)来简化开发过程</li>
+<li>简化的线程模型（Simplified  threading model)  </li>
+<li>事件绑定（Event binding）</li>
+<li>REST Client</li>
+<li>No Magic  </li>
+<li>类似框架：<a href="http://jakewharton.github.io/butterknife/" target="_blank" rel="external">Bufferknife</a></li>
+</ul>
+<h2 id="8、RoboGuice"><a href="#8、RoboGuice" class="headerlink" title="8、RoboGuice"></a>8、RoboGuice</h2><p>项目地址：<a href="https://github.com/roboguice/roboguice" target="_blank" rel="external">https://github.com/roboguice/roboguice</a></p>
+<p>RoboGuice 使得进行Android开发更加方便，使得开发变得更加简单也更有乐趣。当你调用getIntent().getExtras()是不是经常检查是否为null？RoboGuice可以帮助你。想想调用findViewById()并映射到TextView确实有必要么？RoboGuice也可以帮你。</p>
+<p>RoboGuice 可以帮助解决这类的判断工作。你再也不用记住，是通过调用bindService获取一个用户service，调用getSystemService获取一个系统service。注入你的view、service、或者其他对象，然后让RoboGuice来处理剩下的事宜。</p>
+<p>RoboGuice 精简了你的应用代码。更少的代码意味着bug也会更少。也使得阅读代码更加容易，不在纠缠于Android平台的各种特性，而是关注于应用实际的业务逻辑。</p>
+<p>没什么很难的，你所需要做的仅仅是配置RoboGuice。</p>
+<p>##　9、Dagger ##</p>
+<p>项目地址<a href="https://github.com/square/dagger" target="_blank" rel="external">https://github.com/square/dagger</a></p>
+<p>android的依赖注入框架（DI框架），感觉跟Spring 的IOC差不多吧。这个框架它的好处是它没有采用反射技术（Spring是用反射的）,而是用预编译技术，因为基于反射的DI非常地耗用资源（空间，时间）</p>
+<h2 id="10、Fresco"><a href="#10、Fresco" class="headerlink" title="10、Fresco　"></a>10、Fresco　</h2><p>中文文档<a href="http://fresco-cn.org/" target="_blank" rel="external">http://fresco-cn.org/</a><br>项目地址<a href="https://github.com/facebook/fresco" target="_blank" rel="external">https://github.com/facebook/fresco</a></p>
+<p>Fresco 是一个强大的图片加载组件。</p>
+<p>Fresco 中设计有一个叫做 image pipeline 的模块。它负责从网络，从本地文件系统，本地资源加载图片。为了最大限度节省空间和CPU时间，它含有3级缓存设计（2级内存，1级文件）。</p>
+<p>Fresco 中设计有一个叫做 Drawees 模块，方便地显示loading图，当图片不再显示在屏幕上时，及时地释放内存和空间占用。</p>
+<p>特性：</p>
+<ul>
+<li>内存管理</li>
+<li>图片的渐进式呈现</li>
+<li>支持加载Gif图，支持WebP格式</li>
+</ul>
+<h2 id="11、ActiveAndroid"><a href="#11、ActiveAndroid" class="headerlink" title="11、ActiveAndroid"></a>11、ActiveAndroid</h2><p>项目地址：<a href="https://github.com/pardom/ActiveAndroid" target="_blank" rel="external">https://github.com/pardom/ActiveAndroid</a></p>
+<p>ActiveAndroid是一个活跃的记录风格的ORM（对象关系映射）库。ActiveAndroid可以让您保存和检索的SQLite数据库记录而没有写一个SQL语句。每个数据库记录被整齐包裹成一个model类,像保存方法（）和delete（）。</p>
+<h2 id="12、Android-Universal-Image-Loader"><a href="#12、Android-Universal-Image-Loader" class="headerlink" title="12、Android-Universal-Image-Loader"></a>12、Android-Universal-Image-Loader</h2><p>项目地址：<a href="https://github.com/nostra13/Android-Universal-Image-Loader" target="_blank" rel="external">https://github.com/nostra13/Android-Universal-Image-Loader</a></p>
+<p>Android-Universal-Image-Loader是一个开源的UI组件程序，该项目的目的是提供一个可重复使用的仪器为异步图像加载，缓存和显示。所以，如果你的程序里需要这个功能的话，那么不妨试试它。因为已经封装好了一些类和方法。我们 可以直接拿来用了。而不用重复去写了。其实，写一个这方面的程序还是比较麻烦的，要考虑多线程，缓存，内存溢出等很多方面。但是，你也可以参考这个例子来自己写出更好的程序。 </p>
+<h2 id="12、KJFrameForAndroid"><a href="#12、KJFrameForAndroid" class="headerlink" title="12、KJFrameForAndroid"></a>12、KJFrameForAndroid</h2><p>项目地址：<a href="https://github.com/kymjs/KJFrameForAndroid" target="_blank" rel="external">https://github.com/kymjs/KJFrameForAndroid</a><br>一个强大的Android开发库，KJFrameForAndroid的设计思想是通过封装Android原生SDK中复杂的复杂操作而达到简化Android应用级开发，最终实现快速而又安全的开发APP。功能包含</p>
+<ul>
+<li>数据库： javabean直接转换为sqlite表存储  </li>
+<li>Activity继承链：用最快捷的方法实现MVC分层  </li>
+<li>KJHttp：自带缓存功能的网络请求库，同时可选用HttpurlConnection(默认)或HttpClient实现</li>
+<li>KJBitmap：加载网络图片只需要一行代码，使用内存+磁盘双缓存，完美适配任何版本系统不会出现OOM。</li>
+</ul>
+<h2 id="13、CJFrameForAndroid"><a href="#13、CJFrameForAndroid" class="headerlink" title="13、CJFrameForAndroid"></a>13、CJFrameForAndroid</h2><p>项目地址：<a href="https://github.com/kymjs/CJFrameForAndroid" target="_blank" rel="external">https://github.com/kymjs/CJFrameForAndroid</a><br>一个完善的Android插件化开发框架的开源实现，只需要一行代码就可以启动一个存在于asset目录或sd卡上的没有安装的apk。<br>对于插件apk没有任何的编码限制。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+  
+        <div class="post-tags">
+          
+            <a href="/tags/android/" rel="tag"># android</a>
+          
+            <a href="/tags/开源/" rel="tag"># 开源</a>
+          
+        </div>
+      
+
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>🐶 您的支持将鼓励我继续创作 🐶</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赞赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat-reward-img.jpg" alt="EZLippi WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay-reward-img.jpg" alt="EZLippi Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+        
+     <div>    
+      
+      <ul class="post-copyright">
+         <li class="post-copyright-link">
+          <strong>本文作者：</strong>
+          <a href="/" title="欢迎访问 EZLippi 的个人博客">EZLippi</a>
+        </li>
+
+        <li class="post-copyright-link">
+          <strong>本文标题：</strong>
+          <a href="http://www.ezlippi.com/blog/2014/10/android-opensource.html" title="值得推荐的android开源框架">值得推荐的android开源框架</a>
+        </li>
+
+        <li class="post-copyright-link">
+          <strong>本文链接：</strong>
+          <a href="http://www.ezlippi.com/blog/2014/10/android-opensource.html" title="值得推荐的android开源框架">http://www.ezlippi.com/blog/2014/10/android-opensource.html</a>
+        </li>
+
+        <li class="post-copyright-date">
+            <strong>发布时间：</strong>2014年10月1日 - 00时10分
+        </li>  
+
+        <li class="post-copyright-license">
+          <strong>版权声明： </strong>
+          本文由 EZLippi 原创，采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh" rel="license" target="_blank">保留署名-非商业性使用-禁止演绎 4.0-国际许可协议</a> </br>转载请保留以上声明信息！
+        </li>
+      </ul>
+    
+  </div>  
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2014/09/returning-null.html" rel="next" title="关于返回 Null 值的问题">
+                <i class="fa fa-chevron-left"></i> 关于返回 Null 值的问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2014/10/how-http-works.html" rel="prev" title="当我们打开网页时发生了什么">
+                当我们打开网页时发生了什么 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjI4My84ODQ3"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="EZLippi" />
+          <p class="site-author-name" itemprop="name">EZLippi</p>
+          <p class="site-description motion-element" itemprop="description">Easy Lippi</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">95</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">103</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/EZLippi" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/ouyanglip" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/lippi-ouyang" target="_blank" title="zhihu">
+                  
+                    <i class="fa fa-fw fa-battery-3"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.woaitqs.cc/" title="Qisen Tang" target="_blank">Qisen Tang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://szhshp.org" title="szhshp的博客" target="_blank">szhshp的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://python.zhangwei.website" title="JuniorCoder" target="_blank">JuniorCoder</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hippo-jessy.com" title="Hippo" target="_blank">Hippo</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.zhihu.com/people/lippi-ouyang" title="友链出租" target="_blank">友链出租</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、volley"><span class="nav-number">1.</span> <span class="nav-text">1、volley</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、android-async-http"><span class="nav-number">2.</span> <span class="nav-text">2、android-async-http</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、Afinal框架"><span class="nav-number">3.</span> <span class="nav-text">3、Afinal框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、xUtils框架"><span class="nav-number">4.</span> <span class="nav-text">4、xUtils框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5、ThinkAndroid"><span class="nav-number">5.</span> <span class="nav-text">5、ThinkAndroid</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6、LoonAndroid"><span class="nav-number">6.</span> <span class="nav-text">6、LoonAndroid</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7、AndroidAnnotations"><span class="nav-number">7.</span> <span class="nav-text">7、AndroidAnnotations</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8、RoboGuice"><span class="nav-number">8.</span> <span class="nav-text">8、RoboGuice</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10、Fresco"><span class="nav-number">9.</span> <span class="nav-text">10、Fresco　</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11、ActiveAndroid"><span class="nav-number">10.</span> <span class="nav-text">11、ActiveAndroid</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12、Android-Universal-Image-Loader"><span class="nav-number">11.</span> <span class="nav-text">12、Android-Universal-Image-Loader</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12、KJFrameForAndroid"><span class="nav-number">12.</span> <span class="nav-text">12、KJFrameForAndroid</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13、CJFrameForAndroid"><span class="nav-number">13.</span> <span class="nav-text">13、CJFrameForAndroid</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">EZLippi</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io" rel="external nofollow">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">
+    NexT.Mist
+  </a>| Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a>
+</div>
+
+
+
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.lazyload/1.9.3/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("kJ2sJuSJeByLioULSXrJ5CSq-9Nh9j0Va", "uBWeNxCbFEWsOVDTmAInrDq3");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+	<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+
+</body>
+</html>

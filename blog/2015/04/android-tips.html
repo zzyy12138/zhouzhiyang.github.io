@@ -1,0 +1,1374 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|consolas:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="android, tips," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="EZLippi-浮生志" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="本文是一篇译文,讲述的是Android开发过程中遇到的一些实用的小技巧,或者一些实用的API,作者介绍的非常全面，推荐大家收藏起来，平常写Android程序也用的上。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android实用小技巧">
+<meta property="og:url" content="http://www.ezlippi.com/blog/2015/04/android-tips.html">
+<meta property="og:site_name" content="EZLippi-浮生志">
+<meta property="og:description" content="本文是一篇译文,讲述的是Android开发过程中遇到的一些实用的小技巧,或者一些实用的API,作者介绍的非常全面，推荐大家收藏起来，平常写Android程序也用的上。">
+<meta property="og:updated_time" content="2016-03-18T11:03:23.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="android实用小技巧">
+<meta name="twitter:description" content="本文是一篇译文,讲述的是Android开发过程中遇到的一些实用的小技巧,或者一些实用的API,作者介绍的非常全面，推荐大家收藏起来，平常写Android程序也用的上。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.ezlippi.com/blog/2015/04/android-tips.html"/>
+
+
+
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "d1b06a58"
+    });
+  daovoice('update');
+  </script>
+
+
+  <title> android实用小技巧 | EZLippi-浮生志 </title>
+</head>
+
+  	 <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("kJ2sJuSJeByLioULSXrJ5CSq-9Nh9j0Va", "uBWeNxCbFEWsOVDTmAInrDq3");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = $(document.getElementById(url)).text() + ': 0';
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = $(document.getElementById(url)).text() + ': ' + object.get('time');
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content = $(document.getElementById(url)).text() + ': ' + counter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = $(document.getElementById(url)).text() + ': ' + newcounter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+});
+</script>
+  
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?340874ba9357cbe81570aa4ac1185941";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta custom-logo">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">EZLippi-浮生志</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description"></h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://www.ezlippi.com/blog/2015/04/android-tips.html">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="EZLippi">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="EZLippi-浮生志">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="EZLippi-浮生志" src="/images/avatar.jpg">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                android实用小技巧
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-04-16T09:52:18+08:00">
+                2015-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+		  
+			 
+          
+          
+             <span id="/blog/2015/04/android-tips.html" class="leancloud_visitors" data-flag-title="android实用小技巧">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">热度 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+				 <span>℃</span>
+             </span>
+          
+		   
+          
+
+		  
+            <div class="post-wordcount">
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  3,410
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  12
+                </span>
+              
+            </div>
+          
+		  
+          
+              <div class="post-description">
+                  本文是一篇译文,讲述的是Android开发过程中遇到的一些实用的小技巧,或者一些实用的API,作者介绍的非常全面，推荐大家收藏起来，平常写Android程序也用的上。
+              </div>
+          
+ 
+        
+
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文是一篇译文,讲述的是Android开发过程中遇到的一些实用的小技巧,或者一些实用的API,作者介绍的非常全面，推荐大家收藏起来，平常写Android程序也用的上。<br><a id="more"></a></p>
+<h3 id="第一部分"><a href="#第一部分" class="headerlink" title="第一部分"></a>第一部分</h3><ul>
+<li><p><a href="http://developer.android.com/reference/android/app/Activity.html#startActivities(android.content.Intent[]" target="_blank" rel="external">Activity.startActivities() </a>常用于在应用程序中间启动其他的Activity.</p>
+</li>
+<li><p><a href="http://developer.android.com/reference/android/text/TextUtils.html#isEmpty(java.lang.CharSequence" target="_blank" rel="external">TextUtils.isEmpty()</a> 简单的工具类,用于检测是否为空</p>
+</li>
+<li><a href="http://developer.android.com/reference/android/text/Html.html#fromHtml(java.lang.String" target="_blank" rel="external">Html.fromHtml()</a> 用于生成一个Html,参数可以是一个字符串.个人认为它不是很快,所以我不怎么经常去用.（我说不经常用它是为了重点突出这句话：请多手动构建 Spannable 来替换 Html.fromHtml），但是它对渲染从 web 上获取的文字还是很不错的。</li>
+<li><a href="http://developer.android.com/reference/android/widget/TextView.html#setError%28java.lang.CharSequence%29" target="_blank" rel="external">TextView.setError() </a>在验证用户输入的时候很棒</li>
+<li><a href="http://developer.android.com/reference/android/os/Build.VERSION_CODES.html" target="_blank" rel="external"></a>Build.VERSION_CODES 这个标明了当前的版本号,在处理兼容性问题的时候经常会用到.点进去可以看到各个版本的不同特性</li>
+<li><a href="http://developer.android.com/reference/android/util/Log.html#getStackTraceString(java.lang.Throwable" target="_blank" rel="external">Log.getStackTraceString()</a> 方便的日志类工具,方法Log.v()、Log.d()、Log.i()、Log.w()和Log.e()都是将信息打印到LogCat中，有时候需要将出错的信息插入到数据库或一个自定义的日志文件中，那么这种情况就需要将出错的信息以字符串的形式返回来，也就是使用static String getStackTraceString(Throwable tr)方法的时候.</li>
+<li><a href="http://developer.android.com/reference/android/view/LayoutInflater.html#from%28android.content.Context%29" target="_blank" rel="external">LayoutInflater.from()</a> 顾名思义,用于Inflate一个layout,参数是layout的id.这个经常写Adapter的人会用的比较多.</li>
+<li><a href="http://developer.android.com/reference/android/view/ViewConfiguration.html#getScaledTouchSlop%28%29" target="_blank" rel="external">ViewConfiguration.getScaledTouchSlop()</a> 使用 ViewConfiguration 中提供的值以保证所有触摸的交互都是统一的。这个方法获取的值表示:用户的手滑动这个距离后,才判定为正在进行滑动.当然这个值也可以自己来决定.但是为了一致性,还是使用标准的值较好.</li>
+<li><a href="http://developer.android.com/reference/android/telephony/PhoneNumberUtils.html#convertKeypadLettersToDigits%28java.lang.String%29" target="_blank" rel="external">PhoneNumberUtils.convertKeypadLettersToDigits</a> 顾名思义.将字母转换为数字,类似于T9输入法,</li>
+<li><a href="http://developer.android.com/reference/android/content/Context.html#getCacheDir%28%29" target="_blank" rel="external">Context.getCacheDir()</a> 获取缓存数据文件夹的路径,很简单但是知道的人不多,这个路径通常在SD卡上(这里的SD卡指的是广义上的SD卡,包括外部存储和内部存储)Adnroid/data/您的应用程序包名/cache/  下面.测试的时候,可以去这里面看是否缓存成功.缓存在这里的好处是:不用自己再去手动创建文件夹,不用担心用户把自己创建的文件夹删掉,在应用程序卸载的时候,这里会被清空,使用第三方的清理工具的时候,这里也会被清空.</li>
+<li><a href="http://developer.android.com/reference/android/animation/ArgbEvaluator.html" target="_blank" rel="external"></a>ArgbEvaluator 用于处理颜色的渐变。就像 Chris Banes 说的一样，这个类会进行很多自动装箱的操作，所以最好还是去掉它的逻辑自己去实现它。这个没用过,不明其所以然,回头再补充.</li>
+<li><a href="http://developer.android.com/reference/android/view/ContextThemeWrapper.html" target="_blank" rel="external">ContextThemeWrapper</a> 方便在运行的时候修改主题.</li>
+<li><a href="http://developer.android.com/reference/android/widget/Space.html" target="_blank" rel="external"></a>Space space是Android 4.0中新增的一个控件，它实际上可以用来分隔不同的控件，其中形成一个空白的区域.这是一个轻量级的视图组件，它可以跳过Draw，对于需要占位符的任何场景来说都是很棒的。</li>
+<li><a href="http://developer.android.com/reference/android/animation/ValueAnimator.html#reverse%28%29" target="_blank" rel="external">ValueAnimator.reverse()</a> 这个方法可以很顺利地取消正在运行的动画.我超喜欢.</li>
+</ul>
+<h3 id="第二部分"><a href="#第二部分" class="headerlink" title="第二部分"></a>第二部分</h3><ul>
+<li><p><a href="http://developer.android.com/reference/android/text/format/DateUtils.html#formatDateTime%28android.content.Context,%20long,%20int%29" target="_blank" rel="external">DateUtils.formatDateTime() </a>用来进行区域格式化工作,输出格式化和本地化的时间或者日期.</p>
+</li>
+<li><p><a href="http://developer.android.com/reference/android/app/AlarmManager.html#setInexactRepeating(int, long, long, android.app.PendingIntent" target="_blank" rel="external">AlarmManager.setInexactRepeating</a> 通过闹铃分组的方式省电,即使你只调用了一个闹钟,这也是一个好的选择,（可以确保在使用完毕时自动调用 AlarmManager.cancel ()。原文说的比较抽象,这里详细说一下:setInexactRepeating指的是设置非准确闹钟,使用方法:alarmManager.setInexactRepeating(AlarmManager.RTC, startTime,intervalL, pendingIntent),非准确闹钟只能保证大致的时间间隔，但是不一定准确，可能出现设置间隔为30分钟，但是实际上一次间隔20分钟，另一次间隔40分钟。它的最大的好处是可以合并闹钟事件，比如间隔设置每30分钟一次，不唤醒休眠，在休眠8小时后已经积累了16个闹钟事件，而在手机被唤醒的时候，非准时闹钟可以把16个事件合并为一个, 所以这么看来,非准时闹钟一般来说比较节约能源.</p>
+</li>
+<li><a href="http://developer.android.com/reference/android/text/format/Formatter.html#formatFileSize(android.content.Context, long" target="_blank" rel="external">Formatter.formatFileSize()</a> 一个区域化的文件大小格式化工具。通俗来说就是把大小转换为MB,G,KB之类的字符串.</li>
+<li><a href="http://developer.android.com/reference/android/app/ActionBar.html#hide" target="_blank" rel="external">ActionBar.hide()</a>顾名思义,隐藏和显示ActionBar,可以优雅地在全屏和带Actionbar之间转换.</li>
+<li><a href="http://developer.android.com/reference/android/text/util/Linkify.html#addLinks(android.text.Spannable, int" target="_blank" rel="external">Linkify.addLinks()</a>  在Text上添加链接.很实用.</li>
+<li><a href="http://developer.android.com/reference/android/text/StaticLayout.html" target="_blank" rel="external">StaticLayout</a> 在自定义 View 中渲染文字的时候很实用。</li>
+<li><a href="http://developer.android.com/reference/android/app/Activity.html#onBackPressed(" target="_blank" rel="external">onBackPressed()</a>很方便的管理back键的方法,有时候需要自己控制返回键的事件的时候,可以重写一下.比如加入 “点两下back键退出” 功能.</li>
+<li><a href="http://developer.android.com/reference/android/view/GestureDetector.html" target="_blank" rel="external">GestureDetector</a> 用来监听和相应对应的手势事件,比如点击,长按,慢滑动,快滑动,用起来很简单,比你自己实现要方便许多.</li>
+<li><a href="http://developer.android.com/reference/android/graphics/DrawFilter.html" target="_blank" rel="external">DrawFilter</a> 可以让你在不调用onDrew方法的情况下,操作canvas,比了个如,你可以在创建自定义 View 的时候设置一个 DrawFilter，给父 View 里面的所有 View 设置反别名。</li>
+<li><a href="http://developer.android.com/reference/android/app/ActivityManager.html#getMemoryClass(" target="_blank" rel="external">ActivityManager.getMemoryClass() </a>告诉你你的机器还有多少内存,在计算缓存大小的时候会比较有用.</li>
+<li><a href="http://developer.android.com/reference/android/view/ViewStub.html" target="_blank" rel="external">ViewStub</a> 它是一个初始化不做任何事情的 View，但是之后可以载入一个布局文件。在慢加载 View 中很适合做占位符。唯一的缺点就是不支持标签，所以如果你不太小心的话，可能会在视图结构中加入不需要的嵌套。</li>
+<li><a href="http://developer.android.com/reference/android/os/SystemClock.html#sleep(long" target="_blank" rel="external">SystemClock.sleep()</a> 这个方法在保证一定时间的 sleep 时很方便，通常我用来进行 debug 和模拟网络延时。</li>
+<li><a href="http://developer.android.com/reference/android/util/DisplayMetrics.html#density" target="_blank" rel="external">DisplayMetrics.density</a> 这个方法你可以获取设备像素密度,大部分时候最好让系统来自动进行缩放资源之类的操作,但是有时候控制的效果会更好一些.(尤其是在自定义View的时候).</li>
+<li><a href="http://developer.android.com/reference/android/util/Pair.html#create(A, B" target="_blank" rel="external">Pair.create()</a> 方便构建类和构造器的方法。</li>
+</ul>
+<h3 id="第三部分"><a href="#第三部分" class="headerlink" title="第三部分"></a>第三部分</h3><ul>
+<li><p><a href="http://developer.android.com/reference/android/net/UrlQuerySanitizer.html" target="_blank" rel="external">UrlQuerySanitizer</a>——使用这个工具可以方便对 URL 进行检查。</p>
+</li>
+<li><p><a href="http://developer.android.com/reference/android/app/Fragment.html#setArguments%28android.os.Bundle%29" target="_blank" rel="external">Fragment.setArguments</a>——因为在构建 Fragment 的时候不能加参数，所以这是个很好的东西，可以在创建 Fragment 之前设置参数（即使在 configuration 改变的时候仍然会导致销毁/重建）。</p>
+</li>
+<li><a href="http://developer.android.com/reference/android/app/DialogFragment.html#setShowsDialog%28boolean%29" target="_blank" rel="external">DialogFragment.setShowsDialog ()</a>—— 这是一个很巧妙的方式，DialogFragment 可以作为正常的 Fragment 显示！这里可以让 Fragment 承担双重任务。我通常在创建 Fragment 的时候把 onCreateView ()和 onCreateDialog ()都加上，就可以创建一个具有双重目的的 Fragment。</li>
+<li><a href="http://developer.android.com/reference/android/app/FragmentManager.html#enableDebugLogging%28boolean%29" target="_blank" rel="external">FragmentManager.enableDebugLogging ()</a>——在需要观察 Fragment 状态的时候会有帮助。</li>
+<li><a href="http://developer.android.com/reference/android/support/v4/content/LocalBroadcastManager.html" target="_blank" rel="external">LocalBroadcastManager</a>——这个会比全局的 broadcast 更加安全，简单，快速。——顾名思义，这是对数字进行格式化操作的时候用的。</li>
+<li><a href="http://developer.android.com/reference/android/graphics/Region.html#op%28android.graphics.Region,%20android.graphics.Region,%20android.graphics.Region.Op%29" target="_blank" rel="external">Region.op()</a>——我发现在对比两个渲染之前的区域的时候很实用，如果你有两条路径，那么怎么知道它们是不是会重叠呢？使用这个方法就可以做到。</li>
+<li><a href="http://developer.android.com/reference/android/app/Application.html#registerActivityLifecycleCallbacks%28android.app.Application.ActivityLifecycleCallbacks%29" target="_blank" rel="external">Application.registerActivityLifecycleCallbacks</a>——虽然缺少官方文档解释，不过我想它就是注册 Activity 的生命周期的一些回调方法（顾名思义），就是一个方便的工具。</li>
+<li><a href="http://tools.android.com/tech-docs/new-build-system/user-guide#TOC-Build-Types" target="_blank" rel="external">versionNameSuffix</a>——这个 gradle 设置可以让你在基于不同构建类型的 manifest 中修改版本名这个属性，例如，如果需要在在 debug 版本中以”-SNAPSHOT”结尾，那么就可以轻松的看出当前是 debug 版还是 release 版。</li>
+<li><a href="http://developer.android.com/reference/android/database/CursorJoiner.html" target="_blank" rel="external">CursorJoiner</a>——如果你是只使用一个数据库的话，使用 SQL 中的 join 就可以了，但是如果收到的数据是来自两个独立的 ContentProvider，那么 CursorJoiner 就很实用了。</li>
+<li><a href="http://www.genymotion.com/" target="_blank" rel="external"></a>Genymotion——一个非常快的 Android 模拟器，本人一直在用。</li>
+<li><a href="http://developer.android.com/guide/practices/screens_support.html#qualifiers" target="_blank" rel="external">nodpi</a>——在没有特别定义的情况下，很多修饰符(-mdpi,-hdpi,-xdpi等等)都会默认自动缩放 assets/dimensions，有时候我们需要保持显示一致，这种情况下就可以使用 -nodpi。</li>
+<li><a href="http://developer.android.com/reference/android/content/BroadcastReceiver.html#setDebugUnregister%28boolean%29" target="_blank" rel="external">BroadcastRecevier.setDebugUnregister ()</a>——又一个方便的调试工具。</li>
+<li><a href="http://developer.android.com/reference/android/app/Activity.html#recreate%28%29" target="_blank" rel="external">Activity.recreate ()</a>——强制让 Activity 重建。</li>
+<li><a href="http://developer.android.com/reference/android/content/pm/PackageManager.html#checkSignatures%28java.lang.String,%20java.lang.String%29" target="_blank" rel="external"></a>PackageManager.checkSignatures ()——如果同时安装了两个 app 的话，可以用这个方法检查。如果不进行签名检查的话，其他人可以轻易通过使用一样的包名来模仿你的 app。</li>
+</ul>
+<h3 id="第四部分"><a href="#第四部分" class="headerlink" title="第四部分"></a>第四部分</h3><ul>
+<li><p><a href="http://developer.android.com/reference/android/app/Activity.html#isChangingConfigurations%28%29" target="_blank" rel="external">Activity.isChangingConfigurations ()</a>——如果在 Activity 中 configuration 会经常改变的话，使用这个方法就可以不用手动做保存状态的工作了。</p>
+</li>
+<li><p><a href="http://developer.android.com/reference/android/content/SearchRecentSuggestionsProvider.html" target="_blank" rel="external">SearchRecentSuggestionsProvider</a>——可以创建最近提示效果的 provider，是一个简单快速的方法。</p>
+</li>
+<li><a href="http://developer.android.com/reference/android/view/ViewTreeObserver.html" target="_blank" rel="external">ViewTreeObserver</a>——这是一个很棒的工具。可以进入到 VIew 里面，并监控 View 结构的各种状态，通常我都用来做 View 的测量操作（自定义视图中经常用到）。</li>
+<li><a href="https://www.timroes.de/2013/09/12/speed-up-gradle/" target="_blank" rel="external"></a>org.gradle.daemon=true——这句话可以帮助减少 Gradle 构建的时间，仅在命令行编译的时候用到，因为 Android Studio 已经这样使用了。</li>
+<li><a href="http://developer.android.com/reference/android/database/DatabaseUtils.html" target="_blank" rel="external"></a>——一个包含各种数据库操作的使用工具。</li>
+<li><a href="http://developer.android.com/reference/android/widget/LinearLayout.html#attr_android:weightSum" target="_blank" rel="external"></a>android:weightSum (LinearLayout)——如果想使用 layout weights，但是却不想填充整个 LinearLayout 的话，就可以用 weightSum 来定义总的 weight 大小。</li>
+<li><a href="http://developer.android.com/reference/android/view/View.html#attr_android:duplicateParentState" target="_blank" rel="external"></a>android:duplicateParentState (View)——此方法可以使得子 View 可以复制父 View 的状态。比如如果一个 ViewGroup 是可点击的，那么可以用这个方法在它被点击的时候让它的子 View 都改变状态。</li>
+<li><a href="http://developer.android.com/reference/android/view/ViewGroup.html#attr_android:clipChildren" target="_blank" rel="external">DatabaseUtils</a>android:clipChildren (ViewGroup)——如果此属性设置为不可用，那么 ViewGroup 的子 View 在绘制的时候会超出它的范围，在做动画的时候需要用到。</li>
+<li><a href="http://developer.android.com/reference/android/widget/ScrollView.html#attr_android:fillViewport" target="_blank" rel="external">android:fillViewport (ScrollView)</a>——在这片文章中有详细介绍——可以指定图片使用重复填充的模式。</li>
+<li><a href="http://developer.android.com/reference/android/R.attr.html#exitFadeDuration" target="_blank" rel="external">android:enterFadeDuration/android:exitFadeDuration (Drawables)</a>——此属性在 Drawable 具有多种状态的时候，可以定义它展示前的淡入淡出效果。</li>
+<li><a href="http://developer.android.com/reference/android/widget/ImageView.html#attr_android:scaleType" target="_blank" rel="external">android:scaleType (ImageView)</a>——定义在 ImageView 中怎么缩放/剪裁图片，一般用的比较多的是“centerCrop”和“centerInside”。</li>
+<li><a href="http://developer.android.com/training/improving-layouts/reusing-layouts.html#Merge" target="_blank" rel="external">Merge</a>——此标签可以在另一个布局文件中包含别的布局文件，而不用再新建一个 ViewGroup，对于自定义 ViewGroup 的时候也需要用到；可以通过载入一个带有标签的布局文件来自动定义它的子部件。</li>
+<li><a href="http://developer.android.com/reference/android/util/AtomicFile.html" target="_blank" rel="external">AtomicFile</a>——通过使用备份文件进行文件的原子化操作。这个知识点之前我也写过，不过最好还是有出一个官方的版本比较好。</li>
+</ul>
+<h3 id="第五部分"><a href="#第五部分" class="headerlink" title="第五部分"></a>第五部分</h3><ul>
+<li><p><a href="https://developer.android.com/reference/android/support/v4/widget/ViewDragHelper.html" target="_blank" rel="external">ViewDragHelper</a> ——视图拖动是一个比较复杂的问题。这个类可以帮助解决不少问题。</p>
+</li>
+<li><p><a href="https://developer.android.com/reference/android/widget/PopupWindow.html" target="_blank" rel="external">PopupWindow</a>—-Android到处都在使用PopupWindow ，甚至你都没有意识到（标题导航条ActionBar，自动补全AutoComplete，编辑框错误提醒Edittext Errors）。这个类是创建浮层内容的主要方法。</p>
+</li>
+<li><a href="https://developer.android.com/reference/android/app/ActionBar.htmlgetThemedContext%28%29" target="_blank" rel="external">Actionbar.getThemrContext()</a>——导航栏的主题化是很复杂的（不同于Activity其他部分的主题化）。你可以得到一个上下文（Context），用这个上下文创建的自定义组件可以得到正确的主题。</li>
+<li><a href="https://developer.android.com/reference/android/media/ThumbnailUtils.html" target="_blank" rel="external">ThumbnailUtils</a>——帮助创建缩略图。通常我都是用现有的图片加载库（比如，Picasso 或者 Volley），不过这个ThumbnaiUtils可以创建视频缩略图。该API从V8才开始支持。</li>
+<li><a href="https://developer.android.com/reference/android/content/Context.htmlgetExternalFilesDir%28java.lang.String%29" target="_blank" rel="external">Context.getExternalFilesDir()</a>———— 申请了SD卡写权限后，你可以在SD的任何地方写数据，把你的数据写在设计好的合适位置会更加有礼貌。这样数据可以及时被清理，也会有更好的用户体验。此外，Android 4.0 Kitkat中在这个文件夹下写数据是不需要权限的，每个用户有自己的独立的数据存储路径。</li>
+<li><a href="https://developer.android.com/reference/android/util/SparseArray.html" target="_blank" rel="external">SparseArray</a>——Map的高效优化版本。推荐了解姐妹类SparseBooleanArray、SparseIntArray和SparseLongArray。</li>
+<li><a href="https://developer.android.com/reference/android/content/pm/PackageManager.htmlsetComponentEnabledSetting%28android.content.ComponentName,%20int,%20int%29" target="_blank" rel="external">PackageManager.setComponentEnabledSetting()</a>——可以用来启动或者禁用程序清单中的组件。对于关闭不需要的功能组件是非常赞的，比如关掉一个当前不用的广播接收器。</li>
+<li><a href="https://developer.android.com/reference/android/database/sqlite/SQLiteDatabase.htmlyieldIfContendedSafely%28%29" target="_blank" rel="external">SQLiteDatabase.yieldIfContendedSafely()</a>——让你暂时停止一个数据库事务， 这样你可以就不会占用太多的系统资源。</li>
+<li><a href="https://developer.android.com/reference/android/os/Environment.html#getExternalStoragePublicDirectory%28java.lang.String%29" target="_blank" rel="external">Environment.getExternalStoragePublicDirectory()</a>——还是那句话，用户期望在SD卡上得到统一的用户体验。用这个方法可以获得在用户设备上放置指定类型文件（音乐、图片等）的正确目录。</li>
+<li><a href="https://developer.android.com/reference/android/view/View.htmlgenerateViewId%28%29" target="_blank" rel="external">View.generateViewId()</a>——每次我都想要推荐动态生成控件的ID。需要注意的是，不要和已经存在的控件ID或者其他已经生成的控件ID重复。</li>
+<li><a href="https://developer.android.com/reference/android/app/ActivityManager.htmlclearApplicationUserData%28%29" target="_blank" rel="external">ActivityManager.clearApplicationUserData()</a>—— 一键清理你的app产生的用户数据，可能是做用户退出登录功能，有史以来最简单的方式了。</li>
+<li><a href="http://developer.android.com/reference/android/content/Context.htmlcreateConfigurationContext%28android.%E2%80%94%E2%80%94ontent.res.Configuration%29" target="_blank" rel="external">Context.createConfigurationContext()</a> ——自定义你的配置环境信息。我通常会遇到这样的问题：强制让一部分显示在某个特定的环境下（倒不是我一直这样瞎整，说来话长，你很难理解）。用这个实现起来可以稍微简单一点。</li>
+<li><a href="http://developer.android.com/reference/android/app/ActivityOptions.html" target="_blank" rel="external">ActivityOptions</a> ——方便的定义两个Activity切换的动画。</li>
+<li><a href="http://developer.android.com/reference/android/view/ViewParent.htmlrequestDisallowInterceptTouchEvent%28boolean%29" target="_blank" rel="external">ViewParent.requestDisallowInterceptTouchEvent()</a> ——Android系统触摸事件机制大多时候能够默认处理，不过有时候你需要使用这个方法来剥夺父级控件的控制权（顺便说一下，如果你想对Android触摸机制了解更多，<a href="https://www.youtube.com/watch?v=EZAoJU-nUyI这个演讲会令你惊叹不已。）" target="_blank" rel="external">https://www.youtube.com/watch?v=EZAoJU-nUyI这个演讲会令你惊叹不已。）</a></li>
+</ul>
+<p>本文地址：<a href="http://ezlippi.com/blog/2015/04/android-tips.html" target="_blank" rel="external">http://ezlippi.com/blog/2015/04/android-tips.html</a>,转载请注明出处。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+  
+        <div class="post-tags">
+          
+            <a href="/tags/android-tips/" rel="tag"># android, tips</a>
+          
+        </div>
+      
+
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>🐶 您的支持将鼓励我继续创作 🐶</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赞赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat-reward-img.jpg" alt="EZLippi WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay-reward-img.jpg" alt="EZLippi Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+        
+     <div>    
+      
+      <ul class="post-copyright">
+         <li class="post-copyright-link">
+          <strong>本文作者：</strong>
+          <a href="/" title="欢迎访问 EZLippi 的个人博客">EZLippi</a>
+        </li>
+
+        <li class="post-copyright-link">
+          <strong>本文标题：</strong>
+          <a href="http://www.ezlippi.com/blog/2015/04/android-tips.html" title="android实用小技巧">android实用小技巧</a>
+        </li>
+
+        <li class="post-copyright-link">
+          <strong>本文链接：</strong>
+          <a href="http://www.ezlippi.com/blog/2015/04/android-tips.html" title="android实用小技巧">http://www.ezlippi.com/blog/2015/04/android-tips.html</a>
+        </li>
+
+        <li class="post-copyright-date">
+            <strong>发布时间：</strong>2015年4月16日 - 09时04分
+        </li>  
+
+        <li class="post-copyright-license">
+          <strong>版权声明： </strong>
+          本文由 EZLippi 原创，采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh" rel="license" target="_blank">保留署名-非商业性使用-禁止演绎 4.0-国际许可协议</a> </br>转载请保留以上声明信息！
+        </li>
+      </ul>
+    
+  </div>  
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2015/04/web-transmission-basis.html" rel="next" title="网络传输基础">
+                <i class="fa fa-chevron-left"></i> 网络传输基础
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2015/04/java-virtual-mechine.html" rel="prev" title="Java虚拟机简介">
+                Java虚拟机简介 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjI4My84ODQ3"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="EZLippi" />
+          <p class="site-author-name" itemprop="name">EZLippi</p>
+          <p class="site-description motion-element" itemprop="description">Easy Lippi</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">95</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">103</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/EZLippi" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/ouyanglip" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/lippi-ouyang" target="_blank" title="zhihu">
+                  
+                    <i class="fa fa-fw fa-battery-3"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.woaitqs.cc/" title="Qisen Tang" target="_blank">Qisen Tang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://szhshp.org" title="szhshp的博客" target="_blank">szhshp的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://python.zhangwei.website" title="JuniorCoder" target="_blank">JuniorCoder</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hippo-jessy.com" title="Hippo" target="_blank">Hippo</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.zhihu.com/people/lippi-ouyang" title="友链出租" target="_blank">友链出租</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一部分"><span class="nav-number">1.</span> <span class="nav-text">第一部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二部分"><span class="nav-number">2.</span> <span class="nav-text">第二部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三部分"><span class="nav-number">3.</span> <span class="nav-text">第三部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第四部分"><span class="nav-number">4.</span> <span class="nav-text">第四部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第五部分"><span class="nav-number">5.</span> <span class="nav-text">第五部分</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">EZLippi</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io" rel="external nofollow">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">
+    NexT.Mist
+  </a>| Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a>
+</div>
+
+
+
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.lazyload/1.9.3/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("kJ2sJuSJeByLioULSXrJ5CSq-9Nh9j0Va", "uBWeNxCbFEWsOVDTmAInrDq3");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+	<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+
+</body>
+</html>

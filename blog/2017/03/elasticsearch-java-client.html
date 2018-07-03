@@ -1,0 +1,1396 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|consolas:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java,DataBase,ElasticSearch," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="EZLippi-浮生志" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="这篇文章主要介绍ElasticSearch客户端，包括Transport客户端、Jest客户端和Spring Data ElasticSearch,首先来看几个基本概念。
+ElasticSearch官方的介绍:
+ElasticSearch是一个分布式的、基于Json的检索引擎，具有水平扩展、高可靠性和易于管理等优点。
+为了更好的理解ealsticsearch的作用，我们可以看下Github的搜索页">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ElasticSearch Java客户端介绍">
+<meta property="og:url" content="http://www.ezlippi.com/blog/2017/03/elasticsearch-java-client.html">
+<meta property="og:site_name" content="EZLippi-浮生志">
+<meta property="og:description" content="这篇文章主要介绍ElasticSearch客户端，包括Transport客户端、Jest客户端和Spring Data ElasticSearch,首先来看几个基本概念。
+ElasticSearch官方的介绍:
+ElasticSearch是一个分布式的、基于Json的检索引擎，具有水平扩展、高可靠性和易于管理等优点。
+为了更好的理解ealsticsearch的作用，我们可以看下Github的搜索页">
+<meta property="og:image" content="http://www.ezlippi.com/images/elasticsearch_github.png">
+<meta property="og:image" content="http://www.ezlippi.com/images/indexing source.png">
+<meta property="og:updated_time" content="2017-03-11T14:17:23.308Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ElasticSearch Java客户端介绍">
+<meta name="twitter:description" content="这篇文章主要介绍ElasticSearch客户端，包括Transport客户端、Jest客户端和Spring Data ElasticSearch,首先来看几个基本概念。
+ElasticSearch官方的介绍:
+ElasticSearch是一个分布式的、基于Json的检索引擎，具有水平扩展、高可靠性和易于管理等优点。
+为了更好的理解ealsticsearch的作用，我们可以看下Github的搜索页">
+<meta name="twitter:image" content="http://www.ezlippi.com/images/elasticsearch_github.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.ezlippi.com/blog/2017/03/elasticsearch-java-client.html"/>
+
+
+
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "d1b06a58"
+    });
+  daovoice('update');
+  </script>
+
+
+  <title> ElasticSearch Java客户端介绍 | EZLippi-浮生志 </title>
+</head>
+
+  	 <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("kJ2sJuSJeByLioULSXrJ5CSq-9Nh9j0Va", "uBWeNxCbFEWsOVDTmAInrDq3");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = $(document.getElementById(url)).text() + ': 0';
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = $(document.getElementById(url)).text() + ': ' + object.get('time');
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content = $(document.getElementById(url)).text() + ': ' + counter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = $(document.getElementById(url)).text() + ': ' + newcounter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+});
+</script>
+  
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?340874ba9357cbe81570aa4ac1185941";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta custom-logo">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">EZLippi-浮生志</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description"></h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://www.ezlippi.com/blog/2017/03/elasticsearch-java-client.html">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="EZLippi">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="EZLippi-浮生志">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="EZLippi-浮生志" src="/images/avatar.jpg">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                ElasticSearch Java客户端介绍
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-10T13:38:32+08:00">
+                2017-03-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+		  
+			 
+          
+          
+             <span id="/blog/2017/03/elasticsearch-java-client.html" class="leancloud_visitors" data-flag-title="ElasticSearch Java客户端介绍">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">热度 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+				 <span>℃</span>
+             </span>
+          
+		   
+          
+
+		  
+            <div class="post-wordcount">
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  2,648
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  12
+                </span>
+              
+            </div>
+          
+		  
+          
+ 
+        
+
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这篇文章主要介绍ElasticSearch客户端，包括Transport客户端、Jest客户端和Spring Data ElasticSearch,首先来看几个基本概念。</p>
+<h2 id="ElasticSearch"><a href="#ElasticSearch" class="headerlink" title="ElasticSearch"></a>ElasticSearch</h2><p>官方的介绍:</p>
+<pre><code>ElasticSearch是一个分布式的、基于Json的检索引擎，具有水平扩展、高可靠性和易于管理等优点。
+</code></pre><p>为了更好的理解ealsticsearch的作用，我们可以看下Github的搜索页面:</p>
+<p><img src="/images/elasticsearch_github.png" alt=""></p>
+<p>我们在输入框输入一个单词，会列出许多查询结果，搜索引擎和数据库的区别就是相关性，<br>我们可以看到elasticsearch的项目排在第一位，很有可能别人在搜索这个关键词时想要访问这个项目。对于不同的应用影响排名的因素可能各不一样。</p>
+<p>如果你想建立一个像这样的搜索引擎，首先你的安装elasticsearch,elasticsearch很容易安装，你只需要先安装好Java虚拟机就可以了。</p>
+<a id="more"></a>
+<h2 id="安装和使用ElasticSearch"><a href="#安装和使用ElasticSearch" class="headerlink" title="安装和使用ElasticSearch"></a>安装和使用ElasticSearch</h2><p>ElasticSearch默认绑定9200端口，你可以通过<a href="http://localhost:9200来访问，你也可以用命令行客户端来执行HTTP请求，这里我用curl来执行" target="_blank" rel="external">http://localhost:9200来访问，你也可以用命令行客户端来执行HTTP请求，这里我用curl来执行</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.0.0.zip</span><br><span class="line">unzip elasticsearch-5.0.0.zip</span><br><span class="line"></span><br><span class="line">elasticsearch-5.0.0/bin/elasticsearch</span><br><span class="line"></span><br><span class="line">curl -XGET <span class="string">"http://localhost:9200"</span></span><br></pre></td></tr></table></figure>
+<p>你会收到一个Json Document响应，这个响应包含ElasticSearch的安装信息,如下所示:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  "name" : "LI8ZN-t",</span><br><span class="line">  "cluster_name" : "elasticsearch",</span><br><span class="line">  "cluster_uuid" : "UvbMAoJ8TieUqugCGw7Xrw",</span><br><span class="line">  "version" : &#123;</span><br><span class="line">    "number" : "5.0.0",</span><br><span class="line">    "build_hash" : "253032b",</span><br><span class="line">    "build_date" : "2016-10-26T04:37:51.531Z",</span><br><span class="line">    "build_snapshot" : false,</span><br><span class="line">    "lucene_version" : "6.2.0"</span><br><span class="line">  &#125;,</span><br><span class="line">  "tagline" : "You Know, for Search"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最重要的信息就是服务器已经启动成功，还包括ElasticSearch和Lucene的版本信息,Lucene是整个搜索功能的核心库。</p>
+<p>现在我们开始给ElasticSearch发送一个Json文档来存储数据，这时候我们要用POST请求，这里我就以一个食物搜索系统为例来讲解怎么添加数据到索引。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">curl -XPOST "http://localhost:9200/food/dish" -d'</span><br><span class="line">&#123;</span><br><span class="line">  "food": "Hainanese Chicken Rice",</span><br><span class="line">  "tags": ["chicken", "rice"],</span><br><span class="line">  "favorite": &#123;</span><br><span class="line">    "location": "Tian Tian",</span><br><span class="line">    "price": 5.00</span><br><span class="line">  &#125;</span><br><span class="line">&#125;'</span><br></pre></td></tr></table></figure>
+<p>我们还是用之前的端口，这时候我们加了两个字段在URL后面，food和dish，第一个是索引(index)的名称,这是所有文档的集合，第二个是类型(type)，相当于关系型数据库里的表。</p>
+<p>Dish用文档来建模，Elasticsearch支持多种数据类型,比如string,boolean,数值类型numerics以及嵌套的数据类型，比如上面的favorite。</p>
+<p>接下来我们再通过一个POST请求添加一个文档:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">curl -XPOST "http://localhost:9200/food/dish" -d'</span><br><span class="line">&#123;</span><br><span class="line">  "food": "Ayam Penyet",</span><br><span class="line">  "tags": ["chicken", "indonesian"],</span><br><span class="line">  "spicy": true</span><br><span class="line">&#125;'</span><br></pre></td></tr></table></figure>
+<p>这一次文档的结构有啥不同，它没有包含faorite元素，但添加了另一个spicy属性。同个类型的文档可能差异很大。</p>
+<p>建立索引之后，我们就可以来搜索关键字了。我们可以在链接的后面加一个_search，然后添加一个查询参数：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -XGET <span class="string">"http://localhost:9200/food/dish/_search?q=chicken"</span></span><br></pre></td></tr></table></figure>
+<p>这个请求在dish类型里搜索包含chicken字段的文档，结果如下:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;"took":57,"timed_out":false,"_shards":&#123;"total":5,"successful":5,"failed":0&#125;,"hits":&#123;"total":2,"max_score":0.3666863,"hits":[&#123;"_index":"food","_type":"dish","_id":"AVq9cnkMZAUVR2HS07Sa","_score":0.3666863,"_source":</span><br><span class="line">&#123;</span><br><span class="line">  "food": "Hainanese Chicken Rice",</span><br><span class="line">  "tags": ["chicken", "rice"],</span><br><span class="line">  "favorite": &#123;</span><br><span class="line">    "location": "Tian Tian",</span><br><span class="line">    "price": 5.00</span><br><span class="line">  &#125;</span><br><span class="line">&#125;&#125;,&#123;"_index":"food","_type":"dish","_id":"AVq9cqoiZAUVR2HS07Sb","_score":0.2876821,"_source":</span><br><span class="line">&#123;</span><br><span class="line">  "food": "Ayam Penyet",</span><br><span class="line">  "tags": ["chicken", "indonesian"],</span><br><span class="line">  "spicy": true</span><br><span class="line">&#125;&#125;]&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>搜索结果包含了找到文档的数量，最重要的属性是hits数组，这里面包含索引到的source原始数据。Elasticsearch提供基于JSON结构的查询DSL，如下所示:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">curl -XPOST "http://localhost:9200/food/dish/_search" -d'</span><br><span class="line">&#123;</span><br><span class="line">  "query": &#123;</span><br><span class="line">    "bool": &#123;</span><br><span class="line">      "must": &#123;</span><br><span class="line">      "match": &#123;</span><br><span class="line">        "_all": "rice"</span><br><span class="line">      &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      "filter": &#123;</span><br><span class="line">    "term": &#123;</span><br><span class="line">      "tags.keyword": "chicken"</span><br><span class="line">    &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;'</span><br></pre></td></tr></table></figure>
+<p>上面这个JSON是在搜索包含rice字段以及tags字段里有chicken的文档，elasticsearch 5.0提供了.keyword字段来精确查询。</p>
+<p>到目前为止我们只访问了单个ElasticSearch实例,ElasticSearch具有水平伸缩的特性，我们可以添加更多的node，我们仍然可以连接第一个node,它可以将请求转发到集群中的其他节点。</p>
+<h2 id="ElasticSearch客户端介绍"><a href="#ElasticSearch客户端介绍" class="headerlink" title="ElasticSearch客户端介绍"></a>ElasticSearch客户端介绍</h2><h3 id="Transport客户端"><a href="#Transport客户端" class="headerlink" title="Transport客户端"></a>Transport客户端</h3><p>Transport客户端从ElasticSearch第一个版本就有了，也是使用最广泛的客户端，使用它需要在你的构建工具中添加依赖，我这里用的Gradle：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">dependencies</span> &#123;</span><br><span class="line">    <span class="keyword">compile</span> <span class="keyword">group</span>: <span class="string">'org.elasticsearch.client'</span>,</span><br><span class="line">        name: <span class="string">'transport'</span>,</span><br><span class="line">        version: <span class="string">'5.0.0'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过客户端你可以使用ElasticSearch的所有功能，你可以通过Settings对象来初始化一个TransportClient实例，你可以绑定多个节点的地址:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">TransportAddress address =</span><br><span class="line">    <span class="keyword">new</span> InetSocketTransportAddress(</span><br><span class="line">        InetAddress.getByName(<span class="string">"localhost"</span>), <span class="number">9300</span>);</span><br><span class="line"></span><br><span class="line">Client client = <span class="keyword">new</span> PreBuiltTransportClient(Settings.EMPTY)</span><br><span class="line">    addTransportAddress(address);</span><br></pre></td></tr></table></figure>
+<h3 id="查询接口"><a href="#查询接口" class="headerlink" title="查询接口"></a>查询接口</h3><p>对于之前的那条查询:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">curl -XPOST "http://localhost:9200/food/dish/_search" -d'</span><br><span class="line">&#123;</span><br><span class="line">  "query": &#123;</span><br><span class="line">    "bool": &#123;</span><br><span class="line">      "must": &#123;</span><br><span class="line">      "match": &#123;</span><br><span class="line">        "_all": "rice"</span><br><span class="line">      &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      "filter": &#123;</span><br><span class="line">    "term": &#123;</span><br><span class="line">      "tags.keyword": "chicken"</span><br><span class="line">    &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;'</span><br></pre></td></tr></table></figure>
+<p>我们将它转换成Java代码:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">SearchResponse searchResponse = client</span><br><span class="line">   .prepareSearch(<span class="string">"food"</span>)</span><br><span class="line">   .setQuery(</span><br><span class="line">    boolQuery().</span><br><span class="line">      must(matchQuery(<span class="string">"_all"</span>, <span class="string">"rice"</span>)).</span><br><span class="line">      filter(termQuery(<span class="string">"tags.keyword"</span>, <span class="string">"chicken"</span>)))</span><br><span class="line">   .execute().actionGet();</span><br><span class="line"></span><br><span class="line">assertEquals(<span class="number">1</span>, searchResponse.getHits().getTotalHits());</span><br><span class="line"></span><br><span class="line">SearchHit hit = searchResponse.getHits().getAt(<span class="number">0</span>);</span><br><span class="line">String food = hit.getSource().get(<span class="string">"food"</span>).toString();</span><br></pre></td></tr></table></figure>
+<p>我这里调用prepareSearch来请求SearchSourceBuilder，然后我们可以通过静态帮助方法来设置一个查询，上面这个例子用的是bool查询，这个查询的must节点有个match查询，filter节点有个term查询。</p>
+<p>调用execute方法会返回一个future对象，actionGet是个阻塞调用，SearchResponse的结果和我们用HTTP访问的结果是等价的。</p>
+<h3 id="添加索引接口"><a href="#添加索引接口" class="headerlink" title="添加索引接口"></a>添加索引接口</h3><p>我们可以用不同的方法来添加索引，其中之一就是使用jsonBuilder来创建一个Json表达式:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">XContentBuilder builder = jsonBuilder()</span><br><span class="line">    .startObject()</span><br><span class="line">        .field(<span class="string">"food"</span>, <span class="string">"Roti Prata"</span>)</span><br><span class="line">        .array(<span class="string">"tags"</span>, <span class="keyword">new</span> String [] &#123;<span class="string">"curry"</span>&#125;)</span><br><span class="line">        .startObject(<span class="string">"favorite"</span>)</span><br><span class="line">        .field(<span class="string">"location"</span>, <span class="string">"Tiong Bahru"</span>)</span><br><span class="line">        .field(<span class="string">"price"</span>, <span class="number">2.00</span>)</span><br><span class="line">        .endObject()</span><br><span class="line">    .endObject();</span><br></pre></td></tr></table></figure>
+<p>上面的表达式使用不同的method来创建JSON文档，这个文档可以作为IndexRequest的source：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">IndexResponse resp = client.prepareIndex(<span class="string">"food"</span>,<span class="string">"dish"</span>)</span><br><span class="line">        .setSource(builder)</span><br><span class="line">        .execute()</span><br><span class="line">        .actionGet();</span><br></pre></td></tr></table></figure>
+<p>除了使用jsonBuilder我们还可以用其他的选项，如下所示:</p>
+<p><img src="/images/indexing source.png" alt=""></p>
+<p>对于比较简单的数据结构你可以使用Map来构造数据，可以结合序列化插件入jackson来完成对象的序列化。</p>
+<p>从前面的例子我们可以看到Transport客户端接收一个或多个节点的地址，你可能注意到这里用的是9300而不是9200端口，因为Transport客户端不使用HTTP来通信，它内部通过传输层协议来通信。</p>
+<p>前面只连接了一个节点，一旦这个节点挂了我们就不能访问数据了，如果你需要高可用性你可以启用sniffing选项来允许你的客户端连接集群中的其他节点,只需要把client.transport.sniff选项为true即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">TransportAddress address =</span><br><span class="line">    <span class="keyword">new</span> InetSocketTransportAddress(</span><br><span class="line">        InetAddress.getByName(<span class="string">"localhost"</span>), <span class="number">9300</span>);</span><br><span class="line"></span><br><span class="line">Settings settings = Settings.builder()</span><br><span class="line">            .put(<span class="string">"client.transport.sniff"</span>, <span class="keyword">true</span>)</span><br><span class="line">            .build();</span><br><span class="line"></span><br><span class="line">Client client = <span class="keyword">new</span> PreBuiltTransportClient(settings)</span><br><span class="line">    addTransportAddress(address);</span><br></pre></td></tr></table></figure>
+<p>更多关于sniffing特性可以参考elasticsearch的官方文档:<a href="https://www.elastic.co/guide/en/elasticsearch/client/java-api/current/transport-client.html" target="_blank" rel="external">https://www.elastic.co/guide/en/elasticsearch/client/java-api/current/transport-client.html</a></p>
+<h2 id="Jest客户端"><a href="#Jest客户端" class="headerlink" title="Jest客户端"></a>Jest客户端</h2><p>jest客户端能够发送请求给ElasticSearch，首先添加依赖:</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">dependencies</span> &#123;</span><br><span class="line">    <span class="keyword">compile</span> <span class="keyword">group</span>: <span class="string">'io.searchbox'</span>,</span><br><span class="line">        name: <span class="string">'jest'</span>,</span><br><span class="line">        version: <span class="string">'2.0.0'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们可以用过工厂方法来创建一个JestClient:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">JestClientFactory factory = <span class="keyword">new</span> JestClientFactory();</span><br><span class="line">factory.setHttpClientConfig(<span class="keyword">new</span> HttpClientConfig</span><br><span class="line">            .Builder(<span class="string">"http://localhost:9200"</span>)</span><br><span class="line">            .multiThreaded(<span class="keyword">true</span>)</span><br><span class="line">            .build());</span><br><span class="line"></span><br><span class="line">JestClient client = factory.getObject();</span><br></pre></td></tr></table></figure>
+<p>和普通的Rest客户端一样，Jest不支持生成查询，你可以使用string模板或者复用ElasticSearch builders，builder可以用来创建搜索请求:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">String query = jsonStringThatMagicallyAppears;</span><br><span class="line"></span><br><span class="line">Search search = <span class="keyword">new</span> Search.Builder(query)</span><br><span class="line">    .addIndex(<span class="string">"library"</span>)</span><br><span class="line">    .build();</span><br><span class="line"></span><br><span class="line">SearchResult result = client.execute(search);</span><br><span class="line">assertEquals(Integer.valueOf(<span class="number">1</span>), result.getTotal());</span><br></pre></td></tr></table></figure>
+<p>获取查询结果:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">JsonObject jsonObject = result.getJsonObject();</span><br><span class="line">JsonObject hitsObj = jsonObject.getAsJsonObject(<span class="string">"hits"</span>);</span><br><span class="line">JsonArray hits = hitsObj.getAsJsonArray(<span class="string">"hits"</span>);</span><br><span class="line">JsonObject hit = hits.get(<span class="number">0</span>).getAsJsonObject();</span><br><span class="line"></span><br><span class="line"><span class="comment">// ... more boring code</span></span><br></pre></td></tr></table></figure>
+<p>上面这个不是正常使用Jest的方法，Jest支持搜索和索引Java Bean，比如说我用下面这个Java Bean来表示Dish类:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Dish</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String food;</span><br><span class="line">    <span class="keyword">private</span> List&lt;String&gt; tags;</span><br><span class="line">    <span class="keyword">private</span> Favorite favorite;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@JestId</span></span><br><span class="line">    <span class="keyword">private</span> String id;</span><br><span class="line"></span><br><span class="line">     <span class="comment">// ... getters and setters</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以自动将查询结果转换成Dish对象:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Dish dish = result.getFirstHit(Dish.class).source;</span><br><span class="line"></span><br><span class="line">assertEquals(<span class="string">"Roti Prata"</span>, dish.getFood());</span><br></pre></td></tr></table></figure>
+<p>当通过HTTP来访问ElasticSearch时Jest是个不错的选择。</p>
+<h2 id="Spring-Data-ElasticSearch"><a href="#Spring-Data-ElasticSearch" class="headerlink" title="Spring Data ElasticSearch"></a>Spring Data ElasticSearch</h2><p>Spring Data项目提供了通用的编程模型来访问不同的数据源，吸引人的特性是Spring Data允许你使用接口来定义查询，比如比较流行的用来访问关系型数据库的Spring Data JPA以及Spring Data MongoDB。</p>
+<p>首先添加依赖:</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">dependencies</span> &#123;</span><br><span class="line">    <span class="keyword">compile</span> <span class="keyword">group</span>: <span class="string">'org.springframework.data'</span>,</span><br><span class="line">    name: <span class="string">'spring-data-elasticsearch'</span>,</span><br><span class="line">    version: <span class="string">'2.0.4.RELEASE'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用自定义注解来表示要索引的文档:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Document</span>(indexName = <span class="string">"spring_dish"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Dish</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="keyword">private</span> String id;</span><br><span class="line">    <span class="keyword">private</span> String food;</span><br><span class="line">    <span class="keyword">private</span> List&lt;String&gt; tags;</span><br><span class="line">    <span class="keyword">private</span> Favorite favorite;</span><br><span class="line"></span><br><span class="line">     <span class="comment">// more code</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们可以定义一个接口来访问文档，这里使用ElasticsearchCrudRepository，它提供通用的索引和查询操作:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">DishRepository</span> </span><br><span class="line">  <span class="keyword">extends</span> <span class="title">ElasticsearchCrudRepository</span>&lt;<span class="title">Dish</span>, <span class="title">String</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Spring Data ElasticSearch支持XML配置:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">elasticsearch:transport-client</span> <span class="attr">id</span>=<span class="string">"client"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">name</span>=<span class="string">"elasticsearchTemplate"</span> </span><br><span class="line">  <span class="attr">class</span>=<span class="string">"o.s.d.elasticsearch.core.ElasticsearchTemplate"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">name</span>=<span class="string">"client"</span> <span class="attr">ref</span>=<span class="string">"client"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">elasticsearch:repositories</span> </span><br><span class="line">  <span class="attr">base-package</span>=<span class="string">"ezlippi.elasticsearch.springdata"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<p>transport-client用于实例化transport客户端，elasticsearchTemplate提供访问ElasticSearch的通用操作，最后repositories元素告诉Spring Data扫描继承自Spring Data接口的接口，Spring会自动为这些接口创建实例。</p>
+<p>接下来就可以在Java代码中使用repository来执行索引操作:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Dish mie = <span class="keyword">new</span> Dish();</span><br><span class="line">mie.setId(<span class="string">"hokkien-prawn-mie"</span>);</span><br><span class="line">mie.setFood(<span class="string">"Hokkien Prawn Mie"</span>);</span><br><span class="line">mie.setTags(Arrays.asList(<span class="string">"noodles"</span>, <span class="string">"prawn"</span>));</span><br><span class="line"></span><br><span class="line">repository.save(Arrays.asList(hokkienPrawnMie));</span><br><span class="line"></span><br><span class="line"><span class="comment">// one line ommited</span></span><br><span class="line"></span><br><span class="line">Iterable&lt;Dish&gt; dishes = repository.findAll();</span><br><span class="line"></span><br><span class="line">Dish dish = repository.findOne(<span class="string">"hokkien-prawn-mie"</span>);</span><br></pre></td></tr></table></figure>
+<p>根据ID来查询文档没什么意思，你可以添加更多方法到你的接口里:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">DishRepository</span> </span><br><span class="line">  <span class="keyword">extends</span> <span class="title">ElasticsearchCrudRepository</span>&lt;<span class="title">Dish</span>, <span class="title">String</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function">List&lt;Dish&gt; <span class="title">findByFood</span><span class="params">(String food)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">List&lt;Dish&gt; <span class="title">findByTagsAndFavoriteLocation</span><span class="params">(String tag, String location)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">List&lt;Dish&gt; <span class="title">findByFavoritePriceLessThan</span><span class="params">(Double price)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Query</span>(<span class="string">"&#123;\"query\": &#123;\"match_all\": &#123;&#125;&#125;&#125;"</span>)</span><br><span class="line">    <span class="function">List&lt;Dish&gt; <span class="title">customFindAll</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>大部分方法都是以findBy+属性名开头，比如findByFood会查询food属性，结构化查询也是支持的，比如上面的lessThan，上面这个接口会查询比给定价格少的dishes,最后这个查询使用不同的方式，可以使用Query注解来添加查询。</p>
+<p>更多关于Spring Data ElasticSearch的知识可以参考Spring的文档:<a href="http://docs.spring.io/spring-data/elasticsearch/docs/current/reference/html/#project" target="_blank" rel="external">http://docs.spring.io/spring-data/elasticsearch/docs/current/reference/html/#project</a></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>上面介绍了几种常用的ElasticSearch Java客户端，可以针对实际使用场景来选择。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+  
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/DataBase/" rel="tag"># DataBase</a>
+          
+            <a href="/tags/ElasticSearch/" rel="tag"># ElasticSearch</a>
+          
+        </div>
+      
+
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>🐶 您的支持将鼓励我继续创作 🐶</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赞赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat-reward-img.jpg" alt="EZLippi WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay-reward-img.jpg" alt="EZLippi Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+        
+     <div>    
+      
+      <ul class="post-copyright">
+         <li class="post-copyright-link">
+          <strong>本文作者：</strong>
+          <a href="/" title="欢迎访问 EZLippi 的个人博客">EZLippi</a>
+        </li>
+
+        <li class="post-copyright-link">
+          <strong>本文标题：</strong>
+          <a href="http://www.ezlippi.com/blog/2017/03/elasticsearch-java-client.html" title="ElasticSearch Java客户端介绍">ElasticSearch Java客户端介绍</a>
+        </li>
+
+        <li class="post-copyright-link">
+          <strong>本文链接：</strong>
+          <a href="http://www.ezlippi.com/blog/2017/03/elasticsearch-java-client.html" title="ElasticSearch Java客户端介绍">http://www.ezlippi.com/blog/2017/03/elasticsearch-java-client.html</a>
+        </li>
+
+        <li class="post-copyright-date">
+            <strong>发布时间：</strong>2017年3月10日 - 13时03分
+        </li>  
+
+        <li class="post-copyright-license">
+          <strong>版权声明： </strong>
+          本文由 EZLippi 原创，采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh" rel="license" target="_blank">保留署名-非商业性使用-禁止演绎 4.0-国际许可协议</a> </br>转载请保留以上声明信息！
+        </li>
+      </ul>
+    
+  </div>  
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2017/02/mybatis-intorduction.html" rel="next" title="MyBatis教程">
+                <i class="fa fa-chevron-left"></i> MyBatis教程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2017/08/powermock-introduction.html" rel="prev" title="单元测试框架PowerMock教程">
+                单元测试框架PowerMock教程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjI4My84ODQ3"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="EZLippi" />
+          <p class="site-author-name" itemprop="name">EZLippi</p>
+          <p class="site-description motion-element" itemprop="description">Easy Lippi</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">95</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">103</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/EZLippi" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/ouyanglip" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/lippi-ouyang" target="_blank" title="zhihu">
+                  
+                    <i class="fa fa-fw fa-battery-3"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.woaitqs.cc/" title="Qisen Tang" target="_blank">Qisen Tang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://szhshp.org" title="szhshp的博客" target="_blank">szhshp的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://python.zhangwei.website" title="JuniorCoder" target="_blank">JuniorCoder</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hippo-jessy.com" title="Hippo" target="_blank">Hippo</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.zhihu.com/people/lippi-ouyang" title="友链出租" target="_blank">友链出租</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ElasticSearch"><span class="nav-number">1.</span> <span class="nav-text">ElasticSearch</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装和使用ElasticSearch"><span class="nav-number">2.</span> <span class="nav-text">安装和使用ElasticSearch</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ElasticSearch客户端介绍"><span class="nav-number">3.</span> <span class="nav-text">ElasticSearch客户端介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Transport客户端"><span class="nav-number">3.1.</span> <span class="nav-text">Transport客户端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查询接口"><span class="nav-number">3.2.</span> <span class="nav-text">查询接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加索引接口"><span class="nav-number">3.3.</span> <span class="nav-text">添加索引接口</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Jest客户端"><span class="nav-number">4.</span> <span class="nav-text">Jest客户端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Data-ElasticSearch"><span class="nav-number">5.</span> <span class="nav-text">Spring Data ElasticSearch</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">EZLippi</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io" rel="external nofollow">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">
+    NexT.Mist
+  </a>| Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a>
+</div>
+
+
+
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.lazyload/1.9.3/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("kJ2sJuSJeByLioULSXrJ5CSq-9Nh9j0Va", "uBWeNxCbFEWsOVDTmAInrDq3");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+	<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+
+</body>
+</html>
