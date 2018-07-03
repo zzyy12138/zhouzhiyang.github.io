@@ -1,0 +1,1340 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|consolas:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java,Instrumention," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="EZLippi-浮生志" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="开发环境定位问题手段较多,可以加日志、远程调试hotswap等,但在生产环境就没这么方便了,服务上线后就不能随便重启,比如某个接口有时候返回的数据异常,日志又没打印详情,这时候又想知道方法的入参是什么、是否调用了内部某个方法，或者接口响应时间较长想排查具体在哪个方法上调用比较耗时，这些场景都需要用到动态追踪的技术,btrace就是一个能帮助你分析和监控JVM的工具,采用了动态attach到目标J">
+<meta property="og:type" content="article">
+<meta property="og:title" content="btrace动态追踪技术解析">
+<meta property="og:url" content="http://www.ezlippi.com/blog/2018/01/btrace-introduce.html">
+<meta property="og:site_name" content="EZLippi-浮生志">
+<meta property="og:description" content="开发环境定位问题手段较多,可以加日志、远程调试hotswap等,但在生产环境就没这么方便了,服务上线后就不能随便重启,比如某个接口有时候返回的数据异常,日志又没打印详情,这时候又想知道方法的入参是什么、是否调用了内部某个方法，或者接口响应时间较长想排查具体在哪个方法上调用比较耗时，这些场景都需要用到动态追踪的技术,btrace就是一个能帮助你分析和监控JVM的工具,采用了动态attach到目标J">
+<meta property="og:image" content="http://www.ezlippi.com/images/images/btrace.png">
+<meta property="og:updated_time" content="2018-01-25T15:45:41.529Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="btrace动态追踪技术解析">
+<meta name="twitter:description" content="开发环境定位问题手段较多,可以加日志、远程调试hotswap等,但在生产环境就没这么方便了,服务上线后就不能随便重启,比如某个接口有时候返回的数据异常,日志又没打印详情,这时候又想知道方法的入参是什么、是否调用了内部某个方法，或者接口响应时间较长想排查具体在哪个方法上调用比较耗时，这些场景都需要用到动态追踪的技术,btrace就是一个能帮助你分析和监控JVM的工具,采用了动态attach到目标J">
+<meta name="twitter:image" content="http://www.ezlippi.com/images/images/btrace.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.ezlippi.com/blog/2018/01/btrace-introduce.html"/>
+
+
+
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "d1b06a58"
+    });
+  daovoice('update');
+  </script>
+
+
+  <title> btrace动态追踪技术解析 | EZLippi-浮生志 </title>
+</head>
+
+  	 <!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("kJ2sJuSJeByLioULSXrJ5CSq-9Nh9j0Va", "uBWeNxCbFEWsOVDTmAInrDq3");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = $(document.getElementById(url)).text() + ': 0';
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = $(document.getElementById(url)).text() + ': ' + object.get('time');
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content = $(document.getElementById(url)).text() + ': ' + counter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = $(document.getElementById(url)).text() + ': ' + newcounter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+});
+</script>
+  
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?340874ba9357cbe81570aa4ac1185941";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta custom-logo">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">EZLippi-浮生志</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description"></h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://www.ezlippi.com/blog/2018/01/btrace-introduce.html">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="EZLippi">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="EZLippi-浮生志">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="EZLippi-浮生志" src="/images/avatar.jpg">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                btrace动态追踪技术解析
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-01-26T13:38:32+08:00">
+                2018-01-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+		  
+			 
+          
+          
+             <span id="/blog/2018/01/btrace-introduce.html" class="leancloud_visitors" data-flag-title="btrace动态追踪技术解析">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">热度 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+				 <span>℃</span>
+             </span>
+          
+		   
+          
+
+		  
+            <div class="post-wordcount">
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  2,944
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  13
+                </span>
+              
+            </div>
+          
+		  
+          
+ 
+        
+
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p> 开发环境定位问题手段较多,可以加日志、远程调试hotswap等,但在生产环境就没这么方便了,服务上线后就不能随便重启,比如某个接口有时候返回的数据异常,日志又没打印详情,这时候又想知道方法的入参是什么、是否调用了内部某个方法，或者接口响应时间较长想排查具体在哪个方法上调用比较耗时，这些场景都需要用到动态追踪的技术,btrace就是一个能帮助你分析和监控JVM的工具,采用了动态attach到目标JVM的方法,非侵入式监控,主要使用了JVMT(JVM Tool Interface)和Instrumentation技术,国内介绍btrace的文章并不多,最近正好要在部门内分享btrace的使用心得,因此整理了这篇文档,希望能够把btrace里的技术讲清楚。</p>
+<a id="more"></a>
+<h2 id="btrace工作流程"><a href="#btrace工作流程" class="headerlink" title="btrace工作流程"></a>btrace工作流程</h2><p>btrace主要采用了Java Compiler API、ASM字节码修改技术、JVMT(JVM Tool Interface)和jdk1.6开始提供的Instrumentation技术,Java Compiler API用于在运行时把java源码编码成class文件;通过ASM字节码修改框架来实现对类的修改,通过tools.jar里提供的attach接口将btrace-agent 动态attach到目标JVM，实现非侵入式监控,btrace-agent会在目标JVM中创建一个Socket服务端,用于实现和btrace-client JVM的通信, btrace-agent会根据你的追踪脚本来生成字节码修改工具类,注册到ClassFileTransformer上,当JVM加载类时会调用ClassFileTransformer的transfrom方法(首次建立连接时会获取所有加载的类触发一次transform),btrace-agent会在transform()方法内对类的字节码进行修改,从而达到追踪的目标。</p>
+<p>整个btrace的流程图如下所示:<br><img src="/images/images/btrace.png" alt=""></p>
+<h2 id="Instrumentation技术简介"><a href="#Instrumentation技术简介" class="headerlink" title="Instrumentation技术简介"></a>Instrumentation技术简介</h2><p>instrumentation技术提供了在运行时修改类的字节码的入口,你可以在启动脚本中通过-javaagent:jarpath[=options]选项添加到虚拟机参数中,jarpath是agent jar的路径,可以提供一些参数给agent，agent需要自己解析传递进来的参数,agent jar包的manifest文件必须包含Premain-Class属性，这个值定义了agent class的入口,JVM在初始化后会调用agent-class的premain方法,premain方法的定义如下:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">premain</span><span class="params">(String agentArgs, Instrumentation inst)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<p>如果agent class没有实现上述方法,JVM会尝试调用下面这个重载方法:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">premain</span><span class="params">(String agentArgs)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<p>同时你也可以在agent class中添加一个agentmain方法，这个方法主要是用于在JVM启动之后动态attach到目标JVM后调用的,如果agent是通过命令行参数加载的,则agentmain方法不会被调用;如果agent class无法加载或者agent class没有合适的premain方法,又或者premain方法内部抛出了未捕捉到的异常,JVM会退出。</p>
+<p>如果需要在JVM启动之后动态attach agent到目标JVM，需要在agent jar包manifest文件包含Agent-Class属性，值为agent-class的全限定名称,agent class必须实agentmain方法，和premain方法类似，JVM会先尝试调用下面的agentmain方法:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">agentmain</span><span class="params">(String agentArgs, Instrumentation inst)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<p>如果找不到上面的方法则尝试调用下面的重载方法:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">agentmain</span><span class="params">(String agentArgs)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<h2 id="btrace源码分析"><a href="#btrace源码分析" class="headerlink" title="btrace源码分析"></a>btrace源码分析</h2><h3 id="btrace-client启动过程"><a href="#btrace-client启动过程" class="headerlink" title="btrace-client启动过程"></a>btrace-client启动过程</h3><p>使用btrace时需要给btrace脚本传递目标进程的pid以及用于追踪的脚本(java源码),这部分代码的入口在com.sun.btrace.client.Main类的main方法,btrace客户端启动后会先调用Java编译api将追踪的脚本编译成class文件,编译之后attach btrace-agent到目标进程,代码如下所示:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//com.sun.btrace.client.Main</span></span><br><span class="line">Client client = <span class="keyword">new</span> Client(port, OUTPUT_FILE, PROBE_DESC_PATH,</span><br><span class="line">    DEBUG, TRACK_RETRANSFORM, TRUSTED, DUMP_CLASSES, DUMP_DIR, statsdDef);</span><br><span class="line"><span class="keyword">if</span> (! <span class="keyword">new</span> File(fileName).exists()) &#123;</span><br><span class="line">    errorExit(<span class="string">"File not found: "</span> + fileName, <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">byte</span>[] code = client.compile(fileName, classPath, includePath);</span><br><span class="line"><span class="keyword">if</span> (code == <span class="keyword">null</span>) &#123;</span><br><span class="line">    errorExit(<span class="string">"BTrace compilation failed"</span>, <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line">client.attach(pid, <span class="keyword">null</span>, classPath);</span><br></pre></td></tr></table></figure></p>
+<p>上面的includePath是通过-cp启动参数传递给btrace客户端进程的,用于把-cp指定的路径动态添加到目标虚拟机的bootClasspath上,attach方法先找到btrace-agent.jar的路径,然后继续:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//com.sun.btrace.client.Client</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">attach</span><span class="params">(String pid, String sysCp, String bootCp)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">	String agentPath = <span class="string">"/btrace-agent.jar"</span>;</span><br><span class="line">	String tmp = Client.class.getClassLoader().getResource(<span class="string">"com/sun/btrace"</span>).toString();</span><br><span class="line">	tmp = tmp.substring(<span class="number">0</span>, tmp.indexOf(<span class="string">'!'</span>));</span><br><span class="line">	tmp = tmp.substring(<span class="string">"jar:"</span>.length(), tmp.lastIndexOf(<span class="string">'/'</span>));</span><br><span class="line">	agentPath = tmp + agentPath;</span><br><span class="line">	agentPath = <span class="keyword">new</span> File(<span class="keyword">new</span> URI(agentPath)).getAbsolutePath();</span><br><span class="line">	attach(pid, agentPath, sysCp, bootCp);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>attach方法里先把tools.jar的路径找出来,这个路径后面要添加到systemClassPath(appClassLoader的加载路径)上，tools.jar是JDK的一个工具类库,包括javac、attach以及监控jvm的工具集比如jstack、jmap、jstat的入口都在这里面,如果没有tools.jar就无法执行这些命令,然后通过VirtualMachine的attach方法获取到目标虚拟机，最后调用loadAgent方法将btrace-agent动态加载,代码如下:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//com.sun.btrace.client.Client</span></span><br><span class="line">VirtualMachine vm = <span class="keyword">null</span>;</span><br><span class="line">vm = VirtualMachine.attach(pid);</span><br><span class="line">String toolsPath = getToolsJarPath(</span><br><span class="line">    serverVmProps.getProperty(<span class="string">"java.class.path"</span>),</span><br><span class="line">    serverVmProps.getProperty(<span class="string">"java.home"</span>)</span><br><span class="line">);</span><br><span class="line"><span class="keyword">if</span> (sysCp == <span class="keyword">null</span>) &#123;</span><br><span class="line">    sysCp = toolsPath;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    sysCp = sysCp + File.pathSeparator + toolsPath;</span><br><span class="line">&#125;</span><br><span class="line">agentArgs += <span class="string">",systemClassPath="</span> + sysCp;</span><br><span class="line">vm.loadAgent(agentPath, agentArgs);</span><br></pre></td></tr></table></figure></p>
+<h3 id="btrace-agent初始化过程"><a href="#btrace-agent初始化过程" class="headerlink" title="btrace-agent初始化过程"></a>btrace-agent初始化过程</h3><p>前面将btrace-agent.jar attach到目标jvm后,jvm会调用btrace-agent.jar的Manifest文件中的Agent-Class的agentMain方法,manifest文件内容如下:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Manifest-Version: 1.0</span><br><span class="line">Premain-Class: com.sun.btrace.agent.Main</span><br><span class="line">Agent-Class: com.sun.btrace.agent.Main</span><br><span class="line">Can-Redefine-Classes: true</span><br><span class="line">Can-Retransform-Classes: true</span><br><span class="line">Boot-Class-Path: btrace-boot.jar</span><br></pre></td></tr></table></figure></p>
+<p>上面几个参数的作用简单讲一下:</p>
+<ol>
+<li>Premain-Class,前面提到过,包含了premain方法的类的全限定类名,JVM启动时调用premain-class的premain方法,如果是通过-javaagent参数传递的,该参数为必须项</li>
+<li>Agent-Class，和Premain-Class类似，动态attach到JVM时是必须参数</li>
+<li>Boot-Class-Path,可选参数，表示需要添加给bootstrap ClassLoader进行加载的路径,如果有多个路径通过空格进行分割</li>
+<li>Can-Redefine-Classes,可选参数,该agent是否需要重定义类,默认为false</li>
+<li>Can-Retransform-Classes,可选参数，该agent是否需要对字节码修改,默认为false</li>
+</ol>
+<p>agentMain方法首先解析btrace-client传递进来的参数,启动追踪脚本,然后会启动一个socket服务端用来和btrace-client进行通信,JVM在调用agentMain方法时会传递一个Instrumentation对象进来,Btrace就是通过Instrumentation来做文章，下面代码的最后面agent给Instrumentation添加了一个BTraceTransformer，这个BTraceTransformer继承自java.lang.instrument.ClassFileTransformer类，用于对类的字节码进行修改,agentMain的主要代码如下所示:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">final</span> String args, <span class="keyword">final</span> Instrumentation inst)</span> </span>&#123;</span><br><span class="line">	<span class="comment">//把Instrumentation引用赋值给inst变量</span></span><br><span class="line">    Main.inst = inst;</span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		loadArgs(args);</span><br><span class="line">		<span class="comment">//解析参数</span></span><br><span class="line">		parseArgs();</span><br><span class="line">		<span class="comment">//启动脚本</span></span><br><span class="line">		<span class="keyword">int</span> startedScripts = startScripts();</span><br><span class="line">		<span class="comment">//另起线程启动socketServer监听客户端连接</span></span><br><span class="line">		Thread agentThread = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">		            <span class="meta">@Override</span></span><br><span class="line">		            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		                BTraceRuntime.enter();</span><br><span class="line">		                <span class="keyword">try</span> &#123;</span><br><span class="line">		                    startServer();</span><br><span class="line">		                &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">		                    BTraceRuntime.leave();</span><br><span class="line">		                &#125;</span><br><span class="line">		            &#125;</span><br><span class="line">		        &#125;);</span><br><span class="line">	&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">			<span class="comment">//添加transformer到Instrumentation</span></span><br><span class="line">	        inst.addTransformer(transformer, <span class="keyword">true</span>);</span><br><span class="line">	    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>startScripts()方法内部调用了loadBTraceScript()来加载btrace脚本,然后初始化ClientContext和FileClient对象,最后调用handleNewClient()方法:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">loadBTraceScript</span><span class="params">(String filePath, <span class="keyword">boolean</span> traceToStdOut)</span> </span>&#123;</span><br><span class="line">	SharedSettings clientSettings = <span class="keyword">new</span> SharedSettings();</span><br><span class="line">    clientSettings.from(settings);</span><br><span class="line">    clientSettings.setClientName(scriptName);</span><br><span class="line">	ClientContext ctx = <span class="keyword">new</span> ClientContext(inst, transformer, clientSettings);</span><br><span class="line">    Client client = <span class="keyword">new</span> FileClient(ctx, traceScript);</span><br><span class="line">    <span class="keyword">if</span> (client.isInitialized()) &#123;</span><br><span class="line">        handleNewClient(client).get();</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>handleNewClient方法内部会调用<strong>client.retransformLoaded()</strong>来将所有的类进行替换,替换时先获取JVM加载的所有类,然后过滤那些不可修改的以及不在候选范围内的类,也就是说只会对匹配到的类进行替换，比如替换你的Btrace脚本的OnMethod方法里引用的clazz,通过ASM插入一些追踪的代码:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">retransformLoaded</span><span class="params">()</span> <span class="keyword">throws</span> UnmodifiableClassException </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (runtime != <span class="keyword">null</span>) &#123;</span><br><span class="line">	    <span class="keyword">if</span> (probe.isTransforming() &amp;&amp; settings.isRetransformStartup()) &#123;</span><br><span class="line">	        ArrayList&lt;Class&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">	        ClassCache cc = ClassCache.getInstance();</span><br><span class="line">	        <span class="keyword">for</span> (Class c : inst.getAllLoadedClasses()) &#123;</span><br><span class="line">	            <span class="keyword">if</span> (c != <span class="keyword">null</span>) &#123;</span><br><span class="line">	                cc.get(c);</span><br><span class="line">	                <span class="keyword">if</span> (inst.isModifiableClass(c) &amp;&amp;  isCandidate(c)) &#123;</span><br><span class="line">	                    debugPrint(<span class="string">"candidate "</span> + c + <span class="string">" added"</span>);</span><br><span class="line">	                    list.add(c);</span><br><span class="line">	                &#125;</span><br><span class="line">	            &#125;</span><br><span class="line">	        &#125;</span><br><span class="line">	        list.trimToSize();</span><br><span class="line">	        <span class="keyword">int</span> size = list.size();</span><br><span class="line">	        <span class="keyword">if</span> (size &gt; <span class="number">0</span>) &#123;</span><br><span class="line">	            Class[] classes = <span class="keyword">new</span> Class[size];</span><br><span class="line">	            list.toArray(classes);</span><br><span class="line">				<span class="comment">//调用BTraceTransformer执行修改</span></span><br><span class="line">	            inst.retransformClasses(classes);   </span><br><span class="line">	        &#125;</span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>在FileClient初始化过程中会去编译btrace追踪脚本,首先调用readScript()把文件转换成字节数组,然后调用init方法,init方法内部把字节数组封装成一个InstrumentCommand对象,最后调用loadClass()方法来完成btrace脚本的加载,loadClass()方法内部创建了一个BTraceProbePersisted,一个Probe相当于是一个探针,探测具体方法的调用,最后把probe注册到BTraceTransformer上,BTraceTransformer对象里会保存所有的Probe列表:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">FileClient(ClientContext ctx, File scriptFile) <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="keyword">super</span>(ctx);</span><br><span class="line">        <span class="keyword">if</span> (!init(readScript(scriptFile))) &#123;</span><br><span class="line">            debug.warning(<span class="string">"Unable to load BTrace script "</span> + scriptFile);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">init</span><span class="params">(<span class="keyword">byte</span>[] code)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        InstrumentCommand cmd = <span class="keyword">new</span> InstrumentCommand(code, <span class="keyword">new</span> String[<span class="number">0</span>]);</span><br><span class="line">        <span class="keyword">boolean</span> ret = loadClass(cmd, canLoadPack) != <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">if</span> (ret) &#123;</span><br><span class="line">            <span class="keyword">super</span>.initialize();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> Class <span class="title">loadClass</span><span class="params">(InstrumentCommand instr, <span class="keyword">boolean</span> canLoadPack)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">	<span class="comment">//从InstrumentCommand对象中获取字节数组</span></span><br><span class="line">    String[] args = instr.getArguments();</span><br><span class="line">    <span class="keyword">this</span>.btraceCode = instr.getCode();</span><br><span class="line">	<span class="comment">//创建BTraceProbePersisted</span></span><br><span class="line">    probe = load(btraceCode, canLoadPack);</span><br><span class="line">    <span class="keyword">this</span>.runtime = <span class="keyword">new</span> BTraceRuntime(probe.getClassName(), args, <span class="keyword">this</span>, debug, inst);</span><br><span class="line">	<span class="comment">//最后调用register方法把probe注册到transformer上</span></span><br><span class="line">    <span class="keyword">return</span> probe.register(runtime, transformer);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后来看下probe的register()方法的实现,主要是调用BTraceTransformer.register()方法注册一个probe，然后调用了BTraceProbeSupport的defineClass来加载追踪脚本,实际上是通过Unsafe类来加载的，也就是说追踪脚本类是由JVM的启动类加载器加载的：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Class <span class="title">register</span><span class="params">(BTraceRuntime rt, BTraceTransformer t)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] code = dataHolder;</span><br><span class="line">        Class clz = delegate.defineClass(rt, code);</span><br><span class="line">		<span class="comment">//调用BTraceTransformer.register()方法注册一个probe</span></span><br><span class="line">        t.register(<span class="keyword">this</span>);</span><br><span class="line">        <span class="keyword">this</span>.transformer = t;</span><br><span class="line">        <span class="keyword">this</span>.rt = rt;</span><br><span class="line">        <span class="keyword">return</span> clz;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> Class <span class="title">defineClassImpl</span><span class="params">(<span class="keyword">byte</span>[] code, <span class="keyword">boolean</span> mustBeBootstrap)</span> </span>&#123;</span><br><span class="line">    ClassLoader loader = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">if</span> (! mustBeBootstrap) &#123;</span><br><span class="line">        loader = <span class="keyword">new</span> ClassLoader(<span class="keyword">null</span>) &#123;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    Class cl = unsafe.defineClass(className, code, <span class="number">0</span>, code.length, loader, <span class="keyword">null</span>);</span><br><span class="line">    unsafe.ensureClassInitialized(cl);</span><br><span class="line">    <span class="keyword">return</span> cl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="ClassFileTransformer实现修改类"><a href="#ClassFileTransformer实现修改类" class="headerlink" title="ClassFileTransformer实现修改类"></a>ClassFileTransformer实现修改类</h3><p>最后我们来看一下最为关键的BTraceTransformer类的实现,JDK 1.6提供的Instrument技术新增了java.lang.instrument.ClassFileTransformer接口,所有的要加载到JVM中的transformer都要实现这个接口,并重写transform()方法,JVM在加载类的时候会把该类对应的ClassLoader和字节数组传递给transform()方法,实现类可以修改字节数字并把修改后的值返回,需要特别注意的是btrace先会过滤掉classLoader为null(由引导类加载器加载的类,大部分为JVM的核心类库)和系统类加载器加载的类,主要是出于保护JVM核心功能的目的,通过ASM来实现对类的修改:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">byte</span>[] transform(ClassLoader loader, String className, Class&lt;?&gt; classBeingRedefined, ProtectionDomain protectionDomain, <span class="keyword">byte</span>[] classfileBuffer) <span class="keyword">throws</span> IllegalClassFormatException &#123;</span><br><span class="line">    <span class="keyword">if</span> (probes.isEmpty()) <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    className = className != <span class="keyword">null</span> ? className : <span class="string">"&lt;anonymous&gt;"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ((loader == <span class="keyword">null</span> || loader.equals(ClassLoader.getSystemClassLoader())) &amp;&amp; isSensitiveClass(className)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (filter.matchClass(className) == Filter.Result.FALSE) <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">boolean</span> entered = BTraceRuntime.enter();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        BTraceClassReader cr = InstrumentUtils.newClassReader(loader, classfileBuffer);</span><br><span class="line">        BTraceClassWriter cw = InstrumentUtils.newClassWriter(cr);</span><br><span class="line">        <span class="keyword">for</span>(BTraceProbe p : probes) &#123;</span><br><span class="line">            cw.addInstrumentor(p, loader);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">byte</span>[] transformed = cw.instrument();</span><br><span class="line">        <span class="keyword">if</span> (transformed == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// no instrumentation necessary</span></span><br><span class="line">            <span class="keyword">return</span> classfileBuffer;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> transformed;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable th) &#123;</span><br><span class="line">        <span class="keyword">throw</span> th;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (entered) &#123;</span><br><span class="line">            BTraceRuntime.leave();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>前面总结了btrace的工作流程,需要注意的是,btrace监控退出后，原先所有的class都不会被恢复，你的所有的监控代码依然一直在运行,同时为了减少对目标JVM的影响,btrace对追踪脚本做了较多限制,比如不能创建新对象和数组,不能捕捉和抛出异常等,btrace-client在编译完追踪脚本之后会进行校验,校验的详细内容在com.sun.btrace.compilerVerifier类中，感兴趣的同学可以看看, 在btrace-agent端也会通过com.sun.btrace.runtime.instr.MethodInstrumentor类及其子类进行校验,尽量保证我们监控代码的安全。</p>
+<p>参考文档:</p>
+<ol>
+<li><a href="https://docs.oracle.com/javase/6/docs/jdk/api/attach/spec/com/sun/tools/attach/VirtualMachine.html" target="_blank" rel="external">VirtualMachine</a></li>
+<li><a href="https://docs.oracle.com/javase/6/docs/api/java/lang/instrument/package-summary.html" target="_blank" rel="external">instrument</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/java/j-lo-jpda2/" target="_blank" rel="external">JVMTI 和 Agent 实现</a></li>
+<li><a href="http://agapple.iteye.com/blog/1005918" target="_blank" rel="external">btrace一些你不知道的事</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+  
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/Instrumention/" rel="tag"># Instrumention</a>
+          
+        </div>
+      
+
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>🐶 您的支持将鼓励我继续创作 🐶</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赞赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat-reward-img.jpg" alt="EZLippi WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay-reward-img.jpg" alt="EZLippi Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+        
+     <div>    
+      
+      <ul class="post-copyright">
+         <li class="post-copyright-link">
+          <strong>本文作者：</strong>
+          <a href="/" title="欢迎访问 EZLippi 的个人博客">EZLippi</a>
+        </li>
+
+        <li class="post-copyright-link">
+          <strong>本文标题：</strong>
+          <a href="http://www.ezlippi.com/blog/2018/01/btrace-introduce.html" title="btrace动态追踪技术解析">btrace动态追踪技术解析</a>
+        </li>
+
+        <li class="post-copyright-link">
+          <strong>本文链接：</strong>
+          <a href="http://www.ezlippi.com/blog/2018/01/btrace-introduce.html" title="btrace动态追踪技术解析">http://www.ezlippi.com/blog/2018/01/btrace-introduce.html</a>
+        </li>
+
+        <li class="post-copyright-date">
+            <strong>发布时间：</strong>2018年1月26日 - 13时01分
+        </li>  
+
+        <li class="post-copyright-license">
+          <strong>版权声明： </strong>
+          本文由 EZLippi 原创，采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh" rel="license" target="_blank">保留署名-非商业性使用-禁止演绎 4.0-国际许可协议</a> </br>转载请保留以上声明信息！
+        </li>
+      </ul>
+    
+  </div>  
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2018/01/gatling.html" rel="next" title="性能测试Gatling入门教程">
+                <i class="fa fa-chevron-left"></i> 性能测试Gatling入门教程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2018/01/jvm-card-table-turning.html" rel="prev" title="JVM调优:CardTable简介">
+                JVM调优:CardTable简介 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjI4My84ODQ3"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="EZLippi" />
+          <p class="site-author-name" itemprop="name">EZLippi</p>
+          <p class="site-description motion-element" itemprop="description">Easy Lippi</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">95</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">103</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/EZLippi" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/ouyanglip" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/lippi-ouyang" target="_blank" title="zhihu">
+                  
+                    <i class="fa fa-fw fa-battery-3"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.woaitqs.cc/" title="Qisen Tang" target="_blank">Qisen Tang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://szhshp.org" title="szhshp的博客" target="_blank">szhshp的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://python.zhangwei.website" title="JuniorCoder" target="_blank">JuniorCoder</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hippo-jessy.com" title="Hippo" target="_blank">Hippo</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.zhihu.com/people/lippi-ouyang" title="友链出租" target="_blank">友链出租</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#btrace工作流程"><span class="nav-number">1.</span> <span class="nav-text">btrace工作流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Instrumentation技术简介"><span class="nav-number">2.</span> <span class="nav-text">Instrumentation技术简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#btrace源码分析"><span class="nav-number">3.</span> <span class="nav-text">btrace源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#btrace-client启动过程"><span class="nav-number">3.1.</span> <span class="nav-text">btrace-client启动过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#btrace-agent初始化过程"><span class="nav-number">3.2.</span> <span class="nav-text">btrace-agent初始化过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ClassFileTransformer实现修改类"><span class="nav-number">3.3.</span> <span class="nav-text">ClassFileTransformer实现修改类</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">EZLippi</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io" rel="external nofollow">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">
+    NexT.Mist
+  </a>| Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a>
+</div>
+
+
+
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.lazyload/1.9.3/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("kJ2sJuSJeByLioULSXrJ5CSq-9Nh9j0Va", "uBWeNxCbFEWsOVDTmAInrDq3");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+	<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+
+</body>
+</html>

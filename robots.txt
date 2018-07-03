@@ -4,4 +4,4 @@ Disallow:
 
 User-agent: *
 Disallow: 
-Sitemap: http://coolshell.info/sitemap.xml
+Sitemap: http://www.ezlippi.com/sitemap.xml
