@@ -41,7 +41,7 @@ baidu:
 #
 # 《--------------- 下面的信息可以自行选择是否修改 ------------------------》
 
-
+ 
 permalink: /:year/:month/:title/
 # Format
 highlighter: rouge
