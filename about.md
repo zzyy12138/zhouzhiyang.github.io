@@ -11,7 +11,6 @@ title: 关于我
  - 技术博客：[http://zhouzhiyang.cn](http://zhouzhiyang.cn)
  - Github：[http://github.com/zzyy12138](http://github.com/zzyy12138)
  - 期望职位：Python开发工程师/爬虫工程师
- - 期望薪资：税前月薪10k~12k
  - 期望城市：苏州/上海
  - Tel：15151467670
  - E-mail：15151467670@163.com
