@@ -145,6 +145,8 @@ tag: Python
 >>
 
 >>(1)小驼峰式命名法（lower camel case）： 第一个单词以小写字母开始；第二个单词的首字母大写，例如：myName、aDog
+>>
+
 >>(2)大驼峰式命名法（upper camel case）： 每一个单字的首字母都采用大写字母，例如：FirstName、LastName
 >>
 
@@ -164,10 +166,10 @@ tag: Python
 
 * 查看关键字
 
->and     as      assert     break     class      continue    def     del
->elif    else    except     exec      finally    for         from    global
->if      in      import     is        lambda     not         or      pass
->print   raise   return     try       while      with        yield
+>`and ``as ``assert ``break ``class `` continue `` def ``del `
+>`elif `` else ``except ``exec ``finally `` for ``from ``global `
+>`if ``in ``import ``is ``lambda ``not ``or ``pass `
+>`print ``raise ``return ``try ``while ``with ``yield `
 
 * 可以在Python Shell通过以下命令进行查看当前系统中python的关键字
 
