@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Python基础知识"
+title: "Python基础知识-基础语法"
 date: 2018-07-06 
 description: "Python基础知识"
 tag: Python 
@@ -319,7 +319,7 @@ bin(x )|将一个整数转换为一个二进制字符串
 
 
 <br>
-转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python基础知识](http://zhouzhiyang.cn/2018/07/Python_Basics/) 
+转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python基础知识-基础语法](http://zhouzhiyang.cn/2018/07/Python_Basics/) 
 
 
 
