@@ -13,7 +13,7 @@ tag: Python
 
 如下图所示:
 
-><img src="/images/Python_Basics_String_List/jububianliang.png" style="zoom:80%" />
+><img src="/images/Python_Basics6_Function/jububianliang.png" style="zoom:80%" />
 
 <2>小总结
 
@@ -49,7 +49,7 @@ demo:
 
 运行结果:
 
-><img src="/images/Python_Basics_String_List/quanjubianliang.png" style="zoom:80%" />
+><img src="/images/Python_Basics6_Function/quanjubianliang.png" style="zoom:80%" />
 
 总结:
 
@@ -60,7 +60,7 @@ demo:
 
 看如下代码:
 
-><img src="/images/Python_Basics_String_List/quanjujubu.png" style="zoom:80%" />
+><img src="/images/Python_Basics6_Function/quanjujubu.png" style="zoom:80%" />
 
 总结:
 
@@ -72,7 +72,7 @@ demo:
 
 代码如下:
 
-><img src="/images/Python_Basics_String_List/xiugaiquanju.png" style="zoom:80%" />
+><img src="/images/Python_Basics6_Function/xiugaiquanju.png" style="zoom:80%" />
 >
 
 总结:
@@ -198,7 +198,7 @@ demo:
 
 函数名不能重复
 
-><img src="/images/Python_Basics_String_List/hanshuming.png" style="zoom:80%" />
+><img src="/images/Python_Basics6_Function/hanshuming.png" style="zoom:80%" />
 >
 
 >如果在同一个程序中出现了多个相同函数名的函数，那么在调用函数时就会出现问题，所以要避免名字相同
@@ -224,7 +224,7 @@ demo:
 
 在一个函数中定义的变量，只能在本函数中用(局部变量)
 
-><img src="/images/Python_Basics_String_List/zuoyongyu.png" style="zoom:80%" />
+><img src="/images/Python_Basics6_Function/zuoyongyu.png" style="zoom:80%" />
 >
 
 在函数外定义的变量，可以在所有的函数中使用(全局变量)
