@@ -230,4 +230,4 @@ demo:
 在函数外定义的变量，可以在所有的函数中使用(全局变量)
 
 <br>
-转载请注明：[周志洋的博客](http://zhouzhiyang.cn) ? [Python基础知识-函数(一)](http://zhouzhiyang.cn/2018/07/Python_Basics6_Function1/) 
+转载请注明：[周志洋的博客](http://zhouzhiyang.cn) >> [Python基础知识-函数(一)](http://zhouzhiyang.cn/2018/07/Python_Basics6_Function2/) 
