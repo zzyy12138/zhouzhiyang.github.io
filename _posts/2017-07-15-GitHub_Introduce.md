@@ -31,4 +31,4 @@ tag: GitHub
 
 
 <br>
-转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [初识GitHub](http://zhouzhiyang.cn/2018/07/GitHub_Introduce/)  
+转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [初识GitHub](http://zhouzhiyang.cn/2017/07/GitHub_Introduce/)  
