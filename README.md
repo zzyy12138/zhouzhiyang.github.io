@@ -1,4 +1,7 @@
 
+
+预览效果[https://zhouzhiyang.cn/](https://zhouzhiyang.cn/)
+
 ### 使用手册
 
 [windows下如何使用jekyll]https://zhouzhiyang.cn/2018/07/About_Jekyll/)  :  使用Jekyll搭建个人博客的教程，以及如果把博客模板修改成你自己的博客
