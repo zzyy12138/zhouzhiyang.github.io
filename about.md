@@ -13,9 +13,8 @@ title: 关于我
  - Github：[http://github.com/zzyy12138](http://github.com/zzyy12138)
  - 期望职位：Python爬虫/Web后台开发
  - 期望城市：苏州/上海
- - Tel：15151467670
- - E-mail：15151467670@163.com
- - TIM：2351715777
- - Wechat：zzy146711
-
+ - Tel：
+ - E-mail：
+ - TIM：
+ - Wechat：
 {% include comments.html %}
