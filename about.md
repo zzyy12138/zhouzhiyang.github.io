@@ -9,7 +9,7 @@ title: 关于我
 - 技能：Python/Qt/Java
 - 技术博客：[http://zhouzhiyang.cn](http://zhouzhiyang.cn)
 - Github：[http://github.com/zzyy12138](http://github.com/zzyy12138)
-- 期望职位：Python爬虫/Web后台开发
+- 期望职位：Python开发
 - 期望城市：苏州/上海
 - Tel：
 - E-mail：
