@@ -41,8 +41,9 @@ tag: Jekyll
 
 4.打开命令行输入命令检查是否安装成功  
 
->ruby -v
->
+```bash
+ruby -v
+```
 
 ### 安装DevKit
 
@@ -54,38 +55,45 @@ tag: Jekyll
 
 4.在打开命令行窗口传递到`C:\Ruby23-x64\devkit `中输入下面命令  
 
->ruby dk.rb init  
->notepad config.yml  
->
+```bash
+ruby dk.rb init  
+notepad config.yml
+```
 
 5.在打开的记事本窗口中 文末添加`- C:/Ruby23-x64 `保存并退出  
 
 6.回到命令行输入下面命令  
->ruby dk.rb review  
->ruby dk.rb install  
->
+
+```bash
+ruby dk.rb review  
+ruby dk.rb install
+```
 
 ### 安装Jekyll
 
 1.确保gem已经正确安装,输入下面命令,会输出版本号  
 
->gem -v   
->  
+```bash
+gem -v
+```
 
 2.安装Jekyll和Bundler gems  
 
->gem install jekyll bundler  
->
+```bash
+gem install jekyll bundler
+```
 
 3.确保 jekyll gem 已经正确安装,输入下面命令,会输出版本号  
 
->jekyll -v  
->
+```bash
+jekyll -v
+```
 
 4.确保 bundler gem 已经正确安装,输入下面命令,会输出版本号  
 
->bundle -v  
->
+```bash
+bundle -v
+```
 
 ### 启动Jekyll  
 
@@ -111,8 +119,12 @@ tag: Jekyll
 解决方法如下:  
 
 >![错误2](/images/posts/About_Jekyll/4.jpg)  
->只需要在命令前加`bundle exec`  
->
+
+只需要在命令前加`bundle exec`，例如：
+
+```bash
+bundle exec jekyll build
+```
 
 
 3....未完待续  

@@ -25,10 +25,10 @@ open(文件名，访问模式)
 
 示例如下：
 
->```python
->f = open('test.txt', 'w')
->```
->
+```python
+f = open('test.txt', 'w')
+```
+
 
 说明:
 
@@ -55,14 +55,14 @@ close( )
 
 示例如下：
 
->```python
->    # 新建一个文件，文件名为:test.txt
->    f = open('test.txt', 'w')
->
->    # 关闭这个文件
->    f.close()
->```
->
+```python
+    # 新建一个文件，文件名为:test.txt
+    f = open('test.txt', 'w')
+
+    # 关闭这个文件
+    f.close()
+```
+
 
 文件的读写
 
@@ -72,17 +72,17 @@ close( )
 
 demo: 新建一个文件 file_write_test.py,向其中写入如下代码:
 
->```python
->f = open('test.txt', 'w')
->f.write('hello world, i am here!')
->f.close()
->```
->
+```python
+f = open('test.txt', 'w')
+f.write('hello world, i am here!')
+f.close()
+```
+
 
 运行之后会在file_write_test.py文件所在的路径中创建一个文件test.txt,其中数据如下:
 
-><img src="/images/Python_Basics7_File/filewrite.png" style="zoom:80%" />
->
+<img src="/images/Python_Basics7_File/filewrite.png" style="zoom:80%" />
+
 
 注意：
 
@@ -94,28 +94,28 @@ demo: 新建一个文件 file_write_test.py,向其中写入如下代码:
 
 demo: 新建一个文件file_read_test.py，向其中写入如下代码:
 
->```python
->f = open('test.txt', 'r')
->content = f.read(5)  # 最多读取5个数据
->print(content)
->
->print("-"*30)  # 分割线，用来测试
->
->content = f.read()  # 从上次读取的位置继续读取剩下的所有的数据
->print(content)
->
->f.close()  # 关闭文件，这个可以是个好习惯哦
->```
->
+```python
+f = open('test.txt', 'r')
+content = f.read(5)  # 最多读取5个数据
+print(content)
+
+print("-"*30)  # 分割线，用来测试
+
+content = f.read()  # 从上次读取的位置继续读取剩下的所有的数据
+print(content)
+
+f.close()  # 关闭文件，这个可以是个好习惯哦
+```
+
 
 运行结果:
 
->```python
->hello
->------------------------------
->world, i am here!
->```
->
+```python
+hello
+------------------------------
+world, i am here!
+```
+
 
 注意：
 
@@ -125,48 +125,48 @@ demo: 新建一个文件file_read_test.py，向其中写入如下代码:
 
 就像read没有参数时一样，readlines可以按照行的方式把整个文件中的内容进行一次性读取，并且返回的是一个列表，其中每一行的数据为一个元素
 
->```python
->#coding=utf-8
->
->f = open('test.txt', 'r')
->content = f.readlines()
->print(type(content))
->
->i=1
->for temp in content:
->    print("%d:%s" % (i, temp))
->    i += 1
->
->f.close()
->```
->
+```python
+#coding=utf-8
+
+f = open('test.txt', 'r')
+content = f.readlines()
+print(type(content))
+
+i=1
+for temp in content:
+    print("%d:%s" % (i, temp))
+    i += 1
+
+f.close()
+```
+
 
 运行结果:
 
-><img src="/images/Python_Basics7_File/fileread.png" style="zoom:80%" />
->
+<img src="/images/Python_Basics7_File/fileread.png" style="zoom:80%" />
+
 
 <4>读数据（readline）
 
->```python
->#coding=utf-8
->
->f = open('test.txt', 'r')
->
->content = f.readline()
->print("1:%s" % content)
->
->content = f.readline()
->print("2:%s" % content)
->
->
->f.close()
->```
->
+```python
+#coding=utf-8
+
+f = open('test.txt', 'r')
+
+content = f.readline()
+print("1:%s" % content)
+
+content = f.readline()
+print("2:%s" % content)
+
+
+f.close()
+```
+
 
 运行结果:
 
-><img src="/images/Python_Basics7_File/filereadline.png" style="zoom:80%" />
+<img src="/images/Python_Basics7_File/filereadline.png" style="zoom:80%" />
 
 ### 文件的相关操作
 
@@ -178,11 +178,11 @@ os模块中的rename()可以完成对文件的重命名操作
 
 rename(需要修改的文件名, 新的文件名)
 
->```python
->import os
->os.rename("毕业论文.txt", "毕业论文-最终版.txt")
->```
->
+```python
+import os
+os.rename("毕业论文.txt", "毕业论文-最终版.txt")
+```
+
 
 2. 删除文件
 
@@ -190,51 +190,51 @@ os模块中的remove()可以完成对文件的删除操作
 
 remove(待删除的文件名)
 
->```python
->import os
->os.remove("毕业论文.txt")
->```
->
+```python
+import os
+os.remove("毕业论文.txt")
+```
+
 
 3. 创建文件夹
 
->```python
->import os
->os.mkdir("张三")
->```
->
+```python
+import os
+os.mkdir("张三")
+```
+
 
 4. 获取当前目录
 
->```python
->import os
->os.getcwd()
->```
->
+```python
+import os
+os.getcwd()
+```
+
 
 5. 改变默认目录
 
->```python
->import os
->os.chdir("../")
->```
->
+```python
+import os
+os.chdir("../")
+```
+
 
 6. 获取目录列表
 
->```python
->import os
->os.listdir("./")
->```
->
+```python
+import os
+os.listdir("./")
+```
+
 
 7. 删除文件夹
 
->```python
->import os
->os.rmdir("张三")
->```
->
+```python
+import os
+os.rmdir("张三")
+```
+
 
 
 

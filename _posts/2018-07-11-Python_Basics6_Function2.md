@@ -31,25 +31,25 @@ tag: Python
 
 demo:
 
->```python
-># 定义全局变量
->a = 100
->
->def test1():
->    print(a)  # 虽然没有定义变量a但是依然可以获取其数据
->
->def test2():
->    print(a)  # 虽然没有定义变量a但是依然可以获取其数据
->
-># 调用函数
->test1()
->test2()
->```
->
+```python
+# 定义全局变量
+a = 100
+
+def test1():
+    print(a)  # 虽然没有定义变量a但是依然可以获取其数据
+
+def test2():
+    print(a)  # 虽然没有定义变量a但是依然可以获取其数据
+
+# 调用函数
+test1()
+test2()
+```
+
 
 运行结果:
 
-><img src="/images/Python_Basics6_Function/quanjubianliang.png" style="zoom:80%" />
+<img src="/images/Python_Basics6_Function/quanjubianliang.png" style="zoom:80%" />
 
 总结:
 
@@ -60,7 +60,7 @@ demo:
 
 看如下代码:
 
-><img src="/images/Python_Basics6_Function/quanjujubu.png" style="zoom:80%" />
+<img src="/images/Python_Basics6_Function/quanjujubu.png" style="zoom:80%" />
 
 总结:
 
@@ -72,22 +72,22 @@ demo:
 
 代码如下:
 
-><img src="/images/Python_Basics6_Function/xiugaiquanju.png" style="zoom:80%" />
->
+<img src="/images/Python_Basics6_Function/xiugaiquanju.png" style="zoom:80%" />
+
 
 总结:
 
 * 如果在函数中出现global 全局变量的名字 那么这个函数中即使出现和全局变量名相同的变量名 = 数据 也理解为对全局变量进行修改，而不是定义局部变量
 * 如果在一个函数中需要对多个全局变量进行修改，那么可以使用
 
->```python
->     # 可以使用一次global对多个全局变量进行声明
->     global a, b
->     # 还可以用多次global声明都是可以的
->     # global a
->     # global b
->```
->
+```python
+     # 可以使用一次global对多个全局变量进行声明
+     global a, b
+     # 还可以用多次global声明都是可以的
+     # global a
+     # global b
+```
+
 
 ### 多函数程序的基本使用流程
 
@@ -95,62 +95,62 @@ demo:
 
 1. 使用全局变量
 
->```python
->g_num = 0
->
->def test1():
->    global g_num
->    # 将处理结果存储到全局变量g_num中.....
->    g_num = 100
->
->def test2():
->    # 通过获取全局变量g_num的值, 从而获取test1函数处理之后的结果
->    print(g_num)
->
-># 1. 先调用test1得到数据并且存到全局变量中
->test1()
->
-># 2. 再调用test2，处理test1函数执行之后的这个值
->test2()
->```
->
+```python
+g_num = 0
+
+def test1():
+    global g_num
+    # 将处理结果存储到全局变量g_num中.....
+    g_num = 100
+
+def test2():
+    # 通过获取全局变量g_num的值, 从而获取test1函数处理之后的结果
+    print(g_num)
+
+# 1. 先调用test1得到数据并且存到全局变量中
+test1()
+
+# 2. 再调用test2，处理test1函数执行之后的这个值
+test2()
+```
+
 
 2. 使用函数的返回值、参数
 
->```python
->def test1():
->     # 通过return将一个数据结果返回
->     return 50
->
->def test2(num):
->    # 通过形参的方式保存传递过来的数据，就可以处理了
->    print(num)
->
-># 1. 先调用test1得到数据并且存到变量result中
->result = test1()
->
-># 2. 调用test2时，将result的值传递到test2中，从而让这个函数对其进行处理
->test2(result)
->```
->
+```python
+def test1():
+     # 通过return将一个数据结果返回
+     return 50
+
+def test2(num):
+    # 通过形参的方式保存传递过来的数据，就可以处理了
+    print(num)
+
+# 1. 先调用test1得到数据并且存到变量result中
+result = test1()
+
+# 2. 调用test2时，将result的值传递到test2中，从而让这个函数对其进行处理
+test2(result)
+```
+
 
 3. 函数嵌套调用
 
->```python
->def test1():
->    # 通过return将一个数据结果返回
->    return 20
->
->def test2():
->    # 1. 先调用test1并且把结果返回来
->    result = test1()
->    # 2. 对result进行处理
->    print(result)
->
-># 调用test2时，完成所有的处理
->test2()
->```
->
+```python
+def test1():
+    # 通过return将一个数据结果返回
+    return 20
+
+def test2():
+    # 1. 先调用test1并且把结果返回来
+    result = test1()
+    # 2. 对result进行处理
+    print(result)
+
+# 调用test2时，完成所有的处理
+test2()
+```
+
 
 ### 函数使用注意事项
 
@@ -158,61 +158,61 @@ demo:
 
 无参数、无返回值
 
->```python
->def 函数名():
->    语句
->```
->
+```python
+def 函数名():
+    语句
+```
+
 
 无参数、有返回值
 
->```python
->def 函数名():
->    语句
->    return 需要返回的数值
->```
->
+```python
+def 函数名():
+    语句
+    return 需要返回的数值
+```
+
 
 注意:
 
->一个函数到底有没有返回值，就看有没有return，因为只有return才可以返回数据
->在开发中往往根据需求来设计函数需不需要返回值
->函数中，可以有多个return语句，但是只要执行到一个return语句，那么就意味着这个函数的调用完成
+一个函数到底有没有返回值，就看有没有return，因为只有return才可以返回数据
+在开发中往往根据需求来设计函数需不需要返回值
+函数中，可以有多个return语句，但是只要执行到一个return语句，那么就意味着这个函数的调用完成
 
 有参数、无返回值
 
->```python
->def 函数名(形参列表):
->    语句
->```
->
+```python
+def 函数名(形参列表):
+    语句
+```
+
 
 有参数、有返回值
 
->```python
->def 函数名(形参列表):
->    语句
->    return 需要返回的数值
->```
->
+```python
+def 函数名(形参列表):
+    语句
+    return 需要返回的数值
+```
+
 
 函数名不能重复
 
-><img src="/images/Python_Basics6_Function/hanshuming.png" style="zoom:80%" />
->
+<img src="/images/Python_Basics6_Function/hanshuming.png" style="zoom:80%" />
 
->如果在同一个程序中出现了多个相同函数名的函数，那么在调用函数时就会出现问题，所以要避免名字相同
->还有一点 不仅要避免函数名之间不能相同，还要避免 变量名和函数名相同的，否则都会出现问题
->详细的讲解在python就业班中进行学习，此阶段只要注意这些问题即可
->
+
+如果在同一个程序中出现了多个相同函数名的函数，那么在调用函数时就会出现问题，所以要避免名字相同
+还有一点 不仅要避免函数名之间不能相同，还要避免 变量名和函数名相同的，否则都会出现问题
+详细的讲解在python就业班中进行学习，此阶段只要注意这些问题即可
+
 
 
 2. 调用函数
 
 调用的方式为:
 
->函数名([实参列表])
->
+函数名([实参列表])
+
 
 调用时，到底写不写 实参
 
@@ -224,8 +224,8 @@ demo:
 
 在一个函数中定义的变量，只能在本函数中用(局部变量)
 
-><img src="/images/Python_Basics6_Function/zuoyongyu.png" style="zoom:80%" />
->
+<img src="/images/Python_Basics6_Function/zuoyongyu.png" style="zoom:80%" />
+
 
 在函数外定义的变量，可以在所有的函数中使用(全局变量)
 

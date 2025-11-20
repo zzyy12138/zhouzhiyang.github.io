@@ -15,57 +15,57 @@ tag: Python
 
 #### 字符串遍历
 
->```python
->>>> a_str = "hello itcast"
->>>> for char in a_str:
->...     print(char,end=' ')
->...
->h e l l o   i t c a s t
->```
->
+```python
+>>> a_str = "hello itcast"
+>>> for char in a_str:
+...     print(char,end=' ')
+...
+h e l l o   i t c a s t
+```
+
 
 #### 列表遍历
 
->```python
->>>> a_list = [1, 2, 3, 4, 5]
->>>> for num in a_list:
->...     print(num,end=' ')
->...
->1 2 3 4 5
->```
->
+```python
+>>> a_list = [1, 2, 3, 4, 5]
+>>> for num in a_list:
+...     print(num,end=' ')
+...
+1 2 3 4 5
+```
+
 
 #### 元组遍历
 
->```python
->>>> a_turple = (1, 2, 3, 4, 5)
->>>> for num in a_turple:
->...     print(num,end=" ")
->1 2 3 4 5
->```
->
+```python
+>>> a_turple = (1, 2, 3, 4, 5)
+>>> for num in a_turple:
+...     print(num,end=" ")
+1 2 3 4 5
+```
+
 
 #### 字典遍历
 
 <1> 遍历字典的key（键）
 
-><img src="/images/Python_Basics_String_List/bianlikey.png" style="zoom:100%" />
->
+<img src="/images/Python_Basics_String_List/bianlikey.png" style="zoom:100%" />
+
 
 <2> 遍历字典的value（值）
 
-><img src="/images/Python_Basics_String_List/bianlivalue.png" style="zoom:100%" />
->
+<img src="/images/Python_Basics_String_List/bianlivalue.png" style="zoom:100%" />
+
 
 <3> 遍历字典的项（元素）
 
-><img src="/images/Python_Basics_String_List/bianliyuansu.png" style="zoom:100%" />
->
+<img src="/images/Python_Basics_String_List/bianliyuansu.png" style="zoom:100%" />
+
 
 <4> 遍历字典的key-value（键值对）
 
-><img src="/images/Python_Basics_String_List/bianlijianzhidui.png" style="zoom:100%" />
->
+<img src="/images/Python_Basics_String_List/bianlijianzhidui.png" style="zoom:100%" />
+
 
 ### 运算符
 
@@ -91,9 +91,9 @@ not in|4 not in (1, 2, 3)|True|元素是否不存在|字符串、列表、元组
 
 注意：
 
->cmp在比较字典数据时，先比较键，再比较值。
->len在操作字典数据时，返回的是键值对个数。
->del有两种用法，一种是del加空格，另一种是del()
+cmp在比较字典数据时，先比较键，再比较值。
+len在操作字典数据时，返回的是键值对个数。
+del有两种用法，一种是del加空格，另一种是del()
 
 
 
