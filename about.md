@@ -74,8 +74,8 @@ title: 关于我
 
 ## 技术博客
 
-- **个人博客**：[http://zhouzhiyang.cn](http://zhouzhiyang.cn)
-- **GitHub**：[http://github.com/zzyy12138](http://github.com/zzyy12138)
+- **个人博客**：[zhouzhiyang.cn](http://zhouzhiyang.cn)
+- **GitHub**：[zzyy12138](http://github.com/zzyy12138)
 
 ### 博客内容
 
@@ -123,10 +123,8 @@ title: 关于我
 ## 联系方式
 
 - **E-mail**：<15151467670@163.com>
-- **GitHub**：[http://github.com/zzyy12138](http://github.com/zzyy12138)
-- **技术博客**：[http://zhouzhiyang.c](http://zhouzhiyang.cn)n
-
----
+- **GitHub**：[zzyy12138](http://github.com/zzyy12138)
+- **技术博客**：[zhouzhiyang.cn](http://zhouzhiyang.cn)
 
 ## 个人特点
 
