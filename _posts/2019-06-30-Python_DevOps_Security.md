@@ -3,7 +3,7 @@ layout: post
 title: "Python DevOps-安全实践详解"
 date: 2019-06-30 
 description: "安全扫描、密钥管理、网络安全、合规性、漏洞管理、安全审计"
-tag: Python
+tags: ["Python"]
 
 ---
 

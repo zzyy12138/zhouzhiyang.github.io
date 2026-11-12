@@ -3,7 +3,7 @@ layout: post
 title: "STT语音转文本模型"
 date: 2025-09-10 
 description: "STT原理、STT模型、Whisper、Wav2Vec、语音识别、应用场景"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

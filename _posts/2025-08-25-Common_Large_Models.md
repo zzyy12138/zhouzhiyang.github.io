@@ -3,7 +3,7 @@ layout: post
 title: "常见大模型介绍"
 date: 2025-08-25 
 description: "GPT系列、Claude、LLaMA、ChatGLM、Qwen、Baichuan、模型对比、模型选择"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

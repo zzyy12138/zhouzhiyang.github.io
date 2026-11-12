@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-字符串与正则表达式详解"
 date: 2019-03-08 
 description: "字符串格式化、常用方法、正则表达式基础、高级匹配、文本处理技巧"
-tag: Python
+tags: ["Python"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "Dify API使用指南"
 date: 2025-06-25 
 description: "对话 / 工作流 / 知识库 API 怎么调，附 curl 和 Python 示例与踩坑"
-tag: Dify
+tags: ["Dify"]
 
 ---
 

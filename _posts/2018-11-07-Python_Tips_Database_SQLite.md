@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-SQLite数据库详解"
 date: 2018-11-07 
 description: "SQLite数据库操作、连接管理、查询优化、事务处理、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "GPU资源管理与推理集群调度"
 date: 2025-11-08 
 description: "显存怎么估、多模型能不能共卡、K8s调度注意点、常见故障"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

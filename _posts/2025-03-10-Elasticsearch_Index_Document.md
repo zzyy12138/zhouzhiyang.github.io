@@ -3,7 +3,7 @@ layout: post
 title: "Elasticsearch索引与文档操作"
 date: 2025-03-10 
 description: "索引创建、文档CRUD、批量操作、索引模板、别名管理、文档路由"
-tag: ELK
+tags: ["ELK"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "Kibana仪表板与可视化高级"
 date: 2025-04-28 
 description: "高级可视化、仪表板设计、交互功能、脚本化可视化、自定义插件、最佳实践"
-tag: ELK
+tags: ["ELK"]
 
 ---
 

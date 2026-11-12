@@ -3,7 +3,7 @@ layout: post
 title: "AI做密码与逆向题：哪里强、哪里会装懂"
 date: 2026-03-28 
 description: "CTF研究中crypto/rev的实测体感、常见幻觉、提示词和工具约束"
-tag: 安全
+tags: ["安全"]
 
 ---
 

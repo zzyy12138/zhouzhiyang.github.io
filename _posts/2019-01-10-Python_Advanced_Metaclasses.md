@@ -3,7 +3,7 @@ layout: post
 title: "Python进阶-元类编程详解"
 date: 2019-01-10 
 description: "元类基础、__new__方法、类装饰器、单例模式、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "图像理解模型"
 date: 2025-09-15 
 description: "图像理解、视觉模型、CLIP、BLIP、GPT-4V、图像问答、视觉理解"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

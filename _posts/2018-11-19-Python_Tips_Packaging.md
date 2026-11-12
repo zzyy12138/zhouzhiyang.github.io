@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-包打包与分发详解"
 date: 2018-11-19 
 description: "Python包管理、setup.py配置、wheel构建、PyPI分发、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

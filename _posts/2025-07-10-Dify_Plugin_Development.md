@@ -3,7 +3,7 @@ layout: post
 title: "Dify插件开发"
 date: 2025-07-10 
 description: "插件结构、工具实现和打包安装：扩展 Dify 时我实际会动到的部分"
-tag: Dify
+tags: ["Dify"]
 
 ---
 

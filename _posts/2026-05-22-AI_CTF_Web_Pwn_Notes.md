@@ -3,7 +3,7 @@ layout: post
 title: "AI辅助Web题与权限题：研究里踩的边界"
 date: 2026-05-22 
 description: "授权靶场中的请求构造、会话处理、Agent乱扫与人工刹闸"
-tag: 安全
+tags: ["安全"]
 
 ---
 

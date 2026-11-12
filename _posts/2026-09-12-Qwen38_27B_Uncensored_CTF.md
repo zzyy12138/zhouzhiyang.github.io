@@ -3,7 +3,7 @@ layout: post
 title: "CTF研究机上的Qwen3.8-27B去审版"
 date: 2026-09-12 
 description: "官方对齐版常拒答，单独起实例只给授权比赛用"
-tag: 安全
+tags: ["安全"]
 
 ---
 

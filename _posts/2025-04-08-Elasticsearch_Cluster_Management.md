@@ -3,7 +3,7 @@ layout: post
 title: "Elasticsearch集群配置与管理"
 date: 2025-04-08 
 description: "集群架构、节点类型、分片管理、集群监控、故障处理、集群优化"
-tag: ELK
+tags: ["ELK"]
 
 ---
 

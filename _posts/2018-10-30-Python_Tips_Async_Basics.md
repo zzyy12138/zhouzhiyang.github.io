@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-异步编程详解"
 date: 2018-10-30 
 description: "异步编程基础、协程、asyncio模块、异步IO、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

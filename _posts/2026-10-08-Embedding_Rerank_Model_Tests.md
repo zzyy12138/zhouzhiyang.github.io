@@ -3,7 +3,7 @@ layout: post
 title: "Embedding与Rerank模型复测：知识库换模记"
 date: 2026-10-08 
 description: "中文检索效果、延迟、换模重建成本，以及和Dify多库统一的关系"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

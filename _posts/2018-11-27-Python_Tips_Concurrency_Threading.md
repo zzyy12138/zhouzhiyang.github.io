@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-并发编程进阶详解"
 date: 2018-11-27 
 description: "ThreadPoolExecutor、ProcessPoolExecutor、队列通信、异步编程、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

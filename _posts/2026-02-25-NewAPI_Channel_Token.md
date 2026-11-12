@@ -3,7 +3,7 @@ layout: post
 title: "New API发令牌时我一般怎么勾"
 date: 2026-02-25 
 description: "渠道和令牌别混，额度、模型限制、命名"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

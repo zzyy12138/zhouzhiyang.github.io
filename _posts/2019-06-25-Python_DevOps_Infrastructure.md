@@ -3,7 +3,7 @@ layout: post
 title: "Python DevOps-基础设施即代码详解"
 date: 2019-06-25 
 description: "Terraform、Ansible、云服务自动化、基础设施管理、配置管理"
-tag: Python
+tags: ["Python"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "Python进阶-内存管理详解"
 date: 2019-02-15 
 description: "引用计数、垃圾回收、内存池、弱引用、内存优化策略、内存泄漏检测"
-tag: Python 
+tags: ["Python"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "用AI打CTF的研究笔记：工具链与人机分工"
 date: 2026-03-20 
 description: "比赛向研究：Agent能做什么、必须人盯什么、和HackTheBox类AI赛的对照"
-tag: 安全
+tags: ["安全"]
 
 ---
 

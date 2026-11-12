@@ -3,7 +3,7 @@ layout: post
 title: "Python基础知识-布尔与逻辑运算详解"
 date: 2018-09-02 
 description: "真值判定、短路逻辑、any/all函数、布尔运算、逻辑运算符、条件表达式"
-tag: Python 
+tags: ["Python"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "Ollama本地部署"
 date: 2025-10-20 
 description: "Ollama框架、本地部署、模型管理、API使用、简单易用、适合开发"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

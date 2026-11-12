@@ -3,7 +3,7 @@ layout: post
 title: "Dify改走New API连自建vLLM"
 date: 2026-03-08 
 description: "供应商填令牌，先curl再进控制台"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

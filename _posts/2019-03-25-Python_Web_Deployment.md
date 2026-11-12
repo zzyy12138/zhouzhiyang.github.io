@@ -3,7 +3,7 @@ layout: post
 title: "Python Web开发-部署与运维详解"
 date: 2019-03-25 
 description: "Docker容器化、Nginx反向代理、Gunicorn WSGI服务器、环境配置、监控日志、CI/CD"
-tag: Python
+tags: ["Python"]
 
 ---
 

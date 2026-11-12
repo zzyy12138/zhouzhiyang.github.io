@@ -3,7 +3,7 @@ layout: post
 title: "Python机器学习-特征工程详解"
 date: 2019-05-15 
 description: "特征选择、特征构造、编码、缩放、特征变换、特征交互、自动化特征工程"
-tag: Python
+tags: ["Python"]
 
 ---
 

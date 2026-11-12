@@ -3,7 +3,7 @@ layout: post
 title: "Dify对象存储膨胀：向量化失败留下的孤儿文件"
 date: 2026-06-12 
 description: "MinIO/S3里有对象库里没记录、清理策略和上传失败重试"
-tag: Dify
+tags: ["Dify"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "大模型部署概述"
 date: 2025-10-02 
 description: "模型部署、部署方式、部署框架、部署考虑、部署优化、部署实践"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

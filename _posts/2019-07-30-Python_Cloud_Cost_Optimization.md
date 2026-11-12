@@ -3,7 +3,7 @@ layout: post
 title: "Python云计算-成本优化详解"
 date: 2019-07-30 
 description: "资源监控、自动扩缩容、预留实例、成本分析、资源优化、成本控制策略"
-tag: Python
+tags: ["Python"]
 
 ---
 

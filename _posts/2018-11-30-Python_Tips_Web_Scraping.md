@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-网页抓取基础详解"
 date: 2018-11-30 
 description: "BeautifulSoup解析、requests请求、lxml解析器、选择器使用、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

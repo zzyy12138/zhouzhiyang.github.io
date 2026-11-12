@@ -3,7 +3,7 @@ layout: post
 title: "Transformer架构详解"
 date: 2025-08-05 
 description: "Transformer原理、注意力机制、编码器解码器、位置编码、多头注意力、前馈网络"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

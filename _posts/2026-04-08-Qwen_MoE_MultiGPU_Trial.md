@@ -3,7 +3,7 @@ layout: post
 title: "Qwen MoE 多卡试跑：专家并行和显存账"
 date: 2026-04-08 
 description: "在A100池试MoE、TP/EP组合、长上下文与并发只能二选一的现实"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

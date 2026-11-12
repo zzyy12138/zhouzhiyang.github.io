@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-路径处理详解"
 date: 2018-10-09 
 description: "路径处理基础、os.path与pathlib对比、跨平台路径、文件操作、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

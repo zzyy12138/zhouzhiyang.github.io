@@ -3,7 +3,7 @@ layout: post
 title: "Python服务配置漂移：类型、默认值和一次灰度事故"
 date: 2026-04-22 
 description: "YAML字符串数字、环境变量布尔值、pydantic校验没拦住的问题"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

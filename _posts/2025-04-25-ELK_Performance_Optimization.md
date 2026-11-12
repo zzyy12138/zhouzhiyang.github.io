@@ -3,7 +3,7 @@ layout: post
 title: "ELK性能优化与调优"
 date: 2025-04-25 
 description: "Elasticsearch性能优化、Logstash性能优化、Kibana性能优化、系统优化、监控调优"
-tag: ELK
+tags: ["ELK"]
 
 ---
 

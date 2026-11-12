@@ -3,7 +3,7 @@ layout: post
 title: "Python基础知识-分支与循环进阶"
 date: 2018-08-10 
 description: "if/elif/else、while/for、break/continue、循环else、条件表达式、循环优化技巧"
-tag: Python 
+tags: ["Python"]
 
 ---
 

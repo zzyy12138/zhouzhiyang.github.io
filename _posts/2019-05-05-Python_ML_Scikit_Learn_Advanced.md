@@ -3,7 +3,7 @@ layout: post
 title: "Python机器学习-Scikit-learn进阶详解"
 date: 2019-05-05 
 description: "机器学习管道、特征工程、模型选择、超参数调优、交叉验证、性能评估"
-tag: Python
+tags: ["Python"]
 
 ---
 

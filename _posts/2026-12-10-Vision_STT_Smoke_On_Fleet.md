@@ -3,7 +3,7 @@ layout: post
 title: "多模态冒烟：视觉与语音模型在现有卡上的试跑"
 date: 2026-12-10 
 description: "图像理解与STT在A100/PRO6000上的资源占用和接入注意"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

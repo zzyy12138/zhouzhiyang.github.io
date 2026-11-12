@@ -3,7 +3,7 @@ layout: post
 title: "Python进阶-生成器进阶详解"
 date: 2019-01-20 
 description: "yield from语法、协程通信、双向通信、生成器表达式、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "Elasticsearch映射与数据类型"
 date: 2025-04-02 
 description: "映射概念、字段类型、动态映射、显式映射、模板映射、字段参数配置"
-tag: ELK
+tags: ["ELK"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "Dify应用开发基础"
 date: 2025-06-20 
 description: "对话 / 工作流 / 助手怎么选，以及我从原型到可发布的配置习惯"
-tag: Dify
+tags: ["Dify"]
 
 ---
 

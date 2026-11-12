@@ -3,7 +3,7 @@ layout: post
 title: "Claude Code与终端AI编程工作流"
 date: 2025-12-08 
 description: "终端Agent怎么用、权限怎么收、和CI怎么配合"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

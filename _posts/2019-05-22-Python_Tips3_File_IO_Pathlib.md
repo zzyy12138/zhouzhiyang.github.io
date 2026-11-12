@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-文件读写与pathlib详解"
 date: 2019-05-22 
 description: "文本/二进制读写、with 上下文、pathlib 的优雅路径操作、文件管理、目录遍历、文件监控"
-tag: Python
+tags: ["Python"]
 
 ---
 

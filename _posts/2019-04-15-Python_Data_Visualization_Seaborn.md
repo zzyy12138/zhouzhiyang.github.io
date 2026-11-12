@@ -3,7 +3,7 @@ layout: post
 title: "Python数据分析-数据可视化进阶详解"
 date: 2019-04-15 
 description: "Seaborn统计图表、热力图、分布图、关系图、高级可视化技巧"
-tag: Python
+tags: ["Python"]
 
 ---
 

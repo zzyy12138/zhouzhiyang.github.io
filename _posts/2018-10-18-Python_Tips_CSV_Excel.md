@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-CSV 与 Excel 处理"
 date: 2018-10-18 
 description: "csv 模块、pandas 基础、openpyxl 入门"
-tag: Python 
+tags: ["Python"]
 
 ---
 

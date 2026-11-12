@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-机器学习入门详解"
 date: 2018-12-11 
 description: "scikit-learn基础、分类算法、回归算法、模型评估、特征工程、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

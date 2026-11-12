@@ -3,7 +3,7 @@ layout: post
 title: "大模型推理成本优化"
 date: 2025-11-25 
 description: "成本怎么算、路由分层、缓存、输出长度和Dify里的浪费点"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

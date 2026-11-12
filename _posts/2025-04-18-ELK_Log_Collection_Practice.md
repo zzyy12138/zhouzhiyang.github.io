@@ -3,7 +3,7 @@ layout: post
 title: "ELK日志收集实战案例"
 date: 2025-04-18 
 description: "日志收集架构设计、Nginx日志收集、应用日志收集、系统日志收集、日志分析案例"
-tag: ELK
+tags: ["ELK"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "ELK集群高可用部署"
 date: 2025-05-08 
 description: "高可用架构、Elasticsearch高可用、Logstash高可用、Kibana高可用、故障转移、负载均衡"
-tag: ELK
+tags: ["ELK"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "模型版本管理与灰度发布"
 date: 2025-11-16 
 description: "权重/配置/策略分层、金丝雀、回滚和变更记录"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

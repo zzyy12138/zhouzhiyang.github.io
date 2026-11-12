@@ -3,7 +3,7 @@ layout: post
 title: "New API和自研网关怎么并存"
 date: 2026-08-12 
 description: "发Key用New API，观测灰度仍用手写网关"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

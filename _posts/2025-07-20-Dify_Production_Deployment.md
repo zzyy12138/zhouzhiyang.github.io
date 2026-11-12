@@ -3,7 +3,7 @@ layout: post
 title: "Dify生产环境部署"
 date: 2025-07-20 
 description: "反代、多实例、备份和监控：把 Dify 从演示环境推上生产的清单"
-tag: Dify
+tags: ["Dify"]
 
 ---
 

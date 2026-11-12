@@ -3,7 +3,7 @@ layout: post
 title: "Python DevOps-监控与日志详解"
 date: 2019-06-15 
 description: "Prometheus、Grafana、ELK Stack、应用监控、日志聚合、性能监控、告警系统"
-tag: Python
+tags: ["Python"]
 
 ---
 

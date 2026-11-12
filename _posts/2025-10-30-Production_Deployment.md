@@ -3,7 +3,7 @@ layout: post
 title: "大模型生产环境部署"
 date: 2025-10-30 
 description: "生产部署、高可用、监控告警、负载均衡、故障处理、最佳实践"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

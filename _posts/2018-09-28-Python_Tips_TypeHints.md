@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-类型注解详解"
 date: 2018-09-28 
 description: "typing模块详解、类型注解基础、泛型、联合类型、类型别名、mypy静态类型检查、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

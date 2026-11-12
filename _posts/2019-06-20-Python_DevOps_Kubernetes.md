@@ -3,7 +3,7 @@ layout: post
 title: "Python DevOps-Kubernetes部署详解"
 date: 2019-06-20 
 description: "K8s基础、Pod、Service、Deployment、ConfigMap、StatefulSet、Ingress、HPA"
-tag: Python
+tags: ["Python"]
 
 ---
 

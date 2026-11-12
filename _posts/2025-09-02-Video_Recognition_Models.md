@@ -3,7 +3,7 @@ layout: post
 title: "视频识别模型"
 date: 2025-09-02 
 description: "视频理解、视频识别模型、Video-LLaMA、Video-ChatGPT、视频分析、应用场景"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

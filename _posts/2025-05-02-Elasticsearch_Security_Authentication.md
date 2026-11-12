@@ -3,7 +3,7 @@ layout: post
 title: "Elasticsearch安全认证与授权"
 date: 2025-05-02 
 description: "安全概述、用户认证、角色权限、API密钥、TLS/SSL配置、安全最佳实践"
-tag: ELK
+tags: ["ELK"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "Python进阶-装饰器进阶详解"
 date: 2019-02-05 
 description: "参数化装饰器、类装饰器、装饰器链、functools.wraps、装饰器最佳实践"
-tag: Python 
+tags: ["Python"]
 
 ---
 

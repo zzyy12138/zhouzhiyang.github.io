@@ -3,7 +3,7 @@ layout: post
 title: "New API部署：自建推理统一入口"
 date: 2026-02-18 
 description: "Docker起New API，渠道接到vLLM"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

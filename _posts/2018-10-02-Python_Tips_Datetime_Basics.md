@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-日期与时间处理详解"
 date: 2018-10-02 
 description: "datetime模块详解、日期时间操作、格式化、时区处理、时间计算、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "MCP连不上时我按这个顺序查"
 date: 2026-11-18 
 description: "路径、stdout污染、宿主缓存旧工具列表"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

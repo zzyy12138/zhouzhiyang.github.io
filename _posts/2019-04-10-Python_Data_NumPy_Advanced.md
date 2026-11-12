@@ -3,7 +3,7 @@ layout: post
 title: "Python数据分析-NumPy进阶详解"
 date: 2019-04-10 
 description: "NumPy高级数组操作、广播机制、线性代数、随机数生成、性能优化"
-tag: Python
+tags: ["Python"]
 
 ---
 

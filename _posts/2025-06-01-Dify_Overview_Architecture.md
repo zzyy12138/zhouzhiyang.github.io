@@ -3,7 +3,7 @@ layout: post
 title: "Dify概述与架构介绍"
 date: 2025-06-01 
 description: "把 Dify 拆开看：能做什么、架构怎么分层、和 LangChain 比哪里省事"
-tag: Dify
+tags: ["Dify"]
 
 ---
 

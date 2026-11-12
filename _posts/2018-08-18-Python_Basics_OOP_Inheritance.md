@@ -3,7 +3,7 @@ layout: post
 title: "Python基础知识-继承与多态"
 date: 2018-08-18 
 description: "继承、super、方法重写、多态行为"
-tag: Python 
+tags: ["Python"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "Cursor深度实践：Agent与规则工程"
 date: 2025-12-05 
 description: "Cursor怎么拆任务、Rules写什么、上下文怎么喂、审查怎么卡"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

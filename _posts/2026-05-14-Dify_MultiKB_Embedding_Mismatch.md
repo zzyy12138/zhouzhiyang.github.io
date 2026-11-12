@@ -3,7 +3,7 @@ layout: post
 title: "多个知识库无法调权重：Embedding不一致"
 date: 2026-05-14 
 description: "应用绑多库时报冲突、Rerank兜底、统一向量模型的治理"
-tag: Dify
+tags: ["Dify"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "Elasticsearch聚合查询深入"
 date: 2025-04-05 
 description: "指标聚合、桶聚合、管道聚合、嵌套聚合、聚合性能优化"
-tag: ELK
+tags: ["ELK"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-数据可视化详解"
 date: 2018-12-07 
 description: "matplotlib基础、图表类型、样式设置、高级可视化、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

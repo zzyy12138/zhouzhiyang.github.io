@@ -3,7 +3,7 @@ layout: post
 title: "Python云计算-无服务器架构详解"
 date: 2019-07-10 
 description: "AWS Lambda、Azure Functions、Google Cloud Functions、Serverless框架、事件驱动、冷启动优化"
-tag: Python
+tags: ["Python"]
 
 ---
 

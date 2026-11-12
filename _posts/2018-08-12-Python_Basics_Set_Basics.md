@@ -3,7 +3,7 @@ layout: post
 title: "Python基础知识-集合基础"
 date: 2018-08-12 
 description: "去重、集合运算、不可变集合frozenset"
-tag: Python 
+tags: ["Python"]
 
 ---
 

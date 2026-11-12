@@ -3,7 +3,7 @@ layout: post
 title: "Dify高级工作流设计"
 date: 2025-07-02 
 description: "并行、分支、重试和降级：工作流变复杂之后我怎么收住它"
-tag: Dify
+tags: ["Dify"]
 
 ---
 

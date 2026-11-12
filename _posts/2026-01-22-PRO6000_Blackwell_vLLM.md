@@ -3,7 +3,7 @@ layout: post
 title: "RTX PRO 6000 上起 vLLM：Blackwell 的坑比模型多"
 date: 2026-01-22 
 description: "sm_120驱动与CUDA、FP8默认策略、单卡试跑和与A100镜像隔离"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

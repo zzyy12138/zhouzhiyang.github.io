@@ -3,7 +3,7 @@ layout: post
 title: "Dify迁移后知识库打不开：Invalid plugin id"
 date: 2026-03-12 
 description: "测试环境搬生产、插件与密钥不同步、离线包迁移注意点"
-tag: Dify
+tags: ["Dify"]
 
 ---
 

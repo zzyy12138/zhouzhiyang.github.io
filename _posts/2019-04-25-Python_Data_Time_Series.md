@@ -3,7 +3,7 @@ layout: post
 title: "Python数据分析-时间序列分析详解"
 date: 2019-04-25 
 description: "时间序列处理、趋势分析、季节性分解、ARIMA模型、时间序列预测、异常检测"
-tag: Python
+tags: ["Python"]
 
 ---
 

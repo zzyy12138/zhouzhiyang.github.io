@@ -3,7 +3,7 @@ layout: post
 title: "客户端接New API时常见翻车"
 date: 2026-05-28 
 description: "Base URL、令牌、模型名，curl先于改IDE"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

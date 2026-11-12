@@ -3,7 +3,7 @@ layout: post
 title: "MCP里加了切金丝雀，必须带确认串"
 date: 2026-08-08 
 description: "只读稳了以后，写操作限制在0到20%"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "大模型推理加速技术"
 date: 2025-10-28 
 description: "推理加速、KV缓存、批处理、Flash Attention、推理优化、性能提升"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

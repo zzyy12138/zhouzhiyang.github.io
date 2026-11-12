@@ -3,7 +3,7 @@ layout: post
 title: "Python云计算-AWS服务详解"
 date: 2019-07-05 
 description: "boto3基础、EC2实例管理、S3存储、Lambda函数、RDS数据库、最佳实践"
-tag: Python
+tags: ["Python"]
 
 ---
 

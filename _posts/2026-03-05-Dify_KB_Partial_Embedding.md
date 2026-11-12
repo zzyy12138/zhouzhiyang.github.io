@@ -3,7 +3,7 @@ layout: post
 title: "Dify知识库：增量更新失败后新旧片段混召回"
 date: 2026-03-05 
 description: "Celery中断导致向量残留、答案自相矛盾、全量重建与同步策略"
-tag: Dify
+tags: ["Dify"]
 
 ---
 

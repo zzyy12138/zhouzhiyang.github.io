@@ -3,7 +3,7 @@ layout: post
 title: "用Python写MCP Server：结构、校验和异步调用"
 date: 2026-07-18 
 description: "FastMCP拆分模块、Pydantic入参、httpx复用、错误怎么抛回给宿主"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

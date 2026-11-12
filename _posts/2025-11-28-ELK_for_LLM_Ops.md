@@ -3,7 +3,7 @@ layout: post
 title: "结合ELK的大模型运维监控实战"
 date: 2025-11-28 
 description: "推理日志进ELK、和Prometheus怎么分工、和Dify日志怎么对上"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

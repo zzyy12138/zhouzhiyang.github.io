@@ -3,7 +3,7 @@ layout: post
 title: "Python Web开发-WebSocket实时通信详解"
 date: 2019-03-30 
 description: "Flask-SocketIO、WebSocket基础、实时消息、房间管理、事件处理、身份验证、性能优化"
-tag: Python
+tags: ["Python"]
 
 ---
 

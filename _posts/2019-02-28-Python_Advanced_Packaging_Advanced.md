@@ -3,7 +3,7 @@ layout: post
 title: "Python进阶-打包分发进阶详解"
 date: 2019-02-28 
 description: "setuptools进阶、wheel、源码分发、私有仓库、包管理最佳实践"
-tag: Python
+tags: ["Python"]
 
 ---
 

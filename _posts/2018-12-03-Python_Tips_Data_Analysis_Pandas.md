@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-数据分析入门详解"
 date: 2018-12-03 
 description: "pandas基础、数据读取、数据清洗、统计分析、数据可视化、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

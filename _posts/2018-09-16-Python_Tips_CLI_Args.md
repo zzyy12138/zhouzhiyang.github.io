@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-命令行参数argparse详解"
 date: 2018-09-16 
 description: "argparse模块详解、命令行参数解析、子命令、参数验证、帮助信息、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "vLLM部署与优化"
 date: 2025-10-05 
 description: "vLLM框架、PagedAttention、连续批处理、部署配置、性能优化、最佳实践"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

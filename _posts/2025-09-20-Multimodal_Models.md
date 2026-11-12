@@ -3,7 +3,7 @@ layout: post
 title: "多模态大模型"
 date: 2025-09-20 
 description: "多模态模型、图文理解、视频理解、音频理解、多模态融合、应用场景"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

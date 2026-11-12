@@ -3,7 +3,7 @@ layout: post
 title: "RAG工程化：从Dify知识库到生产级检索"
 date: 2025-12-24 
 description: "切分、召回重排、评测集、线上坏案例和发布节奏"
-tag: Dify
+tags: ["Dify"]
 
 ---
 

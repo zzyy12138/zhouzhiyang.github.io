@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-调试与断点详解"
 date: 2018-08-22 
 description: "print调试、pdb/ipdb调试器、断点设置、变量查看、调试技巧与最佳实践"
-tag: Python 
+tags: ["Python"]
 
 ---
 

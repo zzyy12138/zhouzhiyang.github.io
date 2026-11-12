@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-subprocess进程管理详解"
 date: 2018-10-14 
 description: "subprocess模块详解、进程管理、命令执行、输出捕获、错误处理、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

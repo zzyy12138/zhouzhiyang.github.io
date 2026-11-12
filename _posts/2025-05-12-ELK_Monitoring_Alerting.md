@@ -3,7 +3,7 @@ layout: post
 title: "ELK监控与告警"
 date: 2025-05-12 
 description: "监控体系、Elasticsearch监控、Logstash监控、Kibana监控、告警配置、监控仪表板"
-tag: ELK
+tags: ["ELK"]
 
 ---
 

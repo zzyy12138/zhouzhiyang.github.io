@@ -3,7 +3,7 @@ layout: post
 title: "New API挂了主备渠道之后"
 date: 2026-07-22 
 description: "同模型两个上游，维护时令牌不用换"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

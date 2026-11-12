@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-JSON与YAML数据处理详解"
 date: 2018-10-06 
 description: "JSON/YAML数据处理、序列化与反序列化、配置文件处理、数据验证、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-虚拟环境与依赖管理详解"
 date: 2018-12-15 
 description: "venv/virtualenv、pip基本用法、requirements.txt、Poetry进阶管理、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

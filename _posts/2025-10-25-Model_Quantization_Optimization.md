@@ -3,7 +3,7 @@ layout: post
 title: "大模型量化与优化"
 date: 2025-10-25 
 description: "模型量化、INT8量化、INT4量化、FP8量化、量化方法、优化技术"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

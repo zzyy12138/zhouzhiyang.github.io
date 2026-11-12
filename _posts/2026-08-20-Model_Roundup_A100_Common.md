@@ -3,7 +3,7 @@ layout: post
 title: "常见开源模型A100复测：Qwen / DeepSeek / Llama 对照"
 date: 2026-08-20 
 description: "同机同脚本下的显存、TTFT、工具调用抽检，路由表怎么改"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

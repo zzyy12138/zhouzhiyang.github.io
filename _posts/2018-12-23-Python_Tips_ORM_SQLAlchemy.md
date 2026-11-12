@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-ORM与SQLAlchemy详解"
 date: 2018-12-23 
 description: "SQLAlchemy基础、模型定义、查询操作、关系映射、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

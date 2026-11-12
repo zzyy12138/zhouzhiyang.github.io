@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-Web API开发详解"
 date: 2018-12-19 
 description: "Flask基础、路由设计、请求处理、JSON响应、数据库集成、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

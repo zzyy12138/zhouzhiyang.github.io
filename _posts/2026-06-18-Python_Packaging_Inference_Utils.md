@@ -3,7 +3,7 @@ layout: post
 title: "把压测和巡检收成Python包：版本混乱之后"
 date: 2026-06-18 
 description: "脚本散落各处、依赖冲突、打成可安装工具包的过程"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

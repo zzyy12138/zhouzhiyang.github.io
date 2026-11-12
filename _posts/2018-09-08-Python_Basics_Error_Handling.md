@@ -3,7 +3,7 @@ layout: post
 title: "Python基础知识-错误与异常处理详解"
 date: 2018-09-08 
 description: "异常类型、try/except/else/finally、raise与自定义异常、断言、异常处理最佳实践"
-tag: Python 
+tags: ["Python"]
 
 ---
 

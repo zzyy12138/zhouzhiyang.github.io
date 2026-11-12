@@ -3,7 +3,7 @@ layout: post
 title: "Python DevOps-Docker容器化详解"
 date: 2019-06-05 
 description: "Docker基础、Dockerfile编写、多阶段构建、容器编排、最佳实践"
-tag: Python
+tags: ["Python"]
 
 ---
 

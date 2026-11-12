@@ -3,7 +3,7 @@ layout: post
 title: "Python基础知识-字符串/列表/元组/字典的公共方法"
 date: 2018-07-09 
 description: "Python基础知识"
-tag: Python 
+tags: ["Python"]
 
 ---
 

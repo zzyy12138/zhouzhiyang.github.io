@@ -3,7 +3,7 @@ layout: post
 title: "MCP与Dify并存：各管一段别搅成一锅"
 date: 2026-11-05 
 description: "IDE里用MCP运维、业务编排仍走Dify，边界和重复建设怎么取舍"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

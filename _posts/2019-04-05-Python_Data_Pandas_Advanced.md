@@ -3,7 +3,7 @@ layout: post
 title: "Python数据分析-Pandas进阶详解"
 date: 2019-04-05 
 description: "Pandas分组聚合、透视表、时间序列、数据合并、性能优化、高级索引"
-tag: Python
+tags: ["Python"]
 
 ---
 

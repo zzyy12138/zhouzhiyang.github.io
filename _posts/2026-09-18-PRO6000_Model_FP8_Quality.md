@@ -3,7 +3,7 @@ layout: post
 title: "PRO 6000 上FP8常见模型：速度有了质量怎么验"
 date: 2026-09-18 
 description: "Blackwell单卡FP8吞吐、困惑度/抽检、和A100 BF16是否可互换"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

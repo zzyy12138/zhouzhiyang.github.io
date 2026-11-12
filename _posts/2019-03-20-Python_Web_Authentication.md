@@ -3,7 +3,7 @@ layout: post
 title: "Python Web开发-身份认证详解"
 date: 2019-03-20 
 description: "JWT认证、OAuth授权、会话管理、密码安全、Flask-Security、用户权限管理"
-tag: Python
+tags: ["Python"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "Python数据分析-ETL数据处理详解"
 date: 2019-04-20 
 description: "数据提取、转换、加载、数据清洗流程、数据质量检查、ETL最佳实践"
-tag: Python
+tags: ["Python"]
 
 ---
 

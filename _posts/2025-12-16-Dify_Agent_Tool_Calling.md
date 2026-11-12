@@ -3,7 +3,7 @@ layout: post
 title: "Dify Agent与Tool Calling实战笔记"
 date: 2025-12-16 
 description: "工作里什么时候用Agent、工具怎么定义、失败怎么兜、观测看什么"
-tag: Dify
+tags: ["Dify"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "大模型推理基础"
 date: 2025-08-28 
 description: "推理原理、推理流程、生成策略、采样方法、推理优化、推理实践"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-迭代器与生成器详解"
 date: 2019-07-10 
 description: "迭代协议、yield关键字、生成器表达式、惰性求值、内存优化、协程基础"
-tag: Python 
+tags: ["Python"]
 
 ---
 

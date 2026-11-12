@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-网络请求详解"
 date: 2018-11-03 
 description: "requests库详解、HTTP请求处理、会话管理、错误处理、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

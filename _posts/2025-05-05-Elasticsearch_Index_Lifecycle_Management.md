@@ -3,7 +3,7 @@ layout: post
 title: "Elasticsearch索引生命周期管理"
 date: 2025-05-02 
 description: "ILM概述、生命周期策略、阶段配置、索引模板、自动管理、最佳实践"
-tag: ELK
+tags: ["ELK"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "ELK技术栈概述与架构介绍"
 date: 2025-03-01 
 description: "ELK技术栈概述、核心组件、架构设计、应用场景、技术选型"
-tag: ELK
+tags: ["ELK"]
 
 ---
 

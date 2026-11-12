@@ -3,7 +3,7 @@ layout: post
 title: "Python机器学习-模型评估详解"
 date: 2019-05-20 
 description: "交叉验证、评估指标、学习曲线、混淆矩阵、ROC曲线、AUC、模型选择、性能分析"
-tag: Python
+tags: ["Python"]
 
 ---
 

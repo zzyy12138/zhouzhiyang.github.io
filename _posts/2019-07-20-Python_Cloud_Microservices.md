@@ -3,7 +3,7 @@ layout: post
 title: "Python云计算-微服务架构详解"
 date: 2019-07-20 
 description: "服务拆分、API网关、服务发现、负载均衡、服务网格、分布式追踪"
-tag: Python
+tags: ["Python"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "初识GitHub"
 date: 2017-07-15 
 description: "GitHub使用小结"
-tag: GitHub  
+tags: ["GitHub"]
 
 ---
 

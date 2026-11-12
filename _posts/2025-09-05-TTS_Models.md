@@ -3,7 +3,7 @@ layout: post
 title: "TTS文本转语音模型"
 date: 2025-09-05 
 description: "TTS原理、TTS模型、Tacotron、VITS、XTTS、语音合成、应用场景"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "Python基础知识-推导式与生成器表达式详解"
 date: 2018-11-20 
 description: "列表推导式、字典推导式、集合推导式、生成器表达式、嵌套推导式、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

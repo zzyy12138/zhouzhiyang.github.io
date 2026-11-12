@@ -3,7 +3,7 @@ layout: post
 title: "Dify最佳实践与案例"
 date: 2025-07-25 
 description: "客服、内容生成、数据助手三个案例，加上检索不准和成本失控时怎么拆"
-tag: Dify
+tags: ["Dify"]
 
 ---
 

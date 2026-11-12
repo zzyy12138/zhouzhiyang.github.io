@@ -3,7 +3,7 @@ layout: post
 title: "Dify安装部署与环境配置"
 date: 2025-06-05 
 description: "Docker Compose 落地 Dify：环境要求、.env 要点、我踩过的坑"
-tag: Dify
+tags: ["Dify"]
 
 ---
 

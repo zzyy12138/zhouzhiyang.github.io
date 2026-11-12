@@ -3,7 +3,7 @@ layout: post
 title: "LLM服务可观测性：指标、日志与链路追踪"
 date: 2025-11-05 
 description: "TTFT、Prometheus埋点、结构化日志、链路追踪、Grafana和告警怎么落地"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

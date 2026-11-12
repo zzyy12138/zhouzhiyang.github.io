@@ -3,7 +3,7 @@ layout: post
 title: "大模型API使用指南"
 date: 2025-09-25 
 description: "API使用、OpenAI API、Anthropic API、API调用、参数配置、最佳实践"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

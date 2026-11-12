@@ -3,7 +3,7 @@ layout: post
 title: "Python云计算-消息队列详解"
 date: 2019-07-25 
 description: "SQS、SNS、RabbitMQ、Redis Pub/Sub、消息队列、发布订阅、消息处理"
-tag: Python
+tags: ["Python"]
 
 ---
 

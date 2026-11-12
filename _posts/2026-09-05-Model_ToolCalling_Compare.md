@@ -3,7 +3,7 @@ layout: post
 title: "工具调用对比测试：谁稳、谁爱瞎编参数"
 date: 2026-09-05 
 description: "同一套MCP/网关工具schema下的调用成功率与乱参率"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

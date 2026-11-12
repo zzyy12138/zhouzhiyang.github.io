@@ -3,7 +3,7 @@ layout: post
 title: "Dify与自建推理服务对接实战"
 date: 2025-12-20 
 description: "经网关接vLLM/SGLang、别名映射、流式联调、超时和回滚"
-tag: Dify
+tags: ["Dify"]
 
 ---
 

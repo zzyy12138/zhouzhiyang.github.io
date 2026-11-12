@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-日志系统详解"
 date: 2018-10-22 
 description: "日志系统配置、处理器、格式化、日志轮转、结构化日志、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

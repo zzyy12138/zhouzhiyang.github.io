@@ -3,7 +3,7 @@ layout: post
 title: "Python进阶-测试进阶详解"
 date: 2019-02-25 
 description: "mock、fixture、参数化、覆盖率、TDD、测试最佳实践"
-tag: Python
+tags: ["Python"]
 
 ---
 

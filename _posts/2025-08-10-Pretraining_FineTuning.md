@@ -3,7 +3,7 @@ layout: post
 title: "大模型预训练与微调"
 date: 2025-08-10 
 description: "预训练原理、预训练方法、微调技术、LoRA、QLoRA、指令微调、RLHF"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

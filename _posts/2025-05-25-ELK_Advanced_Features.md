@@ -3,7 +3,7 @@ layout: post
 title: "ELK高级特性与应用"
 date: 2025-05-25 
 description: "机器学习、APM应用性能监控、Canvas可视化、Lens可视化、Transform数据转换、高级搜索"
-tag: ELK
+tags: ["ELK"]
 
 ---
 

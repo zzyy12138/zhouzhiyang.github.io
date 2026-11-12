@@ -3,7 +3,7 @@ layout: post
 title: "MCP用stdio还是HTTP，权限怎么收"
 date: 2026-07-28 
 description: "本地Cursor用stdio，密钥和路径别放开"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

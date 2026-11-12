@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-多线程编程详解"
 date: 2018-10-26 
 description: "多线程基础、线程同步、锁机制、队列通信、线程池、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

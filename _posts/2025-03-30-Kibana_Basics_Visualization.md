@@ -3,7 +3,7 @@ layout: post
 title: "Kibana基础与可视化入门"
 date: 2025-03-30 
 description: "Kibana安装配置、Discover搜索、可视化创建、仪表板构建、Dev Tools使用"
-tag: ELK
+tags: ["ELK"]
 
 ---
 

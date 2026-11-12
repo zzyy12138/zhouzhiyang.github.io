@@ -3,7 +3,7 @@ layout: post
 title: "Python Web开发-Flask进阶详解"
 date: 2019-03-05 
 description: "Flask蓝图、中间件、数据库集成、RESTful API、应用工厂模式、安全防护"
-tag: Python
+tags: ["Python"]
 
 ---
 

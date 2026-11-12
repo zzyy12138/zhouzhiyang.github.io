@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-配置文件处理详解"
 date: 2018-11-11 
 description: "配置文件管理、configparser使用、环境变量处理、配置验证、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

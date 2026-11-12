@@ -3,7 +3,7 @@ layout: post
 title: "AI Coding工具全景：Cursor、Claude Code、Copilot"
 date: 2025-12-02 
 description: "常用工具怎么选、时间线、和运维日常怎么结合、哪些事不能交给它"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

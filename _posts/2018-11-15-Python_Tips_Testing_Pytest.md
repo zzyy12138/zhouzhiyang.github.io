@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-pytest测试框架详解"
 date: 2018-11-15 
 description: "pytest测试框架、fixture使用、参数化测试、测试组织、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

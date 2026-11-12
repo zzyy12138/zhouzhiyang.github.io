@@ -3,7 +3,7 @@ layout: post
 title: "Python Web开发-RESTful API设计详解"
 date: 2019-03-15 
 description: "REST原则、HTTP方法、状态码、API版本控制、认证授权、错误处理"
-tag: Python
+tags: ["Python"]
 
 ---
 

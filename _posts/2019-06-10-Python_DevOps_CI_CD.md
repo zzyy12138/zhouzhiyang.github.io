@@ -3,7 +3,7 @@ layout: post
 title: "Python DevOps-CI/CD流水线详解"
 date: 2019-06-10 
 description: "GitHub Actions、Jenkins、自动化测试、部署、持续集成、持续部署最佳实践"
-tag: Python
+tags: ["Python"]
 
 ---
 

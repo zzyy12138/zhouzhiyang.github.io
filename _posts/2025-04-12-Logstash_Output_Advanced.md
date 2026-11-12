@@ -3,7 +3,7 @@ layout: post
 title: "Logstash输出插件与数据管道"
 date: 2025-04-12 
 description: "Elasticsearch输出、多输出、条件输出、输出插件配置、数据管道设计"
-tag: ELK
+tags: ["ELK"]
 
 ---
 

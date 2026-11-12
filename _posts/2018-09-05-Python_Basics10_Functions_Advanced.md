@@ -3,7 +3,7 @@ layout: post
 title: "Python基础知识-函数进阶详解"
 date: 2018-09-05 
 description: "参数类型详解、可变参数、关键字参数、闭包、装饰器、函数式编程基础"
-tag: Python 
+tags: ["Python"]
 
 ---
 

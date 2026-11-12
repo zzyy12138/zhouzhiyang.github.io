@@ -3,7 +3,7 @@ layout: post
 title: "提示词工程基础"
 date: 2025-08-15 
 description: "提示词概念、提示词设计、Few-shot学习、Chain-of-Thought、提示词优化、最佳实践"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

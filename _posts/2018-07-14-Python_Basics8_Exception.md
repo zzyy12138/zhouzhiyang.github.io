@@ -3,7 +3,7 @@ layout: post
 title: "Python异常处理"
 date: 2018-07-14 
 description: "Python基础知识"
-tag: Python 
+tags: ["Python"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "Logstash基础与安装配置"
 date: 2025-03-20 
 description: "Logstash概述、安装部署、基础配置、输入输出插件、过滤器插件"
-tag: ELK
+tags: ["ELK"]
 
 ---
 

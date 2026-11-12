@@ -3,7 +3,7 @@ layout: post
 title: "Dify工作流基础"
 date: 2025-06-10 
 description: "节点、变量、分支怎么串：我从第一个问答工作流里摸出来的用法"
-tag: Dify
+tags: ["Dify"]
 
 ---
 

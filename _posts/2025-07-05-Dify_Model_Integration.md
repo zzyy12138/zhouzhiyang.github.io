@@ -3,7 +3,7 @@ layout: post
 title: "Dify模型集成与配置"
 date: 2025-07-05 
 description: "云端模型、Ollama 本地模型、参数和降级：模型配置上的取舍"
-tag: Dify
+tags: ["Dify"]
 
 ---
 

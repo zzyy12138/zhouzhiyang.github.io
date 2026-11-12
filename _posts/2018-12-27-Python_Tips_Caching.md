@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-缓存策略详解"
 date: 2018-12-27 
 description: "functools.lru_cache、Redis基础、缓存模式、性能优化、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "Python机器学习-深度学习与TensorFlow详解"
 date: 2019-05-10 
 description: "TensorFlow基础、神经网络构建、卷积网络、循环网络、模型优化"
-tag: Python
+tags: ["Python"]
 
 ---
 

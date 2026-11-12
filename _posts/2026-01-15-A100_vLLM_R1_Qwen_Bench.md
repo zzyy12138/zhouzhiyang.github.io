@@ -3,7 +3,7 @@ layout: post
 title: "A100 80G 上跑 DeepSeek-R1 蒸馏与 Qwen：一次压测记录"
 date: 2026-01-15 
 description: "单卡32B、并发与TTFT、max-model-len踩坑，以及为什么高并发更爱14B"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "ELK故障排查指南"
 date: 2025-05-20 
 description: "常见问题、故障诊断、日志分析、性能问题、集群问题、恢复方案"
-tag: ELK
+tags: ["ELK"]
 
 ---
 

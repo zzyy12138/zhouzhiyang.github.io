@@ -3,7 +3,7 @@ layout: post
 title: "Python机器学习-超参数调优详解"
 date: 2019-05-25 
 description: "网格搜索、随机搜索、贝叶斯优化、超参数重要性分析、调优策略、性能对比"
-tag: Python
+tags: ["Python"]
 
 ---
 

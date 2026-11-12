@@ -3,7 +3,7 @@ layout: post
 title: "Dify提示词工程"
 date: 2025-06-30 
 description: "系统提示词、变量和上下文：我在 Dify 里改提示词的实用写法"
-tag: Dify
+tags: ["Dify"]
 
 ---
 

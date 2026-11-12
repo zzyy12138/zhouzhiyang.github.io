@@ -3,7 +3,7 @@ layout: post
 title: "Python云计算-数据服务详解"
 date: 2019-07-15 
 description: "S3、RDS、DynamoDB、Elasticsearch、数据存储、数据查询、数据同步"
-tag: Python
+tags: ["Python"]
 
 ---
 

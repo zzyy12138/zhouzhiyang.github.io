@@ -3,7 +3,7 @@ layout: post
 title: "Dify知识库管理"
 date: 2025-06-15 
 description: "分块、Embedding、检索参数：知识库从能搜到搜得准的调整笔记"
-tag: Dify
+tags: ["Dify"]
 
 ---
 

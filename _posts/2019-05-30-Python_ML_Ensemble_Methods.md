@@ -3,7 +3,7 @@ layout: post
 title: "Python机器学习-集成方法详解"
 date: 2019-05-30 
 description: "Bagging、Boosting、Stacking、投票分类器、集成学习原理、性能优化"
-tag: Python
+tags: ["Python"]
 
 ---
 

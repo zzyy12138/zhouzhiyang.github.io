@@ -3,7 +3,7 @@ layout: post
 title: "推理服务故障排查与SLO实践"
 date: 2025-11-20 
 description: "SLO怎么定、常见故障怎么拆、Runbook和复盘"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

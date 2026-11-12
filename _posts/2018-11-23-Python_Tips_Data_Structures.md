@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-数据结构进阶详解"
 date: 2018-11-23 
 description: "collections模块、heapq堆操作、bisect二分查找、高级数据结构应用"
-tag: Python 
+tags: ["Python"]
 
 ---
 

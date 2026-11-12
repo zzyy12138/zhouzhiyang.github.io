@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-单元测试基础详解"
 date: 2018-09-20 
 description: "unittest框架详解、测试用例组织、断言方法、测试发现、Mock对象、测试覆盖率、最佳实践"
-tag: Python 
+tags: ["Python"]
 
 ---
 

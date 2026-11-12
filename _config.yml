@@ -11,7 +11,6 @@ url: "http://zhouzhiyang.cn"
 # Comment
 comment:
     disqus: zhouzhiyang
-    # uyan: 2143225  # 有言id,登录有言官网申请
 
 # Social
 social:
@@ -20,17 +19,9 @@ social:
     # twitter: 
     mail: 15151467670@163.com
 
-# 百度统计 
-# 使用博客模板请去掉或者更换 id 
+# 百度统计
 baidu:
-    id: 2317b81d98bac2c77d9bccc806a78e62
-    
-# Google Analytics
-# 使用博客模板请去掉或者更换 id
-# ga:
-#     id: UA-84134159-3   
-#     host: auto  
-
+    id: 100936397ef2c6cfe7f8c2a34fd731ef
 
 # 《----------------- 上面的信息修改成你自己的 ---------------------------》
 #
@@ -43,8 +34,11 @@ baidu:
 
  
 permalink: /:year/:month/:title/
-# Format
+# 代码块样式由 highlight.js 负责，这里关掉 kramdown 的 rouge，避免渲两次
 highlighter: rouge
+kramdown:
+  syntax_highlighter_opts:
+    disable: true
 
 textColor: #FF0000
 
@@ -63,7 +57,9 @@ nav:
     
 
 # Pagination
-gems: [jekyll-paginate,jekyll-sitemap]
+plugins:
+  - jekyll-paginate
+  - jekyll-sitemap
 paginate: 20
 paginate_path: "page/:num/"
 

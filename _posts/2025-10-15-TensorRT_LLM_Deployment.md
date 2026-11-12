@@ -3,7 +3,7 @@ layout: post
 title: "TensorRT-LLM部署"
 date: 2025-10-15 
 description: "TensorRT-LLM、NVIDIA优化、GPU加速、模型编译、性能优化、部署实践"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "内网pi coding和zcode接上Qwen3.8-Flash-Next"
 date: 2026-09-25 
 description: "Flash-Next部署，经New API发Key给IDE"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

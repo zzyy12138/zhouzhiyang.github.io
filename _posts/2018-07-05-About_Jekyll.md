@@ -3,7 +3,7 @@ layout: post
 title: "windows下如何使用jekyll"
 date: 2018-07-05 
 description: "windows下使用jekyll"
-tag: Jekyll  
+tags: ["Jekyll"]
 
 ---
 

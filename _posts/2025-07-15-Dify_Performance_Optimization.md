@@ -3,7 +3,7 @@ layout: post
 title: "Dify性能优化"
 date: 2025-07-15 
 description: "工作流、检索、缓存和模型调用：我排查 Dify 变慢时的顺序"
-tag: Dify
+tags: ["Dify"]
 
 ---
 

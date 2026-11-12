@@ -3,7 +3,7 @@ layout: post
 title: "Elasticsearch基础概念与安装"
 date: 2025-03-05 
 description: "Elasticsearch核心概念、安装部署、基础配置、集群搭建、常用命令"
-tag: ELK
+tags: ["ELK"]
 
 ---
 

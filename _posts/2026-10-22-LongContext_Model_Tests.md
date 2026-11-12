@@ -3,7 +3,7 @@ layout: post
 title: "长上下文实测：宣称能吃下和线上敢开是两件事"
 date: 2026-10-22 
 description: "128K/长窗在A100与PRO6000上的显存、速度和中间遗忘"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

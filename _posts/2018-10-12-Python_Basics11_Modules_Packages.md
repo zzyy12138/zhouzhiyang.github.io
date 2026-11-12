@@ -3,7 +3,7 @@ layout: post
 title: "Python基础知识-模块与包详解"
 date: 2018-10-12 
 description: "模块与包基础、导入机制、包结构、相对导入、__all__、脚本与库双用、实际应用案例"
-tag: Python 
+tags: ["Python"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "Python进阶-描述符协议详解"
 date: 2019-01-05 
 description: "描述符协议、__get__/__set__/__delete__、property实现原理、数据验证、属性管理"
-tag: Python 
+tags: ["Python"]
 
 ---
 

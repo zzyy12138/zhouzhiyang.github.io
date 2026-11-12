@@ -3,7 +3,7 @@ layout: post
 title: "Beats轻量级数据采集器"
 date: 2025-04-15 
 description: "Beats概述、Filebeat配置、Metricbeat监控、Packetbeat网络分析、Beats最佳实践"
-tag: ELK
+tags: ["ELK"]
 
 ---
 

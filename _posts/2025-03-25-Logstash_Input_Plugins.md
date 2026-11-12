@@ -3,7 +3,7 @@ layout: post
 title: "Logstash输入插件详解"
 date: 2025-03-25 
 description: "File输入、Beats输入、TCP/UDP输入、HTTP输入、JDBC输入、Kafka输入、Redis输入"
-tag: ELK
+tags: ["ELK"]
 
 ---
 

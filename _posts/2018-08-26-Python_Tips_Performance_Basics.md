@@ -3,7 +3,7 @@ layout: post
 title: "Python实用技巧-性能优化基础"
 date: 2018-08-26 
 description: "时间复杂度分析、内置函数优化、内存管理、性能测试、优化策略与最佳实践"
-tag: Python 
+tags: ["Python"]
 
 ---
 

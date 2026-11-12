@@ -3,7 +3,7 @@ layout: post
 title: "Coding令和CTF令牌别混着用"
 date: 2026-10-05 
 description: "Flash-Next给IDE，去审27B给比赛机"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "Python AI工程化：异步调用、重试与流式输出"
 date: 2025-12-12 
 description: "httpx异步复用、该不该重试、SSE与取消、背压和可测结构"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title: "Python网关高并发：背压、取消和超时雪崩"
 date: 2026-02-12 
 description: "httpx复用、信号量、客户端断开取消上游，以及超时层层放大的一次事故"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

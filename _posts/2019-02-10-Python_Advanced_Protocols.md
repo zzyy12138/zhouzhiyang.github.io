@@ -3,7 +3,7 @@ layout: post
 title: "Python进阶-协议与鸭子类型详解"
 date: 2019-02-10 
 description: "协议概念、鸭子类型、__iter__、__call__、__getitem__、typing.Protocol、协议实现最佳实践"
-tag: Python 
+tags: ["Python"]
 
 ---
 

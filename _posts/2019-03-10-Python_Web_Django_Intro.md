@@ -3,7 +3,7 @@ layout: post
 title: "Python Web开发-Django入门详解"
 date: 2019-03-10 
 description: "Django基础、模型、视图、模板、管理后台、URL配置、表单处理"
-tag: Python
+tags: ["Python"]
 
 ---
 

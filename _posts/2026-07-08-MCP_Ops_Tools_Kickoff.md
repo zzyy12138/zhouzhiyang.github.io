@@ -3,7 +3,7 @@ layout: post
 title: "给运维Agent接了几个MCP只读工具"
 date: 2026-07-08 
 description: "Cursor里查别名健康和GPU，先不上写操作"
-tag: 大模型
+tags: ["大模型"]
 
 ---
 

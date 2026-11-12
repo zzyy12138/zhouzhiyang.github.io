@@ -3,7 +3,7 @@ layout: post
 title: "Python数据分析-大数据处理详解"
 date: 2019-04-30 
 description: "Dask并行计算、分块处理、内存优化、分布式计算、大数据分析最佳实践"
-tag: Python
+tags: ["Python"]
 
 ---
 
