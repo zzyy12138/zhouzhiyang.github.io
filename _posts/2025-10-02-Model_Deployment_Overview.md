@@ -58,4 +58,5 @@ tag: 大模型
 
 监控也是同一阶段补上的。最低限度：GPU 利用率、显存、请求错误率、p95 TTFT。日志带 `request_id` 和模型名，排障会省很多命。选型没有银弹，适合业务流量和卡型的才是好方案。
 
+<br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [大模型部署概述](http://zhouzhiyang.cn/2025/10/Model_Deployment_Overview/)

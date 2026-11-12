@@ -99,4 +99,5 @@ print(r.json()["choices"][0]["message"]["content"])
 
 如果你的流量前缀重复不多，先把 vLLM 吃透更划算；SGLang 是在特定形状的请求上才值得多养一套服务。
 
+<br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [SGLang部署与使用](http://zhouzhiyang.cn/2025/10/SGLang_Deployment/)

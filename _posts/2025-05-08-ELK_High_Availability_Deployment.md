@@ -13,9 +13,9 @@ tag: ELK
 
 底线：
 
-- 至少 3 个可成为 master 的节点（或 3 个专用 master）  
-- 数据至少 1 副本（`number_of_replicas: 1`）  
-- 节点散开：不同机器 / 机架 / 可用区  
+- 至少 3 个可成为 master 的节点（或 3 个专用 master）
+- 数据至少 1 副本（`number_of_replicas: 1`）
+- 节点散开：不同机器 / 机架 / 可用区
 
 ```yaml
 # master 节点
@@ -44,9 +44,9 @@ cluster.routing.allocation.awareness.attributes: zone
 
 Logstash 本身无状态（开了 persisted queue 则队列在本地）。HA 做法：
 
-1. 多实例相同管道配置  
-2. Filebeat 填多个 hosts，或前面用 LB  
-3. `queue.type: persisted`，单实例重启不丢本地缓冲  
+1. 多实例相同管道配置
+2. Filebeat 填多个 hosts，或前面用 LB
+3. `queue.type: persisted`，单实例重启不丢本地缓冲
 
 ```yaml
 # filebeat 侧

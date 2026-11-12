@@ -98,7 +98,7 @@ def chat_with_retry(messages, retries=5):
             time.sleep(2 ** i)
 ```
 
-**成本：** 简单分类走小模型；提示去废话；能缓存的语义缓存；设预算告警。  
+**成本：** 简单分类走小模型；提示去废话；能缓存的语义缓存；设预算告警。
 **并发：** 异步客户端 + 有界信号量，避免把自己打到限流。
 
 Gemini、Hugging Face、Together、国内云厂商都有类似 HTTP API；很多还提供 OpenAI 兼容层，换 `base_url` 就能切——记得回归提示词，兼容不等于输出分布相同。
@@ -109,4 +109,5 @@ Gemini、Hugging Face、Together、国内云厂商都有类似 HTTP API；很多
 
 API 用得熟，本地部署时也更知道该模仿哪些能力（流式、tools、JSON mode）。先把这一层写成可靠的客户端库，再往上堆业务，会少返工很多。
 
+<br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [大模型API使用指南](http://zhouzhiyang.cn/2025/09/Large_Model_API_Usage/)

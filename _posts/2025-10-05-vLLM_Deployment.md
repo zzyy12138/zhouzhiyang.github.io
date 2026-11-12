@@ -91,4 +91,5 @@ print(resp.choices[0].message.content)
 
 对我来说 vLLM 是「默认能扛事」的那一档；把显存账和并发上限算清楚，比追新特性重要得多。
 
+<br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [vLLM部署与优化](http://zhouzhiyang.cn/2025/10/vLLM_Deployment/)

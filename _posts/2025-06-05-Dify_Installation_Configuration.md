@@ -168,4 +168,5 @@ docker compose ps
 
 生产向的最低安全线：强密码、HTTPS 反代、防火墙只暴露 80/443、定期备份 PG 和文件、别把 API Key 写进前端仓库。更细的高可用放到后面生产部署那篇再展开。
 
+<br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Dify安装部署与环境配置](http://zhouzhiyang.cn/2025/06/Dify_Installation_Configuration/)

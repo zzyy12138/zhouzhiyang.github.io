@@ -9,7 +9,7 @@ tag: 大模型
 
 ## 先泼冷水
 
-TensorRT-LLM 的峰值性能经常很好看，尤其在固定模型、固定形状、NVIDIA 栈可控的时候。但代价也很实在：环境挑、要编译引擎、换模型或改 `max_batch_size` / 序列长度往往得重新 build。  
+TensorRT-LLM 的峰值性能经常很好看，尤其在固定模型、固定形状、NVIDIA 栈可控的时候。但代价也很实在：环境挑、要编译引擎、换模型或改 `max_batch_size` / 序列长度往往得重新 build。
 
 我把它定位成「延迟抠到极致、模型变更不频繁」的选项，而不是日常试模型的默认项。日常迭代还是 vLLM 省心。
 
@@ -67,4 +67,5 @@ docker pull nvcr.io/nvidia/tensorrt-llm:latest
 
 如果还在天天换基座、改上下文长度，先用 vLLM/SGLang 把产品和流量形状跑明白，再考虑把热点模型冻成 TRT 引擎。性能数字很好看，但运维节奏跟不上的话，只会变成更难回滚的包袱。
 
+<br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [TensorRT-LLM部署](http://zhouzhiyang.cn/2025/10/TensorRT_LLM_Deployment/)

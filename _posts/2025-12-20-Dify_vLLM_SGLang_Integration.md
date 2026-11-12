@@ -1,9 +1,10 @@
 ---
 layout: post
 title: "Dify与自建推理服务对接实战"
-date: 2025-12-20
+date: 2025-12-20 
 description: "经网关接vLLM/SGLang、别名映射、流式联调、超时和回滚"
 tag: Dify
+
 ---
 
 ## 别让 Dify 直连一堆引擎地址
@@ -45,9 +46,12 @@ curl -N https://llm-gateway.internal/v1/chat/completions \
 
 ## 常见问题
 
-- `model not found`：别名和 `real_name` 对不上  
-- 工具调用不稳：换对 function calling 更熟的指令模型，或改回工作流显式调工具  
-- 上下文超长：查引擎 `max_model_len`，以及知识库 TopK、历史轮次  
-- 速度忽快忽慢：是不是和别的应用挤同一拥塞队列  
+- `model not found`：别名和 `real_name` 对不上
+- 工具调用不稳：换对 function calling 更熟的指令模型，或改回工作流显式调工具
+- 上下文超长：查引擎 `max_model_len`，以及知识库 TopK、历史轮次
+- 速度忽快忽慢：是不是和别的应用挤同一拥塞队列
 
 出问题优先改网关路由切回 stable，不必先动 Dify 应用配置。发布也按这个顺序：引擎小流量 → 网关灰度 → Dify 测试应用 → 生产应用。日志能用 `request_id` / `workflow_run_id` 串起来，对接才算真正打通。
+
+<br>
+转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Dify与自建推理服务对接实战](http://zhouzhiyang.cn/2025/12/Dify_vLLM_SGLang_Integration/)

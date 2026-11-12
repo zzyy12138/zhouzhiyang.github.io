@@ -56,9 +56,9 @@ Top-k 固定候选个数；Top-p（nucleus）按累积概率动态收窄，通�
 
 ## 几个关键参数
 
-- `max_new_tokens`：硬上限，防止跑飞  
-- `stop` / eos：协议和对话轮次要设对，否则会继续瞎写  
-- `presence_penalty` / `frequency_penalty`（API 侧）：压重复、推新话题  
+- `max_new_tokens`：硬上限，防止跑飞
+- `stop` / eos：协议和对话轮次要设对，否则会继续瞎写
+- `presence_penalty` / `frequency_penalty`（API 侧）：压重复、推新话题
 
 创意任务抬温度；要 JSON 就降温并关花样采样。**不要**在评测时开高温度还抱怨「模型不稳定」。
 
@@ -68,9 +68,9 @@ Top-k 固定候选个数；Top-p（nucleus）按累积概率动态收窄，通�
 
 吞吐不够就上连续批处理（vLLM 的 PagedAttention 那套）；精度换速度就 FP16/BF16，再不够 INT8/INT4。框架取舍大致是：
 
-- **Transformers：** 开发调试  
-- **vLLM / TGI：** 线上吞吐  
-- 单机玩：**Ollama** 够快  
+- **Transformers：** 开发调试
+- **vLLM / TGI：** 线上吞吐
+- 单机玩：**Ollama** 够快
 
 ```python
 # 批量时注意 padding 方向和 attention mask
@@ -82,10 +82,11 @@ outputs = model.generate(**inputs, max_new_tokens=64, do_sample=True, top_p=0.9)
 
 ## 常见翻车
 
-- **复读机：** 降一点温度？不——先加 repetition penalty / 换 top-p，并检查提示是否诱导清单循环  
-- **太短或太长：** 提示里写清长度，同时设 `max_new_tokens`；摘要任务可加 `min_new_tokens`  
-- **又慢又贵：** 能小模型就小模型；提示压缩；能缓存的语义缓存；同 GPU 上用连续 batch  
+- **复读机：** 降一点温度？不——先加 repetition penalty / 换 top-p，并检查提示是否诱导清单循环
+- **太短或太长：** 提示里写清长度，同时设 `max_new_tokens`；摘要任务可加 `min_new_tokens`
+- **又慢又贵：** 能小模型就小模型；提示压缩；能缓存的语义缓存；同 GPU 上用连续 batch
 
 推理不是「把 `generate` 调一遍」，而是把采样、显存和产品延迟一起设计。参数表可以抄，失败 case 必须自己积。
 
+<br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [大模型推理基础](http://zhouzhiyang.cn/2025/08/Model_Inference_Basics/)

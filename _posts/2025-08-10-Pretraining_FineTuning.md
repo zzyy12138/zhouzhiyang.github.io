@@ -106,4 +106,5 @@ Adapter 在层间插小模块；Prompt Tuning 几乎只训软提示。参数更�
 
 预训练决定上限，微调和对齐决定你能不能把上限用在业务上。多数团队的工作量其实在数据和评估，不在改两行 `LoraConfig`。
 
+<br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [大模型预训练与微调](http://zhouzhiyang.cn/2025/08/Pretraining_FineTuning/)

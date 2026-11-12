@@ -104,12 +104,12 @@ docker compose exec -T db \
   pg_dump -U user dify | gzip > backup_$(date +%F).sql.gz
 ```
 
-同时备份：对象存储里的文件、重要 `.env`（安全保存）、向量库快照（按所用引擎文档）。  
+同时备份：对象存储里的文件、重要 `.env`（安全保存）、向量库快照（按所用引擎文档）。
 恢复演练每年至少做一次——只备份从不恢复，等于没备份。
 
 ## 升级
 
-预发先升 → 看迁移与插件兼容 → 维护窗口备份 → 滚动升级 → 冒烟（登录、对话、检索、一条工作流）。  
+预发先升 → 看迁移与插件兼容 → 维护窗口备份 → 滚动升级 → 冒烟（登录、对话、检索、一条工作流）。
 准备回滚镜像版本和上一日备份。跨大版本必读官方 breaking changes。
 
 ## 资源粗估（起点）
@@ -123,4 +123,5 @@ docker compose exec -T db \
 
 先监控再扩容，避免一上来买一堆空闲机器。
 
+<br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Dify生产环境部署](http://zhouzhiyang.cn/2025/07/Dify_Production_Deployment/)

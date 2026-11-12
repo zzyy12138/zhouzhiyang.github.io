@@ -56,4 +56,5 @@ tag: 大模型
 
 自学顺序我自己走过的是：概念 → Transformer → 预训练/微调 → 提示词 → 评估指标 → 再碰多模态和部署。别一上来就追最新发布会，把 attention 和采样参数搞明白，后面换模型成本会低很多。
 
+<br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [大模型概述与基础知识](http://zhouzhiyang.cn/2025/08/Large_Model_Overview/)

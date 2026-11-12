@@ -35,7 +35,7 @@ Meta 的 **LLaMA 2 / 3** 把「可商用的强开源底座」推开了：7B～70
 
 ## 代码与多模态（单独记账）
 
-- **代码：** GPT-4 级 API 仍然省心；要私有化看 CodeLlama、Qwen-Coder 等。Copilot 背后那套 Codex 路线已经演化进更大的通用模型里。  
+- **代码：** GPT-4 级 API 仍然省心；要私有化看 CodeLlama、Qwen-Coder 等。Copilot 背后那套 Codex 路线已经演化进更大的通用模型里。
 - **多模态：** GPT-4o / Claude 视觉、Gemini、Qwen-VL。图文问答、单据识别够用；细粒度定位、复杂图表仍要人工抽检。
 
 ## 我怎么选（决策比参数表重要）
@@ -72,4 +72,5 @@ print(msg.content[0].text)
 
 模型名单会继续变；保持「闭源打样、开源控成本与隐私、中文单独回归」这三条，一般不会选得太歪。
 
+<br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [常见大模型介绍](http://zhouzhiyang.cn/2025/08/Common_Large_Models/)

@@ -54,7 +54,7 @@ def get_or_set(prefix, payload, ttl, fetcher):
     return value
 ```
 
-适合缓存：稳定的 FAQ 答案、相同文档的 embedding、很少变的配置。  
+适合缓存：稳定的 FAQ 答案、相同文档的 embedding、很少变的配置。
 不适合：强个性化、强实时（库存、支付状态）。
 
 ## 模型调用
@@ -69,9 +69,10 @@ PG 连接池、磁盘 IO（向量库与文档存储）、worker 数量都要看�
 
 ## 监控指标
 
-应用：响应时间（均值 / P95）、错误率、队列堆积。  
-业务：每对话 Token、检索耗时、外部 HTTP 耗时。  
+应用：响应时间（均值 / P95）、错误率、队列堆积。
+业务：每对话 Token、检索耗时、外部 HTTP 耗时。
 
 没有拆耗时之前不要全局「优化」。我有一次以为是 LLM 慢，最后是知识库 Top K=20 把提示词撑爆了——把 K 降到 4，比换模型有效得多。
 
+<br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Dify性能优化](http://zhouzhiyang.cn/2025/07/Dify_Performance_Optimization/)

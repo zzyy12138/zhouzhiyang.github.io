@@ -1,9 +1,10 @@
 ---
 layout: post
 title: "Claude Code与终端AI编程工作流"
-date: 2025-12-08
+date: 2025-12-08 
 description: "终端Agent怎么用、权限怎么收、和CI怎么配合"
 tag: 大模型
+
 ---
 
 ## 它出现在什么位置
@@ -29,10 +30,13 @@ tag: 大模型
 
 ## 几个实用场景
 
-巡检脚本：GPU 是否可见、`/health`、磁盘、近几分钟错误数——生成后自己补超时和非零退出码。  
-日志归因：脱敏片段 + 配置，让它提假设和验证命令，别直接在生产执行修复。  
+巡检脚本：GPU 是否可见、`/health`、磁盘、近几分钟错误数——生成后自己补超时和非零退出码。
+日志归因：脱敏片段 + 配置，让它提假设和验证命令，别直接在生产执行修复。
 批量对配置：对比各环境 `values.yaml` 的模型别名，产出草案，apply 仍人工。
 
 CI 还是权威门禁。Agent 本地通过不等于可合并；lint/test 过了且人审过才行。
 
 别指望它替代值班，也别一对话塞十个问题。拆开，才控制得住。
+
+<br>
+转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Claude Code与终端AI编程工作流](http://zhouzhiyang.cn/2025/12/Claude_Code_Terminal_Workflow/)

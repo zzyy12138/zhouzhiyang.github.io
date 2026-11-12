@@ -1,9 +1,10 @@
 ---
 layout: post
 title: "Python构建LLM API网关与中间件"
-date: 2025-11-12
+date: 2025-11-12 
 description: "FastAPI做薄网关：鉴权、限流、流式代理、路由和错误码"
 tag: 大模型
+
 ---
 
 ## 为啥不让业务直连 vLLM
@@ -110,3 +111,6 @@ def route_model(alias: str) -> str:
 ```
 
 本地至少测四件事：鉴权失败、超 QPM 返回 429、上游超时是否变成 504、流式中断后连接有没有释放。这些比再包一层「优雅抽象」值钱。
+
+<br>
+转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python构建LLM API网关与中间件](http://zhouzhiyang.cn/2025/11/Python_LLM_API_Gateway/)

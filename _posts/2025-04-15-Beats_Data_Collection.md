@@ -107,10 +107,10 @@ output.elasticsearch:
 
 ## 落地习惯
 
-- 业务机只跑 Beat，解析集中到 Logstash 或 ingest pipeline  
-- 用 `fields` 打标，后面好分流索引  
-- 输出开压缩、适当 worker；磁盘将满时看 registry 与 harvester 状态  
-- Windows 事件用 Winlogbeat，systemd journal 看版本是否还带 journal 输入  
+- 业务机只跑 Beat，解析集中到 Logstash 或 ingest pipeline
+- 用 `fields` 打标，后面好分流索引
+- 输出开压缩、适当 worker；磁盘将满时看 registry 与 harvester 状态
+- Windows 事件用 Winlogbeat，systemd journal 看版本是否还带 journal 输入
 
 装完先 `filebeat test config` / `filebeat test output`，再 `systemctl start`。
 

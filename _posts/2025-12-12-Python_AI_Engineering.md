@@ -1,9 +1,10 @@
 ---
 layout: post
 title: "Python AI工程化：异步调用、重试与流式输出"
-date: 2025-12-12
+date: 2025-12-12 
 description: "httpx异步复用、该不该重试、SSE与取消、背压和可测结构"
 tag: 大模型
+
 ---
 
 ## 脚本能跑和线上能扛是两回事
@@ -70,3 +71,6 @@ SSE 按行读就行。更关键的是：浏览器一关，上游生成要停。�
 ## 结构和联调
 
 路由、策略和真正的 HTTP 调用拆开，单测才能注入假 client。跟 Dify 联调时，超时要分层：Dify ≥ 网关 ≥ 引擎，倒置会出现「下层还在跑、上层已判失败」的重试风暴。流式链路每一跳都确认透传，别在反代里缓冲。
+
+<br>
+转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python AI工程化：异步调用、重试与流式输出](http://zhouzhiyang.cn/2025/12/Python_AI_Engineering/)

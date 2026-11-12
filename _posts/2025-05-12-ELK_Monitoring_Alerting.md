@@ -21,11 +21,11 @@ curl -s "localhost:9200/_cat/thread_pool/search,write?v"
 
 我会告警的：
 
-- 集群 status 变 yellow 持续过久 / 变 red  
-- 磁盘 > 85%（靠近 ES 水位）  
-- 堆长期 > 85% 或 GC 频繁  
-- search/write 线程池 rejected 增长  
-- 节点数突然变少  
+- 集群 status 变 yellow 持续过久 / 变 red
+- 磁盘 > 85%（靠近 ES 水位）
+- 堆长期 > 85% 或 GC 频繁
+- search/write 线程池 rejected 增长
+- 节点数突然变少
 
 慢查询可以开 index 级 slowlog，先抓真凶再优化 DSL。
 

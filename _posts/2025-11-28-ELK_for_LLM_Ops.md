@@ -1,9 +1,10 @@
 ---
 layout: post
 title: "结合ELK的大模型运维监控实战"
-date: 2025-11-28
+date: 2025-11-28 
 description: "推理日志进ELK、和Prometheus怎么分工、和Dify日志怎么对上"
 tag: 大模型
+
 ---
 
 ## 指标告诉你炸了，日志告诉你谁炸的
@@ -49,3 +50,6 @@ ILM 按热温删走，日志盘被打满这种事，沉默成本很高。提示�
 Grafana 报 `chat-large` 的 p95 TTFT 超线 → Kibana 滤同时段 → 发现金丝雀版本慢请求多 → 用 `request_id` 进引擎日志 → 长上下文下 KV 顶满 → 把金丝雀百分比打回 0 → 复盘补上「长上下文压测」再发版。
 
 把观测、GPU、网关、灰度、排障、成本接到同一套日志之后，推理侧排障终于能「从告警点到某次请求」。这比再加一张空看板实在。
+
+<br>
+转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [结合ELK的大模型运维监控实战](http://zhouzhiyang.cn/2025/11/ELK_for_LLM_Ops/)

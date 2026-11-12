@@ -11,7 +11,7 @@ tag: Dify
 
 ## 它在链路里干什么
 
-文档进来之后大致是：解析文本 → 分块 → Embedding → 写入向量库 → 查询时向量召回（可加关键词）→ 把片段交给 LLM。  
+文档进来之后大致是：解析文本 → 分块 → Embedding → 写入向量库 → 查询时向量召回（可加关键词）→ 把片段交给 LLM。
 任一步糊弄，后面模型再强也救不动。
 
 ## 创建时怎么选
@@ -77,4 +77,5 @@ Embedding 选择上：OpenAI 的 embedding 省心；数据不能出网或中文�
 
 反过来说：文档垃圾时，后面都是空转。
 
+<br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Dify知识库管理](http://zhouzhiyang.cn/2025/06/Dify_Knowledge_Base_Management/)

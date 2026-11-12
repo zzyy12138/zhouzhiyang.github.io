@@ -129,9 +129,9 @@ Python 示例：用 json logger，Logstash 只 `json { source => "message" }`，
 
 ## Kibana 里我常看的
 
-- Discover：`status_code: >=500` 或 `level: ERROR`  
-- 图：按 `@timestamp` 的请求量、5xx 占比  
-- 术语：`url.keyword` / `service` top N  
+- Discover：`status_code: >=500` 或 `level: ERROR`
+- 图：按 `@timestamp` 的请求量、5xx 占比
+- 术语：`url.keyword` / `service` top N
 
 索引模板提前建好，`status_code` 用 integer，`level` 用 keyword。ILM 按天索引挂上，access 留 7～30 天，error 可以更久一点。
 

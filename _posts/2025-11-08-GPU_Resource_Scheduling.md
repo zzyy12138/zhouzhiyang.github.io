@@ -1,9 +1,10 @@
 ---
 layout: post
 title: "GPU资源管理与推理集群调度"
-date: 2025-11-08
+date: 2025-11-08 
 description: "显存怎么估、多模型能不能共卡、K8s调度注意点、常见故障"
 tag: 大模型
+
 ---
 
 ## 显存比 CPU 更不客气
@@ -48,3 +49,6 @@ DCGM Exporter 建议接上。利用率长期很低是浪费，长期打满要扩
 - **延迟一阵一阵**：查是不是共卡、CPU 是否给够、是不是在边跑边拉权重
 
 每周看一眼卡时利用率和业务量是否匹配。卡空着和卡被离线任务打满，都是钱的问题，只是方向相反。
+
+<br>
+转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [GPU资源管理与推理集群调度](http://zhouzhiyang.cn/2025/11/GPU_Resource_Scheduling/)

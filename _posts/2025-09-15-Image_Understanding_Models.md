@@ -11,8 +11,8 @@ tag: 大模型
 
 ## 三条技术线
 
-**传统视觉：** ResNet 分类、YOLO/DETR 检测、U-Net 分割——要框、要 mask 时仍然是它们。  
-**ViT / Swin：** 图像切 patch 当 token，全局或窗口注意力，当骨干很强。  
+**传统视觉：** ResNet 分类、YOLO/DETR 检测、U-Net 分割——要框、要 mask 时仍然是它们。
+**ViT / Swin：** 图像切 patch 当 token，全局或窗口注意力，当骨干很强。
 **视觉-语言模型：** CLIP、BLIP、GPT-4V / Gemini / Qwen-VL——把像素接到语言空间，才能「聊图」。
 
 任务选型别装万能：要抠人像用分割模型；要「这张发票总金额多少」用 VLM + 必要时 OCR。
@@ -89,4 +89,5 @@ print(resp.choices[0].message.content)
 
 趋势是更强的统一多模态、更好的细粒度定位、以及文档/GUI Agent。对我这种业务开发者，优先建立「失败案例集」（小字、表格、遮挡、截图压缩），比追每篇新论文标题管用。
 
+<br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [图像理解模型](http://zhouzhiyang.cn/2025/09/Image_Understanding_Models/)

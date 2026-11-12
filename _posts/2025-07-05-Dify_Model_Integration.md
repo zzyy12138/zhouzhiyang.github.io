@@ -57,7 +57,7 @@ LocalAI / vLLM 则走 OpenAI 兼容入口，Base URL 指到 `/v1`，模型名用
 
 ## 切换与降级
 
-工作流里可以按条件选不同 LLM 节点（VIP / 普通，简单 / 复杂）。  
+工作流里可以按条件选不同 LLM 节点（VIP / 普通，简单 / 复杂）。
 供应商挂了怎么办：准备备用 Provider 或本地模型，失败分支切过去，并打日志——不然你只看到「用户说 AI 挂了」。
 
 成本控制：
@@ -70,4 +70,5 @@ LocalAI / vLLM 则走 OpenAI 兼容入口，Base URL 指到 `/v1`，模型名用
 
 调用次数、Token、错误率、P95 延迟。哪天账单暴涨，多半是：循环节点没限流、提示词塞了整页检索、某客户端在重试风暴。先查这三样。
 
+<br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Dify模型集成与配置](http://zhouzhiyang.cn/2025/07/Dify_Model_Integration/)

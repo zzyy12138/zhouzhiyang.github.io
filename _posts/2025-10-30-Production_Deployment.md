@@ -61,4 +61,5 @@ tag: 大模型
 
 十月如果只做一件和生产相关的事，我会选：引擎前面加网关 + 健康检查 + 能只切路由的回滚。有了这三样，后面的观测和 SLO 才接得上；没有的话，引擎再快也只是单机 demo。
 
+<br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [大模型生产环境部署](http://zhouzhiyang.cn/2025/10/Production_Deployment/)

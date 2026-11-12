@@ -100,4 +100,5 @@ API（FastAPI）——REST / WebSocket / 鉴权
 
 先装起来跑通一个「知识库 + 对话」；再单独练工作流节点和变量；然后才是 API 接入业务、模型成本、生产部署。插件和自定义节点可以往后放——很多需求用 HTTP + 代码节点就能扛住。
 
+<br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Dify概述与架构介绍](http://zhouzhiyang.cn/2025/06/Dify_Overview_Architecture/)

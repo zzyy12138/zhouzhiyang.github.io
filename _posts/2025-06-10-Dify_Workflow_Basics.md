@@ -27,7 +27,7 @@ tag: Dify
 
 ### LLM
 
-选模型、写系统提示词和用户提示词、调 temperature / max tokens。  
+选模型、写系统提示词和用户提示词、调 temperature / max tokens。
 准确问答我会把 temperature 压到 0.2～0.5；需要一点文采再往上加。别一上来就拉满 1.5，输出会飘。
 
 ### 知识库检索
@@ -90,4 +90,5 @@ HTTP / 模型偶发失败很正常。节点上能开重试的先开（次数别�
 - 先串行跑通，再考虑并行（高级篇再写）
 - 提示词和知识库质量，往往比再加两个节点更管用
 
+<br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Dify工作流基础](http://zhouzhiyang.cn/2025/06/Dify_Workflow_Basics/)

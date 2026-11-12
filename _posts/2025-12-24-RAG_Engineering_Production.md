@@ -1,9 +1,10 @@
 ---
 layout: post
 title: "RAG工程化：从Dify知识库到生产级检索"
-date: 2025-12-24
+date: 2025-12-24 
 description: "切分、召回重排、评测集、线上坏案例和发布节奏"
 tag: Dify
+
 ---
 
 ## 挂上知识库 ≠ 生产可用
@@ -29,3 +30,6 @@ Embedding 换模型通常要重建索引，单独发版，别和 Chat 模型同�
 发布节奏：预发增量入库 → 跑评测对比 → 小流量应用切换 → 观察 → 全量，并保留旧索引别名以便回滚。Dify 里生产应用尽量钉知识库版本，重要参数用工作流显式控制，避免后台随手改 TopK。
 
 质量差时先分清检索还是生成。上下文突然变长，TTFT 和费用也会跟着坏，别一上来怪引擎。
+
+<br>
+转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [RAG工程化：从Dify知识库到生产级检索](http://zhouzhiyang.cn/2025/12/RAG_Engineering_Production/)

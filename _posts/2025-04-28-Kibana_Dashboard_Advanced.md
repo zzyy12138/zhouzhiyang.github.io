@@ -11,10 +11,10 @@ tag: ELK
 
 ## 面板怎么选
 
-- **时序**：请求量、错误量、P95 延迟 —— Lens 折线/面积最省事  
-- **Top N**：status、path、service —— 条形 + terms  
-- **大数字**：当前 QPS、5xx 数 —— Metric，旁边用颜色规则打红黄绿  
-- **热力**：小时 × 级别，看高峰是否总在爆错误  
+- **时序**：请求量、错误量、P95 延迟 —— Lens 折线/面积最省事
+- **Top N**：status、path、service —— 条形 + terms
+- **大数字**：当前 QPS、5xx 数 —— Metric，旁边用颜色规则打红黄绿
+- **热力**：小时 × 级别，看高峰是否总在爆错误
 
 字段必须可聚合（keyword / number / date）。图是空的，十有八九是 text 字段或时间字段选错。
 

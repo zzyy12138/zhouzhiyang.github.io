@@ -1,9 +1,10 @@
 ---
 layout: post
 title: "Dify Agent与Tool Calling实战笔记"
-date: 2025-12-16
+date: 2025-12-16 
 description: "工作里什么时候用Agent、工具怎么定义、失败怎么兜、观测看什么"
 tag: Dify
+
 ---
 
 ## 工作流还在，Agent 是补充
@@ -51,3 +52,6 @@ async def check_model_health(model_alias: str) -> dict:
 线上至少看：平均工具次数、按工具的失败率、迭代步数、单次 token。Agent 变贵变慢时，这几项比看「感觉」准。
 
 调试顺序也简单：单工具先手工通 → 再看模型选没选对 → 再看回填是否太长 → 最后和固定工作流比，确认真有收益再换。
+
+<br>
+转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Dify Agent与Tool Calling实战笔记](http://zhouzhiyang.cn/2025/12/Dify_Agent_Tool_Calling/)

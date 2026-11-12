@@ -115,4 +115,5 @@ ollama run ops-helper
 
 和 vLLM 的分工我现在很固定：Ollama 负责「快速确认模型行不行」，确认之后权重和接口迁到 vLLM，再谈限流和观测。本地爽不等于线上能睡安稳。
 
+<br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Ollama本地部署](http://zhouzhiyang.cn/2025/10/Ollama_Deployment/)

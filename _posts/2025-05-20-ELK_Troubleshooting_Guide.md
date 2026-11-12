@@ -17,8 +17,8 @@ curl -s "localhost:9200/_cat/nodes?v"
 curl -s "localhost:9200/_cat/shards?h=index,shard,prirep,state,unassigned.reason" | grep UNASSIGNED
 ```
 
-- **red**：有主分片丢了。找挂掉的 data 节点、盘满、分配被关（`cluster.routing.allocation.enable`）。  
-- **yellow**：副本没地方放。单节点必黄；多节点则查副本数是否大于 data 节点数、磁盘水位、awareness 是否过严。  
+- **red**：有主分片丢了。找挂掉的 data 节点、盘满、分配被关（`cluster.routing.allocation.enable`）。
+- **yellow**：副本没地方放。单节点必黄；多节点则查副本数是否大于 data 节点数、磁盘水位、awareness 是否过严。
 
 ```bash
 curl -s "localhost:9200/_cluster/allocation/explain?pretty"
@@ -44,9 +44,9 @@ ss -lntp | grep 9200
 
 ## 写入失败 / 堆积
 
-- ES：`_cat/thread_pool/write?v`、磁盘是否只读、circuit breaker  
-- Logstash：9600 pipelines 统计、`_grokparsefailure` 比例、队列是否打满  
-- Filebeat：registry、输出报错、磁盘  
+- ES：`_cat/thread_pool/write?v`、磁盘是否只读、circuit breaker
+- Logstash：9600 pipelines 统计、`_grokparsefailure` 比例、队列是否打满
+- Filebeat：registry、输出报错、磁盘
 
 ```bash
 curl -s "localhost:9600/_node/stats/pipelines?pretty" | head -c 4000
@@ -65,10 +65,10 @@ curl -s "localhost:9200/_nodes/stats/indices/fielddata,query_cache,segments,brea
 
 多数不是丢，是：
 
-1. 查错索引名 / 别名  
-2. 时间字段或时区不对  
-3. ILM 删了  
-4. 过滤条件太狠  
+1. 查错索引名 / 别名
+2. 时间字段或时区不对
+3. ILM 删了
+4. 过滤条件太狠
 
 先 Discover 放大时间范围、去掉 filter。真要救数据，靠快照恢复，别指望 translog 万能。
 

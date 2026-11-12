@@ -82,4 +82,5 @@ model = AutoModelForCausalLM.from_pretrained("你的模型路径", quantization_
 
 我的默认策略：显存紧先 INT8/INT4 让服务站稳，再用评测决定能不能作为主流量；不会为了「压缩比好看」主动牺牲格式稳定性。量化是手段，不是成绩单。
 
+<br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [大模型量化与优化](http://zhouzhiyang.cn/2025/10/Model_Quantization_Optimization/)

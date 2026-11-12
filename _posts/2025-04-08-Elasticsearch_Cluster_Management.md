@@ -97,9 +97,9 @@ curl -X GET "localhost:9200/_nodes/stats/jvm,fs,os?pretty"
 
 ## 故障时的顺序
 
-1. `_cat/nodes` 谁没了  
-2. 机器：磁盘、内存、`vm.max_map_count`、网络  
-3. ES 日志里的 bootstrap / circuit breaker  
+1. `_cat/nodes` 谁没了
+2. 机器：磁盘、内存、`vm.max_map_count`、网络
+3. ES 日志里的 bootstrap / circuit breaker
 4. 未分配分片 reason：副本不够？磁盘？分配被关？
 
 脑裂：保证合格 master 数、网络稳定；别在两个机房各起一套还共用一个 `cluster.name` 却网络时断时续。

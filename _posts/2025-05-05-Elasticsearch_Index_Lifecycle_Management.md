@@ -11,10 +11,10 @@ tag: ELK
 
 ## 阶段怎么理解
 
-- **hot**：正在写，做 rollover  
-- **warm**：不怎么写了，forcemerge、shrink、减副本  
-- **cold / frozen**：更冷的存储或 searchable snapshot（有仓库才有意义）  
-- **delete**：到期删除  
+- **hot**：正在写，做 rollover
+- **warm**：不怎么写了，forcemerge、shrink、减副本
+- **cold / frozen**：更冷的存储或 searchable snapshot（有仓库才有意义）
+- **delete**：到期删除
 
 `min_age` 一般从索引 rollover 成功算起（hot 里有 rollover 时），别和「创建时间」混着拍脑袋。
 
@@ -94,10 +94,10 @@ curl -X GET "localhost:9200/_cat/aliases/logs?v"
 
 常见坑：
 
-- 忘了 `is_write_index: true`，rollover 失败  
-- 策略改了，已有索引还挂着旧配置（可 `_ilm/retry` 或等下轮）  
-- warm 要求 `require.data: warm` 但集群没有带该属性的节点，分片搬不走  
-- 删除太狠，出事没法查 —— 先宽松保留，磁盘稳了再收  
+- 忘了 `is_write_index: true`，rollover 失败
+- 策略改了，已有索引还挂着旧配置（可 `_ilm/retry` 或等下轮）
+- warm 要求 `require.data: warm` 但集群没有带该属性的节点，分片搬不走
+- 删除太狠，出事没法查 —— 先宽松保留，磁盘稳了再收
 
 Data stream + ILM 是 7.9+ 更推荐的日志写法，新项目可以优先用，概念和上面类似，少自己管 `000001` 命名。
 

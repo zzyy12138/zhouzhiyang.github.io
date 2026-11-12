@@ -112,4 +112,5 @@ Attention 是 \(O(n^2)\)，长序列先爆显存。**FlashAttention** 用 IO-awa
 
 读源码时建议对照 Hugging Face 的 `LlamaAttention` 看一遍：RoPE、GQA、FlashAttention 开关都在里面，比只背论文图有感觉。
 
+<br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Transformer架构详解](http://zhouzhiyang.cn/2025/08/Transformer_Architecture/)

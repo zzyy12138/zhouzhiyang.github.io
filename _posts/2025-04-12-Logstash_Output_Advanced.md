@@ -93,9 +93,9 @@ Filebeat → (Kafka) → Logstash → ES
                 └──────────────→ 可选另一消费者
 ```
 
-- 流量平稳、解析简单：Filebeat → ES  
-- 要复杂 filter：Filebeat → Logstash → ES  
-- 突发大、多消费者：中间加 Kafka，Logstash 做消费者  
+- 流量平稳、解析简单：Filebeat → ES
+- 要复杂 filter：Filebeat → Logstash → ES
+- 突发大、多消费者：中间加 Kafka，Logstash 做消费者
 
 一台 Logstash 跑多个 pipeline 时，用 `pipelines.yml` 拆开，避免一个 conf 里 if-else 迷宫：
 
