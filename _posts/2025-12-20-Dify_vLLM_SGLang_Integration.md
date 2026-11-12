@@ -9,11 +9,11 @@ tags: ["Dify"]
 
 ## 别让 Dify 直连一堆引擎地址
 
-六月学 Dify，十月学 vLLM/SGLang，中间若直接把引擎 URL 填进 Dify，短期省事，灰度回滚时会很痛。我现在默认链路是：
+直接把引擎 URL 填进 Dify，短期省事，灰度回滚时会很痛。默认链路是：
 
 **Dify → LLM 网关 → vLLM / SGLang**
 
-Dify 只认别名和网关 Key；真实模型名、金丝雀、限流都在网关。
+Dify 只认别名和网关 Key；真实模型名、新版本流量比例、限流都在网关。
 
 ## 引擎和映射
 
@@ -41,7 +41,7 @@ Dify 供应商里 Base URL 指网关 `/v1`，模型名填 `dify-chat` 这种别�
 curl -N https://llm-gateway.internal/v1/chat/completions \
   -H "Authorization: Bearer sk-dify-prod" \
   -H "Content-Type: application/json" \
-  -d '{"model":"dify-chat","stream":true,"messages":[{"role":"user","content":"你好"}]}'
+  -d '{"model":"dify-chat","stream":true,"messages":[{"role":"user","content":"ping"}]}'
 ```
 
 ## 常见问题

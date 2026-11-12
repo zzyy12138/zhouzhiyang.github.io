@@ -7,7 +7,7 @@ tags: ["大模型"]
 
 ---
 
-训练决定模型「会什么」，推理决定用户「感不感觉得到」。延迟、吞吐、采样参数一拧错，好模型也能产出垃圾。这篇记自回归生成在干什么，以及我调参和加速时的习惯。
+训练决定模型「会什么」，推理决定用户「感不感觉得到」。延迟、吞吐、采样参数一拧错，好模型也能产出垃圾。这篇记自回归生成在干什么，以及调参和加速时怎么取舍。
 
 ## 生成在循环什么
 
@@ -36,7 +36,7 @@ def generate(model, tokenizer, prompt, max_new_tokens=128, **gen_kwargs):
 p_i = \mathrm{softmax}(z_i / T)
 \]
 
-\(T<1\) 更尖、更保守；\(T>1\) 更平、更跳。结构化抽取我常用 `0～0.3`；写作 `0.7～1.0`。
+\(T<1\) 更尖、更保守；\(T>1\) 更平、更跳。结构化抽取常用 `0～0.3`；写作 `0.7～1.0`。
 
 ### Top-k / Top-p
 
@@ -52,7 +52,7 @@ def top_p_truncate(logits, p=0.9):
     return sorted_logits.scatter(-1, idx, sorted_logits)
 ```
 
-Top-k 固定候选个数；Top-p（nucleus）按累积概率动态收窄，通常更稳。实践里 `temperature≈0.7` + `top_p≈0.9` 是我的默认起点，再按重复率微调 `repetition_penalty`（约 `1.05～1.2`）。
+Top-k 固定候选个数；Top-p（nucleus）按累积概率动态收窄，通常更稳。实践里 `temperature≈0.7` + `top_p≈0.9` 是默认起点，再按重复率微调 `repetition_penalty`（约 `1.05～1.2`）。
 
 ## 几个关键参数
 

@@ -417,7 +417,7 @@ memory_usage_optimization()
 - `memory_profiler`：分析内存使用
 - `line_profiler`：逐行性能分析
 
-通过掌握这些性能优化技巧，你可以编写出更高效的Python代码，在处理大数据或性能敏感的应用中取得更好的效果。
+掌握这些性能优化技巧后，可以写出更高效的 Python 代码，在处理大数据或性能敏感的应用中取得更好的效果。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python实用技巧-性能基础](http://zhouzhiyang.cn/2018/08/Python_Tips_Performance_Basics/) 

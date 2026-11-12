@@ -520,7 +520,7 @@ comparison_analysis()
 5. **实际应用**：在销售分析、数据对比等场景中的应用
 6. **最佳实践**：遵循数据可视化的最佳实践
 
-通过系统学习这些概念，你将能够创建出专业、美观的数据可视化图表，有效传达数据中的信息和洞察。
+掌握这些概念后，可以创建出专业、美观的数据可视化图表，有效传达数据中的信息和洞察。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python实用技巧-数据可视化](http://zhouzhiyang.cn/2018/12/Python_Tips_Visualization_Matplotlib/) 

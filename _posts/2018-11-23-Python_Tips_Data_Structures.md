@@ -472,7 +472,7 @@ data_statistics_example()
 5. **性能优化**：选择合适的数据结构提高程序效率
 6. **最佳实践**：遵循数据结构使用的最佳实践
 
-通过系统学习这些概念，你将能够编写出更加高效、优雅的Python代码，提高程序的性能和可维护性。
+掌握这些概念后，可以编写出更加高效、优雅的Python代码，提高程序的性能和可维护性。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python实用技巧-数据结构进阶](http://zhouzhiyang.cn/2018/11/Python_Tips_Data_Structures/) 

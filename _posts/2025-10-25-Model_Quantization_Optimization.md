@@ -9,17 +9,17 @@ tags: ["大模型"]
 
 ## 量化首先是显存问题
 
-线上逼我认真做量化的理由，很少是「追求论文里的加速比」，更多是：这张 24G 卡 FP16 吃不下，或者并发一抬 KV 把余量掏空。权重量化后，同一张卡能塞下模型，或腾出空间给并发——这才是体感。
+线上认真做量化，很少是为了论文里的加速比，更多是：这张 24G 卡 FP16 吃不下，或者并发一抬 KV 把余量掏空。权重量化后，同一张卡能塞下模型，或腾出空间给并发——这才是体感。
 
-精度会掉。能不能接受，用你的业务评测集说话，别只看官方库的 demo 分数。
+精度会掉。能不能接受，用业务评测集说话，别只看官方库的 demo 分数。
 
-## 我怎么选精度档
+## 精度档怎么选
 
 - **INT8：** 相对稳，很多场景损失可接受，先试它往往够用。
-- **INT4（GPTQ / AWQ）：** 显存更紧、要上更大模型或更高并发时再上。AWQ、GPTQ 我都用过，最终看在自己数据上谁掉点少、以及推理引擎是否好加载。
+- **INT4（GPTQ / AWQ）：** 显存更紧、要上更大模型或更高并发时再上。AWQ、GPTQ 都可以试，最终看在业务数据上谁掉点少、以及推理引擎是否好加载。
 - **FP8：** 看 GPU 和引擎支持情况，栈匹配时再碰；别为了「新」强上。
 
-BitsAndBytes 的 4bit 加载适合训练/实验快速省显存；生产推理服务我更倾向引擎原生支持的量化权重（vLLM 直接吃 AWQ/GPTQ 这类）。
+BitsAndBytes 的 4bit 加载适合训练/实验快速省显存；生产推理服务更适合引擎原生支持的量化权重（vLLM 直接吃 AWQ/GPTQ 这类）。
 
 ## 实操片段
 
@@ -29,7 +29,7 @@ GPTQ 示意：
 from auto_gptq import AutoGPTQForCausalLM, BaseQuantizeConfig
 
 quantize_config = BaseQuantizeConfig(bits=4, group_size=128, desc_act=False)
-model = AutoGPTQForCausalLM.from_pretrained("你的模型路径", quantize_config=quantize_config)
+model = AutoGPTQForCausalLM.from_pretrained("/models/target", quantize_config=quantize_config)
 # 按库文档准备校准数据后再 quantize / save_quantized
 model.save_quantized("quantized_gptq")
 ```
@@ -39,10 +39,10 @@ AWQ 示意：
 ```python
 from awq import AutoAWQForCausalLM
 
-model = AutoAWQForCausalLM.from_pretrained("你的模型路径")
+model = AutoAWQForCausalLM.from_pretrained("/models/target")
 model.quantize(
     quant_config={"zero_point": True, "q_group_size": 128, "w_bit": 4},
-    calib_data="calibration_data",  # 换成你的校准语料
+    calib_data="calibration_data",  # 换成校准语料路径
 )
 model.save_quantized("quantized_awq")
 ```
@@ -58,7 +58,7 @@ bnb = BitsAndBytesConfig(
     bnb_4bit_quant_type="nf4",
     bnb_4bit_compute_dtype=torch.float16,
 )
-model = AutoModelForCausalLM.from_pretrained("你的模型路径", quantization_config=bnb)
+model = AutoModelForCausalLM.from_pretrained("/models/target", quantization_config=bnb)
 ```
 
 校准数据要用接近线上的文本。拿维基百科校准、线上全是工单和日志，掉点会莫名其妙。
@@ -78,9 +78,9 @@ model = AutoModelForCausalLM.from_pretrained("你的模型路径", quantization_
 - **只量化权重，并发照旧拉满：** KV 仍按高精相关占用涨，OOM 还是会来，该限流继续限。
 - **group_size / 校准不足：** 图省事用默认小校准集，某些垂直领域崩得更明显。
 - **引擎不认格式：** 量化完发现 vLLM 版本不支持该权重类型，白忙。先查引擎文档再开量化任务。
-- **和金丝雀脱节：** 量化版当新版本发，没有小流量对比质量，出了问题难以及时切回。
+- **没先放量对比：** 量化版当新版本发，没有先放一部分流量比质量，出了问题难以及时切回。
 
-我的默认策略：显存紧先 INT8/INT4 让服务站稳，再用评测决定能不能作为主流量；不会为了「压缩比好看」主动牺牲格式稳定性。量化是手段，不是成绩单。
+默认策略：显存紧先 INT8/INT4 让服务站稳，再用评测决定能不能作为主流量；不为了「压缩比好看」主动牺牲格式稳定性。量化是手段，不是成绩单。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [大模型量化与优化](http://zhouzhiyang.cn/2025/10/Model_Quantization_Optimization/)

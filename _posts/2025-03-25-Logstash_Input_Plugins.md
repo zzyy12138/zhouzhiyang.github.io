@@ -7,7 +7,7 @@ tags: ["ELK"]
 
 ---
 
-input 决定数据从哪进。用过一轮之后，生产默认我会选 Beats；File 适合本机临时捞；Kafka 适合削峰；JDBC 只做库表同步。
+input 决定数据从哪进。生产默认用 Beats；File 适合本机临时捞；Kafka 适合削峰；JDBC 只做库表同步。
 
 ## File
 

@@ -310,7 +310,7 @@ best_practices()
 5. **实际应用**：在数据处理、文件操作等场景中的应用
 6. **最佳实践**：遵循推导式使用的最佳实践
 
-通过系统学习这些概念，你将能够编写出更加Pythonic、高效的代码，提高开发效率和代码质量。
+掌握这些概念后，可以编写出更加Pythonic、高效的代码，提高开发效率和代码质量。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python基础知识-推导式与生成器表达式](http://zhouzhiyang.cn/2018/11/Python_Basics12_Comprehensions/) 

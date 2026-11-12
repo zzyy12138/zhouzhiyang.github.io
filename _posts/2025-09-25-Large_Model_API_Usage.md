@@ -7,7 +7,7 @@ tags: ["大模型"]
 
 ---
 
-多数业务接入大模型，第一步不是训模型，而是把 API 调稳：鉴权、超时、限流、流式、工具调用、账单。下面按我踩坑后的写法记，SDK 版本会变，模式不太变。
+多数业务接入大模型，第一步不是训模型，而是把 API 调稳：鉴权、超时、限流、流式、工具调用、账单。下面按踩坑后的写法记，SDK 版本会变，模式不太变。
 
 ## 为什么先 API
 
@@ -24,7 +24,7 @@ client = OpenAI()  # OPENAI_API_KEY
 resp = client.chat.completions.create(
     model="gpt-4o-mini",
     messages=[
-        {"role": "system", "content": "你是简洁的后端工程师。"},
+        {"role": "system", "content": "角色：简洁的后端工程师。"},
         {"role": "user", "content": "解释一下幂等性，举一个 HTTP 例子。"},
     ],
     temperature=0.4,
@@ -47,7 +47,7 @@ for chunk in stream:
         print(delta, end="", flush=True)
 ```
 
-工具调用用现在的 `tools` / `tool_calls`（老的 `functions` 参数逐渐淘汰）。模型只负责「提议调用」，真正执行函数在你自己的后端——别把密钥工具直接暴露给模型乱调。
+工具调用用现在的 `tools` / `tool_calls`（老的 `functions` 参数逐渐淘汰）。模型只负责「提议调用」，真正执行函数在业务后端——别把密钥工具直接暴露给模型乱调。
 
 ## Anthropic Claude
 
@@ -67,7 +67,7 @@ print(msg.content[0].text)
 
 ## 参数：少就是多
 
-| 参数 | 我怎么用 |
+| 参数 | 怎么用 ||
 |------|----------|
 | `temperature` | 抽取 / 判题 → 低；头脑风暴 → 高 |
 | `max_tokens` | 必须设，防止跑飞烧钱 |

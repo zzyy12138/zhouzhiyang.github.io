@@ -9,7 +9,7 @@ tags: ["Python"]
 
 ## 生成器进阶的重要性
 
-生成器是Python中一个强大而优雅的特性，它不仅能够节省内存，还能实现复杂的控制流。掌握生成器的进阶用法，包括`yield from`语法、协程通信和双向通信，将大大提升你的Python编程能力。
+生成器是Python中一个强大而优雅的特性，它既能省内存，也能实现复杂的控制流。进阶用法包括 `yield from`、协程通信和双向通信。
 
 ## yield from 语法
 
@@ -569,7 +569,7 @@ for event in events:
 5. **性能优化**：利用生成器优化内存使用
 6. **设计模式**：学会使用生成器实现复杂的设计模式
 
-通过系统学习这些概念，你将能够创建更加高效和灵活的Python程序。
+掌握这些概念后，可以创建更加高效和灵活的Python程序。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python进阶-生成器进阶](http://zhouzhiyang.cn/2019/01/Python_Advanced_Generators_Advanced/) 

@@ -338,7 +338,7 @@ python -c "import pdb; pdb.set_trace()"
 4. **异常处理**：在异常时进入调试器
 5. **最佳实践**：使用断言、装饰器和配置文件
 
-通过系统学习这些调试技巧，你将能够更高效地开发和维护Python程序。
+掌握这些调试技巧后，可以更高效地开发和维护 Python 程序。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python实用技巧-调试与断点](http://zhouzhiyang.cn/2018/08/Python_Tips_Debugging/) 

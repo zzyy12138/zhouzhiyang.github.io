@@ -7,11 +7,11 @@ tags: ["大模型"]
 
 ---
 
-## 什么时候我会想起 SGLang
+## 什么时候用 SGLang
 
 vLLM 覆盖了大部分「聊天补全」需求。但有一类场景它不那么顺手：多轮里系统提示很长且重复、要按固定结构一段段生成、或者同一前缀被大量请求复用。SGLang 的 RadixAttention（前缀树缓存）在这类流量上收益很明显——缓存命中时，重复前缀不用反复算。
 
-反过来：纯冷启动、前缀几乎不共享的短请求，它未必比 vLLM 强，还多一层学习成本。我是「有结构化/前缀命中诉求再上」，不是为了换框架而换。
+反过来：纯冷启动、前缀几乎不共享的短请求，它未必比 vLLM 强，还多一层学习成本。有结构化或前缀命中诉求再上，不为了换框架而换。
 
 ## 安装
 
@@ -35,14 +35,14 @@ sgl.set_default_backend(runtime)
 
 @sgl.function
 def brief_answer(s, question):
-    s += "你是简洁助手。\n问题：" + question + "\n回答："
+    s += "角色：简洁助手。\n问题：" + question + "\n回答："
     s += sgl.gen("answer", max_tokens=128, stop=["\n\n"])
 
 state = brief_answer.run(question="KV cache 是干什么的？")
 print(state["answer"])
 ```
 
-条件、循环那套 API 适合把「先分析再方案再总结」写进一个 function，而不是在网关里串三次 HTTP。我用过类似编排做内部工具生成；注意每一步的 `max_tokens` 和 `stop`，不然容易拖很长又不好截断。
+条件、循环那套 API 适合把「先分析再方案再总结」写进一个 function，而不是在网关里串三次 HTTP。内部工具生成可以用类似编排；注意每一步的 `max_tokens` 和 `stop`，不然容易拖很长又不好截断。
 
 ```python
 @sgl.function
@@ -62,7 +62,7 @@ def three_step(s, task):
 
 ## 当服务起
 
-命令行启动（版本不同参数名可能略有差异，以你装的版本文档为准）：
+命令行启动（版本不同参数名可能略有差异，以当前版本文档为准）：
 
 ```bash
 python -m sglang.launch_server \
@@ -81,7 +81,7 @@ r = requests.post(
     "http://127.0.0.1:30000/v1/chat/completions",
     json={
         "model": "Qwen/Qwen2.5-7B-Instruct",
-        "messages": [{"role": "user", "content": "你好"}],
+        "messages": [{"role": "user", "content": "ping"}],
     },
     timeout=60,
 )
@@ -95,9 +95,9 @@ print(r.json()["choices"][0]["message"]["content"])
 - **前缀缓存：** 系统提示、工具 schema 尽量稳定且可共享；每次请求都拼一长段独一无二的上下文，Radix 优势就浪费了。
 - **显存：** 缓存本身占显存。命中率高时吞吐好看，但要把缓存规模和并发一起盯，不然和 vLLM 一样会 OOM。
 - **结构化别写太炫：** function 里嵌太深的循环/并行，调试成本高于收益。能拆成网关编排的，不一定非要塞进 SGLang。
-- **和 vLLM 并存：** 我见过团队两个引擎都挂着——通用聊天走 vLLM，高前缀命中的内部 API 走 SGLang。共卡的话记得限显存，别默认「都能跑就行」。
+- **和 vLLM 并存：** 两个引擎可以同时挂——通用聊天走 vLLM，高前缀命中的内部 API 走 SGLang。共卡的话记得限显存，别默认「都能跑就行」。
 
-如果你的流量前缀重复不多，先把 vLLM 吃透更划算；SGLang 是在特定形状的请求上才值得多养一套服务。
+流量前缀重复不多时，先把 vLLM 吃透更划算；SGLang 是在特定形状的请求上才值得多养一套服务。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [SGLang部署与使用](http://zhouzhiyang.cn/2025/10/SGLang_Deployment/)

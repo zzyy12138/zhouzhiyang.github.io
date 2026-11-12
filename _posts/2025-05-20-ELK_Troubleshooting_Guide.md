@@ -7,7 +7,7 @@ tags: ["ELK"]
 
 ---
 
-排障时我固定顺序：健康色 → 节点还在不在 → 磁盘/堆 → 未分配分片原因 → 组件日志。先收集再改配置，避免瞎重启。
+排障顺序：健康色 → 节点还在不在 → 磁盘/堆 → 未分配分片原因 → 组件日志。先收集再改配置，避免瞎重启。
 
 ## 集群红 / 黄
 
@@ -24,7 +24,7 @@ curl -s "localhost:9200/_cat/shards?h=index,shard,prirep,state,unassigned.reason
 curl -s "localhost:9200/_cluster/allocation/explain?pretty"
 ```
 
-这条经常直接告诉你为什么不分配。
+这条经常直接写出不分配的原因。
 
 ## 节点起不来
 

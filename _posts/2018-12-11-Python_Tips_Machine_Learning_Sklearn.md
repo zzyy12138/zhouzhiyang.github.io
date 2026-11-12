@@ -267,7 +267,7 @@ house_price_prediction()
 5. **最佳实践**：遵循机器学习的最佳实践
 6. **持续学习**：不断探索新的算法和技术
 
-通过系统学习这些概念，你将能够构建出有效的机器学习模型，解决实际的数据科学问题。
+掌握这些概念后，可以构建出有效的机器学习模型，解决实际的数据科学问题。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python实用技巧-机器学习入门](http://zhouzhiyang.cn/2018/12/Python_Tips_Machine_Learning_Sklearn/) 

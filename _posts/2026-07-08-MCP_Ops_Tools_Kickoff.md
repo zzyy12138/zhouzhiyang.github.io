@@ -1,26 +1,43 @@
 ---
 layout: post
-title: "给运维Agent接了几个MCP只读工具"
+title: "对话里查别名和GPU：只用只读MCP"
 date: 2026-07-08 
 description: "Cursor里查别名健康和GPU，先不上写操作"
 tags: ["大模型"]
 
 ---
 
-值班时经常有人在 Cursor 里问「这个别名是不是挂了」「哪张卡满了」。以前要么自己开 Grafana，要么 SSH。这周用 Python MCP SDK 接了几个只读工具，让对话里能查，但别给它 shell。
+## 问题
 
-第一版就这些：
+要在对话里确认别名是否存活、哪张卡满了。每次打开 Grafana 或 SSH 太慢。把 shell 交给 Agent，等于把机器交出去：它会重启进程、改环境变量，失败了还说自己成功了。
 
-- `list_model_aliases`
-- `get_alias_health`
-- `get_gpu_node_snapshot`（字段脱敏）
-- `search_request_logs`（按 `request_id`，不回 prompt 原文）
+## 处理
 
-切流量、重启先不做。工具描述写清楚「只读」，返回别太长，不然上下文一会就脏了。
+用 Python MCP SDK 只挂只读工具，描述里写明「只读」：
 
-服务放运维网段，Cursor 只在办公网配。密钥走环境变量。日志看 stderr——stdio 下 `print` 会把会话搞挂，这事我已经踩过。
+- `list_model_aliases`：别名和上游的对应关系
+- `get_alias_health`：是否可服务、最近错误码
+- `get_gpu_node_snapshot`：利用率、显存占用，字段脱敏
+- `search_request_logs`：只按 `request_id` 查，不回 prompt 原文
 
-先做到「问一句能知道活没活着」，写操作以后再说。
+返回要短。一次塞进几万字日志，后面的回答会漂。健康检查返回别名、状态、错误码即可，不要整段引擎日志。GPU 只回几个数字，不要整段 `nvidia-smi`。
+
+切流量、重启不要放进这一版。问「重启引擎」时，应该没有对应工具，而不是执行一下再道歉。
+
+## 部署
+
+服务放运维网段，Cursor 只在办公网配。密钥走环境变量，不写进仓库，不写进工具描述。
+
+stdio 下 `print` 会把协议流弄脏，会话直接挂。日志走 stderr，第三方进度条关掉。
+
+## 怎么确认
+
+1. 问「别名 X 是否存活」，应调用 `get_alias_health`，而不是编一个状态
+2. 工具列表里没有写操作和 shell
+3. 返回里没有密钥、没有 prompt 原文
+4. 故意问重启，调用发不出去
+
+先只回答「活没活着」。写操作另开，并且单独批准。
 
 <br>
-转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [给运维Agent接了几个MCP只读工具](http://zhouzhiyang.cn/2026/07/MCP_Ops_Tools_Kickoff/)
+转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [对话里查别名和GPU：只用只读MCP](http://zhouzhiyang.cn/2026/07/MCP_Ops_Tools_Kickoff/)

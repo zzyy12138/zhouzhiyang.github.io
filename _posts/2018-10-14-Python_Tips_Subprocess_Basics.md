@@ -570,7 +570,7 @@ deployment_automation()
 5. **实际应用**：在系统管理、自动化部署等场景中应用
 6. **最佳实践**：遵循subprocess使用的最佳实践
 
-通过系统学习这些概念，你将能够编写出安全、高效的进程管理代码，提高自动化脚本的可靠性。
+掌握这些概念后，可以编写出安全、高效的进程管理代码，提高自动化脚本的可靠性。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python实用技巧-subprocess 入门](http://zhouzhiyang.cn/2018/10/Python_Tips_Subprocess_Basics/) 

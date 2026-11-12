@@ -485,7 +485,7 @@ data_quality_check()
 5. **实际应用**：在销售分析、数据质量检查等场景中的应用
 6. **最佳实践**：遵循数据分析的最佳实践
 
-通过系统学习这些概念，你将能够熟练使用pandas进行数据分析，为数据科学项目打下坚实基础。
+掌握这些概念后，可以熟练使用pandas进行数据分析，为数据科学项目打下坚实基础。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python实用技巧-数据分析入门](http://zhouzhiyang.cn/2018/12/Python_Tips_Data_Analysis_Pandas/) 

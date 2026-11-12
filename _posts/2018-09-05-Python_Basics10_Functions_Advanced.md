@@ -401,7 +401,7 @@ function_composition()
 4. **装饰器**：使用装饰器增强函数功能
 5. **函数式编程**：掌握高阶函数和函数组合
 
-通过系统学习这些概念，你将能够编写出更加灵活、强大的Python函数。
+掌握这些概念后，可以编写出更加灵活、强大的Python函数。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python基础知识-函数进阶](http://zhouzhiyang.cn/2018/09/Python_Basics10_Functions_Advanced/) 

@@ -9,7 +9,7 @@ tags: ["大模型"]
 
 ## 定位说清楚
 
-Ollama 解决的是「本机三分钟跑起一个模型」，不是「生产扛并发」。写脚本、试 Prompt、给同事演示、内网离线玩一玩，它很合适。拿它硬扛线上高峰，吞吐和调度都会很快碰到天花板——那时该上 vLLM 一类引擎。
+Ollama 解决的是「本机三分钟跑起一个模型」，不是「生产扛并发」。写脚本、试 Prompt、本地演示、内网离线试用，它合适。拿它扛线上高峰，吞吐和调度都会很快碰到天花板，那时该上 vLLM 一类引擎。
 
 ## 安装和启动
 
@@ -83,7 +83,7 @@ r = requests.post(
     "http://localhost:11434/api/chat",
     json={
         "model": "qwen2.5:7b",
-        "messages": [{"role": "user", "content": "你好"}],
+        "messages": [{"role": "user", "content": "ping"}],
         "stream": False,
     },
 )
@@ -96,7 +96,7 @@ print(r.json()["message"]["content"])
 FROM qwen2.5:7b
 PARAMETER temperature 0.4
 PARAMETER top_p 0.9
-SYSTEM 你是偏运维向的助手，回答短、先给结论。
+SYSTEM 角色：偏运维的助手，回答短、先给结论。
 ```
 
 ```bash
@@ -106,14 +106,14 @@ ollama run ops-helper
 
 适合把「演示用角色」固定下来，避免每次聊天手工贴系统提示。
 
-## 我实际怎么用、怎么不用
+## 适用和不适用
 
 - **用：** Cursor/脚本连本地、对比几个小模型回答、出差无网时查点东西、给 Dify 先指一个本地 endpoint 做联调。
 - **不用：** 当生产唯一推理后端；多租户；要严格 TTFT SLO 的在线聊天。
 
 显存/内存不够时，换更小的 tag（`3b`/`7b`），别指望 Ollama 魔法变出一张卡。有 NVIDIA 时它会走 GPU，但调度和连续批处理成熟度跟 vLLM 不是一个量级。
 
-和 vLLM 的分工我现在很固定：Ollama 负责「快速确认模型行不行」，确认之后权重和接口迁到 vLLM，再谈限流和观测。本地爽不等于线上能睡安稳。
+和 vLLM 的分工：Ollama 负责「快速确认模型行不行」，确认之后权重和接口迁到 vLLM，再谈限流和观测。本地能跑不等于线上能扛。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Ollama本地部署](http://zhouzhiyang.cn/2025/10/Ollama_Deployment/)

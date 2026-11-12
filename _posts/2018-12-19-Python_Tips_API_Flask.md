@@ -411,7 +411,7 @@ def api_docs():
 5. **最佳实践**：遵循RESTful API设计原则
 6. **文档生成**：学会API文档的编写和维护
 
-通过系统学习这些概念，你将能够构建出高效、可扩展的Web API服务。
+掌握这些概念后，可以构建出高效、可扩展的Web API服务。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python实用技巧-Web API 开发](http://zhouzhiyang.cn/2018/12/Python_Tips_API_Flask/) 

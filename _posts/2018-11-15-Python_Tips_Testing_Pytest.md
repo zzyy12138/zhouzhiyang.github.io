@@ -623,7 +623,7 @@ api_testing()
 5. **实际应用**：在Web应用、API等场景中应用测试
 6. **最佳实践**：遵循测试编写的最佳实践
 
-通过系统学习这些概念，你将能够编写出全面、可靠的测试代码，提高软件质量和可维护性。
+掌握这些概念后，可以编写出全面、可靠的测试代码，提高软件质量和可维护性。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python实用技巧-pytest 测试框架](http://zhouzhiyang.cn/2018/11/Python_Tips_Testing_Pytest/) 

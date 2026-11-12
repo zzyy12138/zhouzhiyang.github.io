@@ -31,7 +31,7 @@ Dify 的 Code 节点在独立沙箱里跑，有内存和超时上限。节点里
 
 Code 节点适合胶水，不适合当数据平台。谁在沙箱里 `pandas` 读超大表，谁就要和 OOM 反复见面。
 
-改完后我们在内部规范写了一句：Code 节点预期内存超过阈值的，PR 直接打回，改外部 Job。
+内部规范里写一句：Code 节点预期内存超过阈值的，PR 直接打回，改外部 Job。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Dify Code节点被杀：沙箱内存打满之后](http://zhouzhiyang.cn/2026/05/Dify_Code_Node_OOM/)

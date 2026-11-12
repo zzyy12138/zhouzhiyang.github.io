@@ -9,7 +9,7 @@ tags: ["大模型"]
 
 推理挂了好发现：进程没了、探活红了。难的是还能聊，但变慢、变贵、偶尔答非所问。没有观测只能猜，灰度也不敢放。
 
-我现在一般：指标看趋势，日志对单次请求，跨好几个组件才上链路。不求一次上齐。
+指标看趋势，日志对单次请求，跨好几个组件才上链路。不必一次上齐。
 
 ## 指标别贪多
 
@@ -25,7 +25,7 @@ TPOT、整包耗时可以有，但告警阈值先绑在 TTFT 和错误率上，�
 
 ## 网关里怎么埋点
 
-我习惯在网关记 TTFT：上游第一个非空 chunk 到来时打点。引擎自带 `/metrics` 当然要刮，但网关能带上租户、模型别名，排障更直接。
+在网关记 TTFT：上游第一个非空 chunk 到来时打点。引擎自带 `/metrics` 也要采集，但网关能带上租户、模型别名，排障更直接。
 
 ```python
 from prometheus_client import Counter, Histogram, Gauge
@@ -71,11 +71,11 @@ async def stream_chat(model: str, upstream):
 
 ## 看板和告警
 
-Grafana 我只固定四块：总览（QPS、错误、p95 TTFT、GPU）、延迟对比、资源（显存 / KV / 队列）、token 消耗。告警也分层：连续健康失败或错误率飙升算急事；TTFT 超 SLO 一刻钟要看；token 突增可以上班再查。
+Grafana 固定四块：总览（QPS、错误、p95 TTFT、GPU）、延迟对比、资源（显存 / KV / 队列）、token 消耗。告警分层：连续健康失败或错误率飙升当紧急；TTFT 超 SLO 一刻钟要看；token 突增可以延后查。
 
 和 ELK 的分工后面单独写。这里先定原则：Prometheus 负责「哪里不对」，ES 负责「哪类请求不对」。
 
-手头服务如果还没有按模型拆开的 TTFT，优先补这个。很多争论到看板前会自己停。
+还没有按模型拆开的 TTFT 时，优先补这个。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [LLM服务可观测性：指标、日志与链路追踪](http://zhouzhiyang.cn/2025/11/LLM_Observability/)

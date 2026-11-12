@@ -555,7 +555,7 @@ concurrent_data_processor()
 5. **实际应用**：在下载器、数据处理等场景中的应用
 6. **最佳实践**：遵循并发编程的最佳实践
 
-通过系统学习这些概念，你将能够编写出高效、可扩展的并发程序，提高应用的性能和响应能力。
+掌握这些概念后，可以编写出高效、可扩展的并发程序，提高应用的性能和响应能力。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python实用技巧-并发编程进阶](http://zhouzhiyang.cn/2018/11/Python_Tips_Concurrency_Threading/) 

@@ -70,7 +70,7 @@ def advanced_formatting_demo():
     
     # 1. 模板字符串
     from string import Template
-    template = Template("欢迎 $name 访问我们的网站，今天是 $date")
+    template = Template("欢迎 $name 访问本站，今天是 $date")
     result = template.substitute(name="李四", date="2019-03-08")
     print(f"1. 模板字符串: {result}")
     
@@ -185,7 +185,7 @@ def advanced_string_processing():
     print(f"1. 字符翻译: '{text}' -> '{translated}'")
     
     # 2. 字符串编码解码
-    chinese_text = "你好，世界！"
+    chinese_text = "中文，世界！"
     print(f"\n2. 字符串编码:")
     print(f"   原始: {chinese_text}")
     print(f"   UTF-8编码: {chinese_text.encode('utf-8')}")
@@ -207,10 +207,10 @@ def advanced_string_processing():
     email_template = Template("""
     尊敬的 $name：
     
-    您好！您的订单 $order_id 已确认，总金额为 $amount 元。
+    订单 $order_id 已确认，总金额为 $amount 元。
     预计发货时间：$ship_date
     
-    感谢您的购买！
+    感谢购买！
     """)
     
     # 填充模板
@@ -239,7 +239,7 @@ def regex_basics_demo():
     print("\n=== 正则表达式基础 ===")
     
     # 示例文本
-    text = "今天是2019-03-08，我的邮箱是zhangsan@example.com，电话是138-0013-8000"
+    text = "今天是2019-03-08，邮箱是zhangsan@example.com，电话是138-0013-8000"
     print(f"示例文本: {text}")
     
     # 1. 基础匹配
@@ -419,10 +419,10 @@ def text_analysis_demo():
     
     # 示例文本
     article = """
-    在2019年3月8日这个特殊的日子里，我们庆祝女性的成就。
+    在2019年3月8日这个特殊的日子里，值得记住的是女性的成就。
     这篇文章讨论了Python编程的重要性，特别是在数据分析领域。
     联系邮箱：editor@technews.com，电话：400-123-4567。
-    网站：https://www.example.com，关注我们的微信公众号。
+    网站：https://www.example.com，微信公众号见页脚。
     """
     
     print(f"原文: {article.strip()}")

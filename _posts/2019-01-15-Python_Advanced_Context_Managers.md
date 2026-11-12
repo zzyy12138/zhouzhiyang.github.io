@@ -464,7 +464,7 @@ print(f"恢复后配置: {config}")
 5. **最佳实践**：遵循上下文管理器设计的最佳实践
 6. **性能优化**：学会使用上下文管理器优化资源使用
 
-通过系统学习这些概念，你将能够编写更加安全、优雅的Python代码。
+掌握这些概念后，可以编写更加安全、优雅的Python代码。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python进阶-上下文管理器](http://zhouzhiyang.cn/2019/01/Python_Advanced_Context_Managers/) 

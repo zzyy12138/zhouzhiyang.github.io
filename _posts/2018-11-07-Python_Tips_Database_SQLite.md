@@ -464,7 +464,7 @@ data_analysis_example()
 5. **实际应用**：在用户管理、数据分析等场景中应用
 6. **最佳实践**：遵循数据库操作的最佳实践
 
-通过系统学习这些概念，你将能够构建出稳定、高效的数据存储应用，提高数据管理的可靠性。
+掌握这些概念后，可以构建出稳定、高效的数据存储应用，提高数据管理的可靠性。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python实用技巧-SQLite 数据库](http://zhouzhiyang.cn/2018/11/Python_Tips_Database_SQLite/) 

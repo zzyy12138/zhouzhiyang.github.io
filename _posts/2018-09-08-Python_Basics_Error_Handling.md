@@ -482,7 +482,7 @@ exception_handling_patterns()
 4. **断言**：使用assert进行程序验证
 5. **最佳实践**：遵循异常处理的最佳实践和模式
 
-通过系统学习这些概念，你将能够编写出更加健壮、可靠的Python程序。
+掌握这些概念后，可以编写出更加健壮、可靠的Python程序。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python基础知识-错误与异常](http://zhouzhiyang.cn/2018/09/Python_Basics_Error_Handling/) 

@@ -2,16 +2,16 @@
 layout: post
 title: "模型版本管理与灰度发布"
 date: 2025-11-16 
-description: "权重/配置/策略分层、金丝雀、回滚和变更记录"
+description: "权重/配置/策略分层、按比例放量、回滚和变更记录"
 tags: ["大模型"]
 
 ---
 
 ## 换模型不只是换文件
 
-有一次以为只是换了 AWQ 权重，后来才发现采样参数和系统提示也被人改过。出了质量问题，根本分不清该回滚哪一层。
+只换 AWQ 权重时，采样参数和系统提示可能同时被改过。出了质量问题，分不清该回滚哪一层。
 
-后来强制拆开三样东西：
+拆开三样东西：
 
 1. **产物**：权重、tokenizer、量化结果
 2. **运行配置**：并行度、最大长度、dtype 之类
@@ -21,7 +21,7 @@ tags: ["大模型"]
 
 ## 命名随便不得
 
-`latest` 基本等于埋雷。我现在会写成类似：
+`latest` 基本等于埋雷。写成类似：
 
 - `qwen2.5-72b-instruct-awq-20251112`
 - `serve-config-v12`
@@ -31,30 +31,30 @@ tags: ["大模型"]
 
 ## 灰度怎么推
 
-资源够、回滚要秒级，蓝绿干脆。GPU 紧就用金丝雀：1% → 10% → 50% → 100%，每步看错误率、p95 TTFT，再抽几条业务问答题。
+资源够、回滚要秒级，蓝绿干脆。GPU 紧就按比例放量：先 1%，再 10%、50%，最后 100%。每一步看错误率、p95 TTFT，再抽几条业务问答题。
 
 引擎大改（比如 vLLM 换 SGLang）更适合影子流量：请求复制到新版本，结果不回用户，先比延迟和输出差异。
 
-路由尽量对 `request_id` 稳定哈希。同一用户上一句打 A、下一句打 B，用户觉得飘，你查日志也疯。
+路由尽量对 `request_id` 稳定哈希。同一用户上一句打 A、下一句打 B，对话会飘，日志也对不齐。
 
 ```python
 from dataclasses import dataclass
 
 @dataclass
-class CanaryRule:
+class SplitRule:
     stable: str
-    canary: str
+    new_version: str
     percent: int
 
-def choose(rule: CanaryRule, request_id: str) -> str:
+def choose(rule: SplitRule, request_id: str) -> str:
     bucket = abs(hash(request_id)) % 100
-    return rule.canary if bucket < rule.percent else rule.stable
+    return rule.new_version if bucket < rule.percent else rule.stable
 ```
 
-## 上线前后我自己的检查
+## 上线前后的检查
 
 上线前：离线集过线、目标并发不下 OOM、看板能按 version 过滤、回滚命令演练过。
-上线中：金丝雀先挂够一段时间，别十分钟就飙到全量。
+上线中：新版本先维持一小段流量，别十分钟就飙到全量。
 上线后：旧产物留几天；写变更单（谁、何时、改了什么）；如果 Dify 在用，确认它用的是别名而不是裸模型名。
 
 回滚也分层：先改百分比（最快），再回配置，最后才重载旧权重。多数质量回退，切路由就够了。

@@ -43,7 +43,7 @@ PUT /my_index
 }
 ```
 
-取舍上我现在习惯：日志类索引主分片别一上来就开很大，单分片 20～50GB 量级再考虑拆；副本开发环境可以 0，生产至少 1。
+取舍：日志类索引主分片别一上来就开很大，单分片 20～50GB 量级再考虑拆；副本开发环境可以 0，生产至少 1。
 
 **创建后改不了的**：`number_of_shards` 等静态设置。
 **能改的**：副本数、`refresh_interval`、`max_result_window` 等。
@@ -87,7 +87,7 @@ PUT /_index_template/logs_template
 }
 ```
 
-注意模板 JSON 里 `mappings` 和 `aliases` 同级，中间别漏逗号（我写漏过一次，创建直接 400）。
+注意模板 JSON 里 `mappings` 和 `aliases` 同级，中间别漏逗号（漏了会直接 400）。
 
 别名适合「对外固定名字，对内换索引」：
 

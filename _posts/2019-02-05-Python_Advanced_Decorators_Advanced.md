@@ -9,7 +9,7 @@ tags: ["Python"]
 
 ## 装饰器进阶的重要性
 
-装饰器是Python中最强大的特性之一，它允许我们在不修改原函数代码的情况下增强函数功能。掌握装饰器的进阶用法对于编写优雅、可维护的Python代码至关重要。
+装饰器是Python中最强大的特性之一，它可以在不改原函数的情况下增强函数功能。
 
 ## 参数化装饰器
 
@@ -452,7 +452,7 @@ result3 = create_user("", "invalid@email")
 5. **装饰器工厂**：动态创建装饰器
 6. **实际应用**：在API、缓存、日志等场景中的应用
 
-掌握这些装饰器进阶技巧，可以让你编写更加优雅、可维护的Python代码。
+这些装饰器写法用来保持代码可维护。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python进阶-装饰器进阶详解](http://zhouzhiyang.cn/2019/02/Python_Advanced_Decorators_Advanced/) 

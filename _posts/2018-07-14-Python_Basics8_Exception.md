@@ -25,7 +25,7 @@ tags: ["Python"]
 
 说明:
 
-打开一个不存在的文件123.txt，当找不到123.txt 文件时，就会抛出给我们一个IOError类型的错误，No such file or directory：123.txt （没有123.txt这样的文件或目录）
+打开不存在的文件 123.txt 时，会抛出 IOError，No such file or directory：123.txt（没有这个文件或目录）
 
 
 总结:
@@ -169,8 +169,8 @@ except:
 
 说明:
 
-test.txt文件中每一行数据打印，但是我有意在每打印一行之前用time.sleep方法暂停2秒钟。这样做的原因是让程序运行得慢一些。在程序运行的时候，按Ctrl+c中断（取消）程序。  
-我们可以观察到KeyboardInterrupt异常被触发，程序退出。但是在程序退出之前，finally从句仍然被执行，把文件关闭。
+示例会打印 test.txt 的每一行，并在每行之前用 time.sleep 暂停 2 秒，让程序跑得慢一些。运行过程中按 Ctrl+C 中断。  
+此时会触发 KeyboardInterrupt，程序退出。退出之前 finally 仍会执行，把文件关闭。
 
 
 ### 异常的传递
@@ -184,7 +184,7 @@ test.txt文件中每一行数据打印，但是我有意在每打印一行之前
 
 ### 抛出自定义的异常
 
-你可以用raise语句来引发一个异常。异常/错误对象必须有一个名字，且它们应是Error或Exception类的子类
+用 raise 可以主动抛出异常。异常对象必须有名字，并且应是 Error 或 Exception 的子类
 
 下面是一个引发异常的例子:
 
@@ -200,7 +200,7 @@ def main():
     try:
         s = input('请输入 --> ')
         if len(s) < 3:
-            # raise引发一个你定义的异常
+            # raise 引发一个自定义异常
             raise ShortInputException(len(s), 3)
     except ShortInputException as result:#x这个变量被绑定到了错误的实例
         print('ShortInputException: 输入的长度是 %d,长度至少应是 %d'% (result.length, result.atleast))

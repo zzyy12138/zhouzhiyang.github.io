@@ -7,7 +7,7 @@ tags: ["ELK"]
 
 ---
 
-Beats 比 Logstash 轻太多，适合铺在每台业务机上。我用得最多的是 Filebeat；Metricbeat / Heartbeat 做补充；Packetbeat 要抓包，权限和性能成本更高，按需上。
+Beats 比 Logstash 轻太多，适合铺在每台业务机上。用得最多的是 Filebeat；Metricbeat / Heartbeat 做补充；Packetbeat 要抓包，权限和性能成本更高，按需上。
 
 ## Filebeat
 
@@ -103,7 +103,7 @@ output.elasticsearch:
   hosts: ["http://localhost:9200"]
 ```
 
-需要 root/能力位，流量大时 CPU 明显。有现成 APM / 访问日志时，我优先不用它。
+需要 root/能力位，流量大时 CPU 明显。已有 APM 或访问日志时，不要再加这一层。
 
 ## 落地习惯
 

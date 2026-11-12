@@ -335,7 +335,7 @@ web_scraping_example()
 5. **实际应用**：在API客户端、数据抓取等场景中应用
 6. **最佳实践**：遵循网络请求的最佳实践
 
-通过系统学习这些概念，你将能够构建出稳定、高效的网络应用，提高应用的可靠性和性能。
+掌握这些概念后，可以构建出稳定、高效的网络应用，提高应用的可靠性和性能。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python实用技巧-网络请求基础](http://zhouzhiyang.cn/2018/11/Python_Tips_Network_Requests/) 

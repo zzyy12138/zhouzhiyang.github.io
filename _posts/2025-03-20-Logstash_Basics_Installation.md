@@ -7,7 +7,7 @@ tags: ["ELK"]
 
 ---
 
-Logstash 干三件事：收进来（input）、改一改（filter）、送出去（output）。资源比 Filebeat 重，所以生产里我更倾向 Filebeat 采集，Logstash 只做需要复杂解析的那一段。
+Logstash 干三件事：收进来（input）、改一改（filter）、送出去（output）。资源比 Filebeat 重，所以生产里采集默认用 Filebeat，Logstash 只做需要复杂解析的那一段。
 
 ## 安装
 
@@ -22,7 +22,7 @@ wget https://artifacts.elastic.co/downloads/logstash/logstash-8.11.0-linux-x86_6
 tar -xzf logstash-8.11.0-linux-x86_64.tar.gz
 ```
 
-`logstash.yml` 里我常动的：
+`logstash.yml` 里常改的：
 
 ```yaml
 node.name: logstash-node-1
@@ -171,7 +171,7 @@ filter {
 }
 ```
 
-Grok 失败会打 `_grokparsefailure`，我会单独输出到文件，避免脏数据静默进 ES：
+Grok 失败会打 `_grokparsefailure`，应单独输出到文件，避免脏数据静默进 ES：
 
 ```ruby
 output {

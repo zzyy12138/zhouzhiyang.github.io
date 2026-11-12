@@ -58,7 +58,7 @@ async def require_api_key(authorization: str = Header(default="")):
     return meta
 ```
 
-中间件顺序我踩过坑：限流放鉴权前面，未授权请求也会占配额，还可能把上游打尖。更稳的是：请求 ID → 鉴权 → 限流 → 校验 → 路由 → 调用 → 打点。
+中间件顺序容易踩坑：限流放鉴权前面，未授权请求也会占配额，还可能把上游打尖。更稳的是：请求 ID → 鉴权 → 限流 → 校验 → 路由 → 调用 → 打点。
 
 ## 超时、重试、流式
 
@@ -85,12 +85,12 @@ async def proxy_once(body: dict) -> dict:
 
 ## 路由和灰度
 
-对外用别名，例如 `chat-large`，真实模型名放网关。金丝雀按 `request_id` 做稳定哈希，同一会话别来回跳版本，否则日志根本没法看。
+对外用别名，例如 `chat-large`，真实模型名放网关。新版本流量按 `request_id` 做稳定哈希，同一会话别来回跳版本，否则日志根本没法看。
 
 ```python
 import random
 
-CANARY = {
+ROUTES = {
     "chat-large": [
         ("qwen2.5-72b-instruct", 90),
         ("qwen2.5-72b-instruct-awq", 10),
@@ -98,7 +98,7 @@ CANARY = {
 }
 
 def route_model(alias: str) -> str:
-    rules = CANARY.get(alias)
+    rules = ROUTES.get(alias)
     if not rules:
         return alias
     r = random.randint(1, 100)

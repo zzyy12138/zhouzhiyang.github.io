@@ -286,7 +286,7 @@ blog_system_example()
 5. **最佳实践**：遵循ORM设计的最佳实践
 6. **性能优化**：学会查询优化和缓存策略
 
-通过系统学习这些概念，你将能够构建出高效、可维护的数据库应用。
+掌握这些概念后，可以构建出高效、可维护的数据库应用。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python实用技巧-ORM与SQLAlchemy](http://zhouzhiyang.cn/2018/12/Python_Tips_ORM_SQLAlchemy/) 

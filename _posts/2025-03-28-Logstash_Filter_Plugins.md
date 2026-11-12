@@ -7,7 +7,7 @@ tags: ["ELK"]
 
 ---
 
-filter 决定字段干不干净。流水线里我一般按这个顺序：能 JSON 就 JSON → 否则 Grok → Date 校正 `@timestamp` → Mutate 清理 → 需要再 GeoIP/UA。
+filter 决定字段干不干净。流水线按这个顺序：能 JSON 就 JSON → 否则 Grok → Date 校正 `@timestamp` → Mutate 清理 → 需要再 GeoIP/UA。
 
 ## Grok
 

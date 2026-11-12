@@ -7,7 +7,7 @@ tags: ["ELK"]
 
 ---
 
-性能优化别一上来改二十个参数。先分清是写入慢、查询慢，还是磁盘/堆不够。下面是我实际有效的几刀。
+性能优化别一上来改二十个参数。先分清是写入慢、查询慢，还是磁盘/堆不够。下面这几项见效快。
 
 ## Elasticsearch
 
@@ -68,7 +68,7 @@ curl -s "localhost:9200/_cat/nodes?v&h=name,heap.percent,disk.used_percent,cpu,l
 
 看拒绝数（rejected）、GC、磁盘、indexing/search latency。Logstash 看 pipeline 的 event in/out 和 backpressure。
 
-优化顺序我一般是：磁盘与分片数量 → mapping/字段膨胀 → 写入批量与 refresh → 查询 filter 化 → 最后才动 JVM/线程池。
+优化顺序：磁盘与分片数量 → mapping/字段膨胀 → 写入批量与 refresh → 查询 filter 化 → 最后才动 JVM/线程池。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [ELK性能优化与调优](http://zhouzhiyang.cn/2025/04/ELK_Performance_Optimization/)

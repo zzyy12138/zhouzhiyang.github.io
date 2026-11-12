@@ -7,7 +7,7 @@ tags: ["ELK"]
 
 ---
 
-把前面组件串起来，按我实际搭过的 Nginx + 应用日志写法记一版。链路：
+把前面组件串起来，按 Nginx + 应用日志来写。链路：
 
 ```
 业务机 Filebeat → Logstash → Elasticsearch → Kibana
@@ -121,13 +121,13 @@ filter {
 }
 ```
 
-pattern 必须贴合你们 logback/log4j 的 pattern，没有统一格式就催应用改 JSON。
+pattern 必须贴合应用 logback/log4j 的 pattern，没有统一格式就让应用改 JSON。
 
 ## 能打 JSON 就别 Grok
 
 Python 示例：用 json logger，Logstash 只 `json { source => "message" }`，省心很多。字段名在应用侧约定好 `service`、`level`、`trace_id`。
 
-## Kibana 里我常看的
+## Kibana 里常看的
 
 - Discover：`status_code: >=500` 或 `level: ERROR`
 - 图：按 `@timestamp` 的请求量、5xx 占比

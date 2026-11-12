@@ -7,75 +7,40 @@ tags: ["Dify"]
 
 ---
 
-演示机 `docker compose up` 和生产不是一回事。生产我至少会想清楚：谁入口、数据怎么备份、挂了怎么知道、密钥怎么放。
+演示机 `docker compose up` 和生产不是一回事。生产至少先定：入口在哪、数据怎么备份、挂了怎么知道、密钥怎么放。
 
 ## 架构怎么铺
 
 常见一层就够小团队用：
 
-- **Nginx / Caddy**：TLS 终止、反代到 web/api
-- **API / Worker 多副本**：按 CPU 和队列堆积扩
-- **PostgreSQL**：最好主从或托管数据库，别和业务容器同一生命周期瞎重启
-- **Redis**：密码、持久化策略想清楚
-- **向量库**：磁盘与内存单独估
-- **对象存储**：多机后本地盘没法共享，知识库文件上 S3/OSS
+- **入口**：官方 Compose 已经带 Nginx。前面再加一层 TLS 时，反代到 Dify 的 Nginx，不要绕过它直接打内部的 web:3000 和 api:5001
+- **API / Worker**：队列堆了再加机器。多副本要共用同一套 PostgreSQL、Redis、向量库和对象存储
+- **PostgreSQL**：托管更省事。库一旦初始化，改密码要先在数据库里改，再改 `DB_PASSWORD`
+- **Redis**：改掉默认密码 `difyai123456`
+- **向量库**：默认 Weaviate，磁盘和内存单独估
+- **对象存储**：多机后本地 `docker/volumes/app/storage` 没法共享，知识库文件改 S3/OSS，并带上里面的 `.dify_secret_key` 策略：钥匙随 storage 走，不要在新环境另生成一把
 
-单机 Compose 也能上生产，但要把 volume、备份、升级步骤写进运维文档；别靠「机器上那个目录我记得」。
+单机 Compose 也能上生产，但要把 `docker/volumes`、`.env` 和升级步骤写进运维文档。
 
-## Compose 高可用示意
-
-下面仅示意多实例 + 反代，具体镜像和环境变量跟官方仓库对齐：
+`deploy.replicas` 在普通 `docker compose up` 里不会拉起多份容器，那是 Swarm 字段。要多副本，用 Kubernetes，或把 API/worker 分到多台机器、共用同一数据库。下面只说明这些进程各自读什么，不能当可运行的高可用编排抄走。
 
 ```yaml
-version: "3.8"
-
+# 不能直接 up。镜像标签用官方 compose 里的同一版，不要自己写 :latest 或 :1
 services:
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "443:443"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./certs:/etc/nginx/certs:ro
-    depends_on:
-      - web
-      - api
-
-  web:
-    image: langgenius/dify-web:latest
-    restart: always
-    environment:
-      - CONSOLE_API_URL=https://your.domain
-      - APP_API_URL=https://your.domain
-    deploy:
-      replicas: 2
-
   api:
-    image: langgenius/dify-api:latest
-    restart: always
+    image: langgenius/dify-api:<与官方 compose 相同的版本>
     environment:
-      - DATABASE_URL=postgresql://user:pass@db:5432/dify
-      - REDIS_HOST=redis
-      - SECRET_KEY=${SECRET_KEY}
-    deploy:
-      replicas: 2
-
-  db:
-    image: postgres:15-alpine
-    restart: always
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
-  redis:
-    image: redis:7-alpine
-    restart: always
-    command: redis-server --requirepass ${REDIS_PASSWORD}
-
-volumes:
-  pgdata:
+      DB_HOST: db_postgres
+      DB_PORT: "5432"
+      DB_USERNAME: postgres
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: dify
+      REDIS_HOST: redis
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      # SECRET_KEY 与原环境 storage 里的钥匙保持一致，不要新生成
 ```
 
-实际生产我更倾向：**数据库用云托管**，应用层 Compose/K8s，减少自己修 PG 的时间。
+对外 URL 只有在域名拆开、或要 OAuth 回调时才写。同一域名、走自带 Nginx 时，`CONSOLE_API_URL`、`SERVICE_API_URL` 可以留空，由请求自己判断。拆域名时再设成控制台 API 和给开发者看的 Service API 地址，不要把两者都写成不带路径的根域名然后指望前端自己拼对。
 
 ## 安全底线
 
@@ -94,18 +59,16 @@ volumes:
 - 应用错误率、队列延迟
 - Token 日消耗异常
 
-告警阈值按你们作息调；半夜被「磁盘 85%」叫醒要能接受，否则别订太敏感。
+告警阈值按值班时间调；半夜被「磁盘 85%」叫醒要能接受，否则别订太敏感。
 
 ## 备份
 
 ```bash
-# PostgreSQL 逻辑备份示例
-docker compose exec -T db \
-  pg_dump -U user dify | gzip > backup_$(date +%F).sql.gz
+docker compose exec -T db_postgres \
+  pg_dump -U postgres dify | gzip > backup_$(date +%F).sql.gz
 ```
 
-同时备份：对象存储里的文件、重要 `.env`（安全保存）、向量库快照（按所用引擎文档）。
-恢复演练每年至少做一次——只备份从不恢复，等于没备份。
+同时备份：对象存储或 `docker/volumes/app/storage`（里面有 `.dify_secret_key`）、`docker/.env`、向量库数据目录。只备份 Postgres，换一台机器后知识库文件和登录态会对不上。恢复要在空环境演练一次。
 
 ## 升级
 

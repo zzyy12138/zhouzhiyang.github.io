@@ -7,7 +7,7 @@ tags: ["ELK"]
 
 ---
 
-聚合就是 ES 版的 GROUP BY + 统计。日志里我用得最多的是：按服务/状态码 terms、按时间 date_histogram、再套一层 avg/percentile。`size: 0` 只拿聚合结果，别把命中文档也拖回来。
+聚合就是 ES 版的 GROUP BY + 统计。日志里最常用的是：按服务/状态码 terms、按时间 date_histogram、再套一层 avg/percentile。`size: 0` 只拿聚合结果，别把命中文档也拖回来。
 
 ## 指标
 

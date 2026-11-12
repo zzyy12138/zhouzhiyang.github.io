@@ -488,7 +488,7 @@ performance_optimization()
 5. **条件表达式**：使用三元运算符简化代码
 6. **最佳实践**：注重可读性和性能优化
 
-通过系统学习这些概念，你将能够编写出更加清晰、高效的Python代码。
+掌握这些概念后，可以编写出更加清晰、高效的Python代码。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python基础知识-布尔与逻辑运算](http://zhouzhiyang.cn/2018/09/Python_Basics_Bool_Logic/) 

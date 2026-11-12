@@ -2,12 +2,12 @@
 layout: post
 title: "Dify安装部署与环境配置"
 date: 2025-06-05 
-description: "Docker Compose 落地 Dify：环境要求、.env 要点、我踩过的坑"
+description: "Docker Compose 落地 Dify：环境要求、.env 要点、常见坑"
 tags: ["Dify"]
 
 ---
 
-装 Dify 这件事，我建议默认走 **Docker Compose**。源码部署适合要改后端或盯前端的人；Kubernetes 等你真有多副本、滚动发布需求再说。下面按我这边实际装过的路径写。
+装 Dify 默认走 **Docker Compose**。源码部署适合要改后端或盯前端的情况；Kubernetes 等到真有多副本、滚动发布需求再说。下面按实际能跑通的路径写。
 
 ## 选哪种部署
 
@@ -17,9 +17,9 @@ tags: ["Dify"]
 
 ## 机器大概要多少
 
-最低能跑起来大约 2 核 / 4G / 20G 盘，但会很肉，尤其是向量库和 embedding 一起跑的时候。我自己测试机至少按 **4 核 / 8G / SSD 50G+** 准备；稍微正经一点的环境直接 8 核 / 16G 更省心。
+最低能跑起来大约 2 核 / 4G / 20G 盘，但会很肉，尤其是向量库和 embedding 一起跑的时候。测试机至少按 **4 核 / 8G / SSD 50G+** 准备；稍微正经一点的环境直接 8 核 / 16G 更省心。
 
-系统侧：Linux（Ubuntu 20.04+ 或 CentOS 7+）最省事；macOS 可以；Windows 建议 WSL2。软件上 Docker 20.10+、Compose 2.0+、Git 基本够用。
+系统侧：Linux 用 Docker 官方仍支持的发行版；macOS 用 Docker Desktop，虚拟机至少 2 核 / 8G；Windows 用 WSL2，源码和数据放在 Linux 文件系统里。Compose 要用 2.35 及以上，旧版本读不对现在的 `.env` 优先级。
 
 ## Docker Compose 快速装
 
@@ -28,121 +28,94 @@ git clone https://github.com/langgenius/dify.git
 cd dify/docker
 
 cp .env.example .env
-# 先改密码、SECRET_KEY，再启动
+# 生产环境先改 DB_PASSWORD、REDIS_PASSWORD，再启动
 
 docker compose up -d
-docker compose logs -f
+docker compose ps --all
 ```
 
-新版本 Compose 插件一般是 `docker compose`（没空格的 `docker-compose` 看你环境）。起来之后浏览器打开 `http://localhost:3000`，首次会让你注册管理员——这个账号丢了挺麻烦，密码记牢。
+起来之后浏览器打开 `http://localhost/install` 创建管理员，之后从 `http://localhost` 登录。默认 HTTP 端口是 80，不是 3000。80 被占用时，在 `docker/.env` 里改 `EXPOSE_NGINX_PORT`，HTTPS 对应改 `EXPOSE_NGINX_SSL_PORT`，地址里带上这个端口。
 
-### .env 里我真正会改的
+### .env 里真正要改的
+
+模型 Key 不写在这份文件里，装完进控制台的模型供应商再填。`docker/.env` 里和安全相关的是这些：
 
 ```bash
-# 数据库
-POSTGRES_DB=dify
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=换成强密码
-POSTGRES_HOST=db
-POSTGRES_PORT=5432
+DB_PASSWORD=换成强密码
+REDIS_PASSWORD=也换成强密码
 
-# Redis
-REDIS_HOST=redis
-REDIS_PORT=6379
-REDIS_PASSWORD=也建议设上
-
-# 向量库（官方 compose 常见 Qdrant）
-QDRANT_URL=http://qdrant:6333
-
-# 可选：先不配也行，进控制台再加模型
-OPENAI_API_KEY=
-
-# 应用
-SECRET_KEY=随机长字符串，别用 example 默认值
-CORS_ALLOW_ORIGINS=http://localhost:3000
-
-STORAGE_TYPE=local
-STORAGE_LOCAL_PATH=/app/storage
+# 80 或 443 被占用时再改
+# EXPOSE_NGINX_PORT=8080
+# EXPOSE_NGINX_SSL_PORT=8443
 ```
 
-`SECRET_KEY` 和数据库密码千万别偷懒。后面要换域名或反代，再回头改 CORS 和对外 URL。
+数据库默认是 PostgreSQL，主机名 `db_postgres`，库名 `dify`，用户 `postgres`。默认向量库是 Weaviate（`VECTOR_STORE=weaviate`）。想改成 Qdrant 或其他库，必须在第一次启动前改 `VECTOR_STORE` 并带上对应 Compose profile；启动后再改，已有知识库的向量不会跟着搬。
+
+`SECRET_KEY` 留空即可。首次启动会生成并写到 `docker/volumes/app/storage/.dify_secret_key`。自己要指定的话，用 `openssl rand -base64 42` 在首次启动前写上。事后更换会使已签发的登录态、文件链接和用这把钥匙加密的凭据全部失效。迁移时要把这把钥匙和 storage 一起带走。
 
 ### compose 里大概有哪些服务
 
-官方文件会变，理解职责比背镜像名重要：
+对外只发布 Nginx。API、Web、数据库、Redis、Weaviate、代码沙箱默认都不映射到宿主机端口。
 
-```yaml
-# 示意结构，以仓库当前 docker-compose.yml 为准
-services:
-  db:       # PostgreSQL
-  redis:    # 缓存 / 队列相关
-  qdrant:   # 向量存储
-  api:      # 后端
-  worker:   # 异步任务（有的版本单独拆）
-  web:      # 前端，常见映射 3000
+```text
+nginx          # 唯一对外入口，默认 80/443
+web            # 控制台前端
+api            # Flask API
+worker         # Celery 异步任务
+worker_beat    # 定时任务
+plugin_daemon  # 插件运行时，模型供应商也走这里
+sandbox        # Code 节点沙箱
+db_postgres    # PostgreSQL
+redis
+weaviate       # 默认向量库
+ssrf_proxy     # 沙箱出网代理
+init_permissions  # 一次性改 storage 权限，正常结束是 Exited (0)
 ```
 
-关心持久化就盯 volume：`postgres_data`、`redis_data`、`qdrant_data`、本地 storage。备份至少把 PG 和知识库文件算进去。
+持久化主要在 `docker/volumes/`：数据库、Weaviate、`app/storage`。备份至少包括 PG、向量库和这份 storage。
 
-## 源码部署（我偶尔用来改代码）
+## 源码部署（改代码时再用）
 
-后端大致：
+变量放在 `api/.env`、`web/.env.local`，中间件仍可用仓库里的 middleware compose。依赖安装以当前 `api` 目录的说明为准。库表要自己迁：
 
 ```bash
 cd dify/api
-python3 -m venv venv
-source venv/bin/activate   # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-cp .env.example .env
-# 配好 DATABASE_URL、Redis、向量库
-
 flask db upgrade
-python app.py
 ```
 
-前端：
+容器启动时如果 `MIGRATION_ENABLED=true`，会在启动时自动跑迁移；源码启动不会，漏了这一步登录和建应用都会报缺表。
 
-```bash
-cd dify/web
-npm install
-cp .env.example .env.local
-# NEXT_PUBLIC_API_URL / CONSOLE 指到后端
-npm run build
-npm start
-```
-
-源码路径的坑通常在：Python/Node 版本不一致、向量库没单独起、前端 env 指错导致登录转圈。能 Compose 就别硬刚源码，除非你真的要改。
+源码路径的坑通常在：Python/Node 版本和仓库要求不一致、向量库没单独起、前端指到了错误的 API 地址导致登录转圈。能 Compose 就别硬刚源码，除非真的要改代码。
 
 ## 向量库和存储怎么选
 
-- **Qdrant**：官方方案常见，个人部署我优先这个
-- **Weaviate / Milvus**：有现成集群或数据规模很大时再考虑
+- **Weaviate**：官方 Compose 默认，单机先用这个
+- **Qdrant / Milvus / pgvector**：已有集群，或明确要换存储引擎时再改 `VECTOR_STORE`
 
 文件存储：
 
 - 本地：`STORAGE_TYPE=local`，注意容器权限和磁盘空间
 - 对象存储：上生产、多机部署再切 S3 / OSS / Azure Blob，本机玩没必要
 
-## 我踩过的坑
+## 常见坑
 
 **端口被占**
 
 ```bash
-# Linux
-ss -lptn | grep -E '3000|5001'
+ss -lptn | grep -E ':80|:443'
 ```
 
-改 compose 映射即可，比如 `"3001:3000"`。记得同步改你书签和 CORS。
+改 `EXPOSE_NGINX_PORT` / `EXPOSE_NGINX_SSL_PORT` 后重新 `docker compose up -d`。不要去改 Web 容器的 3000 或 API 的 5001，这两个端口在默认 Compose 里不发布到宿主机。
 
 **数据库起不来 / API 连不上**
 
 ```bash
-docker compose ps
-docker compose logs db --tail=100
-docker compose exec db psql -U postgres -d dify
+docker compose ps --all
+docker compose logs db_postgres --tail=100
+docker compose exec db_postgres psql -U postgres -d dify
 ```
 
-常见原因：密码和 `.env` 不一致、旧 volume 里残留了另一套密码、磁盘满。
+常见原因：`DB_PASSWORD` 和数据卷里已经初始化的密码不一致、磁盘满。库一旦初始化，要先在数据库里改密码，再改 `DB_PASSWORD`。
 
 **内存不够**
 
@@ -150,21 +123,16 @@ docker compose exec db psql -U postgres -d dify
 
 **storage 权限**
 
-```bash
-sudo chown -R 1000:1000 /你的/storage路径
-```
-
-Docker 权限本身：把用户加进 `docker` 组，重新登录再试。
+默认由 `init_permissions` 处理 `docker/volumes/app/storage`。它应是 `Exited (0)`。不要对一个并不存在的 `/data/dify/storage` 做 chown。自己另外挂了宿主机目录时，目录属主要和容器里的运行用户一致，并且包含 `.dify_secret_key` 所在的 storage。
 
 ## 装完怎么确认
 
 ```bash
-curl http://localhost:5001/health
-curl -I http://localhost:3000
-docker compose ps
+docker compose ps --all
+curl -I http://localhost/install
 ```
 
-然后：注册管理员 → 配一个模型 Provider → 建个最简单的对话应用发一句「你好」。模型 Key 无效时界面报错比看容器日志直观。
+自定义了 `EXPOSE_NGINX_PORT` 就把上面的地址改成该端口。然后：创建管理员 → 在模型供应商里配 Key → 建个最简单的对话应用发一句「ping」。模型 Key 无效时界面报错比看容器日志直观。`init_permissions` 停在 0 是正常的，不要把它当成启动失败。
 
 生产向的最低安全线：强密码、HTTPS 反代、防火墙只暴露 80/443、定期备份 PG 和文件、别把 API Key 写进前端仓库。更细的高可用放到后面生产部署那篇再展开。
 

@@ -7,7 +7,7 @@ tags: ["ELK"]
 
 ---
 
-output 决定数据最终去哪。我这边 90% 是 Elasticsearch，偶尔旁路一份 Kafka 或错误文件。
+output 决定数据最终去哪。多数情况是 Elasticsearch，偶尔旁路一份 Kafka 或错误文件。
 
 ## Elasticsearch 输出
 

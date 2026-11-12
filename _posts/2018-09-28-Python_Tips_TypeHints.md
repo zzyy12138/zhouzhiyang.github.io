@@ -612,7 +612,7 @@ type_checking_examples()
 5. **静态检查**：使用mypy进行静态类型检查
 6. **最佳实践**：遵循类型注解的最佳实践
 
-通过系统学习这些概念，你将能够编写出更加清晰、可维护的Python代码，提高开发效率和代码质量。
+掌握这些概念后，可以编写出更加清晰、可维护的Python代码，提高开发效率和代码质量。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python实用技巧-类型注解基础](http://zhouzhiyang.cn/2018/09/Python_Tips_TypeHints/) 

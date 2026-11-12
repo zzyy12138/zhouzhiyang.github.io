@@ -7,9 +7,9 @@ tags: ["大模型"]
 
 ---
 
-## 背景
+## 问题
 
-吃过「多库 Embedding 不一致无法调权重」的亏之后，又集中复测了几款常用中文/多语 Embedding 和一档 Rerank，在同一批内部文档（制度 + 运维 Runbook）上看召回。
+多库 Embedding 不一致时无法调权重。换模前，在同一批文档（制度 + 运维 Runbook）上比较常用中文/多语 Embedding 和一档 Rerank 的召回。
 
 ## 看什么
 
@@ -26,7 +26,7 @@ Rerank 适合多路召回后的融合，尤其临时多库并存时；不是免�
 
 ## 和 Dify
 
-新建库强制同一 Embedding；旧库迁移列进变更窗。检索回归集留在仓库里，换模必跑——和聊天模型的「金丝雀」同一纪律，只是对象换成向量索引。
+新建库强制同一 Embedding；旧库迁移列进变更窗。检索回归集留在仓库里，换模必跑——和聊天模型换版本时先放一小部分流量同一纪律，只是对象换成向量索引。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Embedding与Rerank模型复测：知识库换模记](http://zhouzhiyang.cn/2026/10/Embedding_Rerank_Model_Tests/)

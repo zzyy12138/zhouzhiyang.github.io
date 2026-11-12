@@ -67,7 +67,7 @@ sudo rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
 sudo yum install elasticsearch
 ```
 
-也可以下 tar 包解压跑。版本我这边实验环境用的是 8.11。
+也可以下 tar 包解压跑。下面示例用的是 8.11。
 
 ## 单节点配置
 

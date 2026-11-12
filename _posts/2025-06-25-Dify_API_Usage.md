@@ -7,11 +7,11 @@ tags: ["Dify"]
 
 ---
 
-控制台调通只是一半，真正接到业务里靠的是 API。下面按我对接时用到的接口写，Base URL 以你自己部署为准（云上常见 `https://api.dify.ai`，自建则是你的域名）。
+控制台调通只是一半，真正接到业务里靠的是 API。云上 API Base 是 `https://api.dify.ai/v1`，自建一般是 `https://部署域名/v1`。下面的路径都接在这个 Base 后面。
 
 ## 认证
 
-在应用的 API 页面生成 Key。**应用级 Key** 只打这个应用，够用就别开过大权限的全局 Key。
+在应用的「访问 API」里生成 Key。这把 Key 只打这个应用。知识库上传、删除用的是另一把知识库 Key，两把不能混。
 
 Header 方式：
 
@@ -24,23 +24,22 @@ Key 只放服务端。塞进小程序 / 前端仓库，等于公开付款账户�
 ## 对话：发消息
 
 ```bash
-curl -X POST "https://你的域名/v1/chat-messages" \
+curl -X POST "https://dify.example.com/v1/chat-messages" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "inputs": {},
     "query": "用户的问题",
     "response_mode": "blocking",
-    "conversation_id": "",
     "user": "user-1234"
   }'
 ```
 
 要点：
 
-- `user`：建议传你们体系里的稳定用户 ID，便于会话隔离和限流
-- `conversation_id`：多轮时带回上一次返回的 id；首轮空字符串
-- `inputs`：对应应用里定义的变量
+- `user`：必填。传业务体系里的稳定用户 ID，会话隔离和限流都靠它
+- `conversation_id`：首轮不要传；多轮带回上一次响应里的 id
+- `inputs`：对应应用里定义的变量，没有变量就传 `{}`
 - `response_mode`：`blocking` 等完整结果；`streaming` 走 SSE，聊天 UI 更友好
 
 流式时按 SSE 解析 `message` / `message_end` 等事件。客户端要能处理半包和断线——别假设一条事件就是完整答案。
@@ -51,34 +50,28 @@ curl -X POST "https://你的域名/v1/chat-messages" \
 from dify_client import ChatClient
 
 client = ChatClient(
-    api_key="YOUR_API_KEY",
-    base_url="https://你的域名",
+    "YOUR_API_KEY",
+    base_url="https://dify.example.com/v1",
 )
 
-resp = client.create_message(
+resp = client.create_chat_message(
     inputs={},
     query="用户问题",
+    user="user-1234",
     response_mode="blocking",
-    user="user-1234",
 )
-print(resp.answer)
-
-for chunk in client.create_message_stream(
-    inputs={},
-    query="用户问题",
-    response_mode="streaming",
-    user="user-1234",
-):
-    if chunk.event == "message":
-        print(chunk.answer, end="", flush=True)
+resp.raise_for_status()
+print(resp.json()["answer"])
 ```
 
-SDK 包名/方法随版本可能有差异，以你安装的 `dify-client` 文档为准；不行就直接 `requests` 调 REST，我线上不少地方其实就裸调。
+`ChatClient` 的 `base_url` 必须带到 `/v1`。返回值是 HTTP 响应，答案在 JSON 的 `answer` 字段里，没有 `.answer` 属性，也没有 `create_message` 这个方法。流式同样调用 `create_chat_message(..., response_mode="streaming")`，再按 SSE 逐行读 `data:`。
+
+包名是 `dify-client`。方法和参数对不上时，直接用上面的 curl，不要猜一层封装。
 
 ## 工作流：运行
 
 ```bash
-curl -X POST "https://你的域名/v1/workflows/run" \
+curl -X POST "https://dify.example.com/v1/workflows/run" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -90,38 +83,40 @@ curl -X POST "https://你的域名/v1/workflows/run" \
   }'
 ```
 
-长流程可以先拿 `workflow_run_id`，再查：
+长流程先从响应里拿 `workflow_run_id`，再查这一次运行。路径是单数 `run`：
 
 ```bash
-GET /v1/workflows/runs/{workflow_run_id}
+GET /v1/workflows/run/{workflow_run_id}
 ```
 
-`inputs` 的字段名必须和工作流开始节点一致，类型也对上——这是我对接时最常写错的地方。
+状态会停在 `running`、`succeeded`、`failed`、`stopped`、`partial-succeeded` 或 `paused`。工作流必须已经发布，未发布时这个接口不会跑到线上版本。
+
+`inputs` 的字段名必须和工作流开始节点一致，类型也对上——对接时这里最容易写错。
 
 ## 知识库相关
 
-上传（示意）：
+知识库接口用知识库 API Key，不是应用 Key。上传文件：
 
 ```bash
-curl -X POST "https://你的域名/v1/datasets/{dataset_id}/documents" \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -F "data=@document.pdf" \
-  -F "indexing_technique=high_quality"
+curl -X POST "https://dify.example.com/v1/datasets/{dataset_id}/document/create-by-file" \
+  -H "Authorization: Bearer DATASET_API_KEY" \
+  -F "file=@document.pdf" \
+  -F 'data={"indexing_technique":"high_quality","process_rule":{"mode":"automatic"}}'
 ```
 
-上传后 `indexing_status` 往往是异步的，要轮询文档详情直到 completed，再指望检索生效。删除用 `DELETE .../documents/{document_id}`。
-
-具体路径以你部署版本的 API 文档为准，不同大版本字段名可能微调。
+`data` 是 JSON 字符串，文件字段名是 `file`。响应里的 `indexing_status` 一开始通常是 `indexing`，用返回的 `batch` 查索引进度，到 `completed` 再做检索。删除文档同样走知识库 Key。
 
 ## 会话历史
 
 ```bash
-GET /v1/messages?conversation_id={conversation_id}&limit=20
+GET /v1/messages?user=user-1234&conversation_id={conversation_id}&limit=20
 ```
+
+`user` 必须和发消息时同一人。漏掉这个参数会 400。
 
 做客服工作台回放、审计时有用。注意隐私合规，别把全量对话无脑落日志。
 
-## 错误码（我常碰的）
+## 错误码（常见的）
 
 | 状态码 | 常见原因 |
 |--------|----------|

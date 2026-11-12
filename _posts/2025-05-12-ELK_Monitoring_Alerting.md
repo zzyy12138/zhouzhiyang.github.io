@@ -19,7 +19,7 @@ curl -s "localhost:9200/_cat/shards?h=index,shard,prirep,state,unassigned.reason
 curl -s "localhost:9200/_cat/thread_pool/search,write?v"
 ```
 
-我会告警的：
+需要告警的：
 
 - 集群 status 变 yellow 持续过久 / 变 red
 - 磁盘 > 85%（靠近 ES 水位）

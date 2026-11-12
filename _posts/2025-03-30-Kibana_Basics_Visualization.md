@@ -83,7 +83,7 @@ GET my_index/_search
 }
 ```
 
-改 mapping、测 ILM、看 `_cat/indices` 我都在这敲。
+改 mapping、测 ILM、看 `_cat/indices` 都在这里敲。
 
 ## 权限和访问
 

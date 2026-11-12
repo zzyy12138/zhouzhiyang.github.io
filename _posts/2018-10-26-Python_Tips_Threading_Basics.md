@@ -616,7 +616,7 @@ concurrent_downloader()
 5. **实际应用**：在下载器、任务处理等场景中应用
 6. **最佳实践**：遵循多线程编程的最佳实践
 
-通过系统学习这些概念，你将能够编写出高效、安全的多线程程序，提高应用的并发性能。
+掌握这些概念后，可以编写出高效、安全的多线程程序，提高应用的并发性能。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python实用技巧-多线程基础](http://zhouzhiyang.cn/2018/10/Python_Tips_Threading_Basics/) 

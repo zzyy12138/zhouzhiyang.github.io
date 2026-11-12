@@ -7,7 +7,7 @@ tags: ["ELK"]
 
 ---
 
-Mapping 就是告诉 ES 每个字段怎么存、怎么搜。类型选错了，轻则聚合报错，重则磁盘和堆被拖垮。日志场景我基本不靠纯动态映射「随缘推断」。
+Mapping 就是告诉 ES 每个字段怎么存、怎么搜。类型选错了，轻则聚合报错，重则磁盘和堆被拖垮。日志场景不要靠纯动态映射随缘推断。
 
 ## text 还是 keyword
 
@@ -37,7 +37,7 @@ PUT /my_index
 - `keyword`：整串精确值，适合 status、service、id。
 - 又要搜又要聚合：用上面的 multi-field，`title` 搜、`title.keyword` 聚合。
 
-动态映射默认会给字符串加 text + keyword，省事但字段爆炸时很烦，生产索引我倾向显式写。
+动态映射默认会给字符串加 text + keyword，省事但字段爆炸时很烦。生产索引显式写 mapping。
 
 ## 数值、日期、布尔
 
@@ -122,7 +122,7 @@ PUT /my_index
 
 - `true`：来啥映射啥（默认）
 - `false`：新字段不索引（还在 `_source`）
-- `strict`：新字段直接拒绝——模板稳定后我偏好这个，免得幽灵字段
+- `strict`：新字段直接拒绝——模板稳定后用这个，免得幽灵字段
 
 ## 模板里固化 mapping
 
@@ -155,7 +155,7 @@ PUT /_index_template/logs_template
 
 已有字段类型基本改不了。只能：建新索引 → `_reindex` → 切别名。或者上 `runtime` 字段做只读查询侧转换，不适合当长期方案。
 
-几个参数我常掂量：
+几个常要权衡的参数：
 
 - `index: false`：只存不搜
 - `doc_values: false`：不参与聚合/排序，省空间

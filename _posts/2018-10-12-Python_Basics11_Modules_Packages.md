@@ -133,7 +133,7 @@ def package_init_example():
     init_content = '''
 # mypackage/__init__.py
 """
-我的包 - 一个示例Python包
+示例包 - 一个示例 Python 包
 """
 
 __version__ = "1.0.0"
@@ -634,7 +634,7 @@ def config_management_package():
     print(f"可用配置: {configs}")
     
     # 模拟配置操作
-    # config_manager.set_config("app", "name", "我的应用")
+    # config_manager.set_config("app", "name", "示例应用")
     # config_manager.set_config("app", "version", "1.0.0")
     # config_manager.set_config("database", "host", "localhost")
     # config_manager.set_config("database", "port", 5432)
@@ -656,7 +656,7 @@ config_management_package()
 5. **实际应用**：在插件系统、配置管理等场景中应用
 6. **最佳实践**：遵循模块和包设计的最佳实践
 
-通过系统学习这些概念，你将能够编写出结构清晰、可重用的Python代码，提高开发效率和代码质量。
+掌握这些概念后，可以编写出结构清晰、可重用的Python代码，提高开发效率和代码质量。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python基础知识-模块与包](http://zhouzhiyang.cn/2018/10/Python_Basics11_Modules_Packages/) 

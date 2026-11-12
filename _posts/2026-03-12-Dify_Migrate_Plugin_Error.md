@@ -32,7 +32,7 @@ tags: ["Dify"]
 
 ## 教训
 
-Dify 迁移不是 `docker compose up` 成功就结束。知识库链路依赖插件、存储、密钥三条线，缺一条都会以很怪的前端错误出现。后来我们迁移清单里把「知识库点开 + 检索测试」写成必测项。
+Dify 迁移不是 `docker compose up` 成功就结束。知识库链路依赖插件、存储、密钥三条线，缺一条都会以很怪的前端错误出现。迁移清单里把「知识库点开 + 检索测试」写成必测项。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Dify迁移后知识库打不开：Invalid plugin id](http://zhouzhiyang.cn/2026/03/Dify_Migrate_Plugin_Error/)

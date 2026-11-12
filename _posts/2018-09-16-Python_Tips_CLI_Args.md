@@ -260,7 +260,7 @@ file_processor_tool()
 4. **参数验证**：实现自定义参数验证和错误处理
 5. **实际应用**：创建实用的命令行工具
 
-通过系统学习这些概念，你将能够创建出功能强大、用户友好的命令行工具。
+掌握这些概念后，可以创建出功能强大、用户友好的命令行工具。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python实用技巧-命令行参数 argparse](http://zhouzhiyang.cn/2018/09/Python_Tips_CLI_Args/) 

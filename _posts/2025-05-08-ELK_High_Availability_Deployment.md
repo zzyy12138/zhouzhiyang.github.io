@@ -84,7 +84,7 @@ server {
 
 会话、加密密钥（`xpack.encryptedSavedObjects.encryptionKey` 等）多实例要一致，不然登录/告警对象会怪。
 
-## 我真实的取舍
+## 取舍
 
 | 规模 | 做法 |
 |------|------|

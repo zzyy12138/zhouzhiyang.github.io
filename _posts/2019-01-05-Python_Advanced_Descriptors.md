@@ -9,7 +9,7 @@ tags: ["Python"]
 
 ## 什么是描述符？
 
-描述符是Python中一个强大但经常被忽视的特性。它允许我们自定义属性的访问、设置和删除行为。描述符是许多Python高级特性的基础，如`property`、`staticmethod`、`classmethod`等。
+描述符是Python中一个强大但经常被忽视的特性。它可以自定义属性的读取、赋值和删除。描述符是许多Python高级特性的基础，如`property`、`staticmethod`、`classmethod`等。
 
 ## 描述符协议基础
 
@@ -110,7 +110,7 @@ except TypeError as e:
 
 ## Property 装饰器的实现原理
 
-`@property`装饰器实际上是描述符的一个应用。让我们看看它是如何工作的：
+`@property` 装饰器本身就是描述符。实现方式如下：
 
 ### 1. 基本 Property 使用
 
@@ -409,7 +409,7 @@ print(DebugModel.name.get_stats())  # 查看统计
 
 ## 总结
 
-描述符是Python中一个强大而灵活的特性，它允许我们：
+描述符是Python中一个强大而灵活的特性，它可以：
 
 1. **自定义属性访问行为**：控制属性的获取、设置和删除
 2. **实现数据验证**：确保属性值的类型和范围正确
@@ -417,7 +417,7 @@ print(DebugModel.name.get_stats())  # 查看统计
 4. **实现观察者模式**：属性变化时自动通知
 5. **提供调试功能**：跟踪属性访问
 
-掌握描述符协议将大大提高你的Python编程能力，让你能够创建更加灵活和强大的类设计。
+掌握描述符协议后，可以做出更灵活的类设计。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Python进阶-描述符协议](http://zhouzhiyang.cn/2019/01/Python_Advanced_Descriptors/) 
