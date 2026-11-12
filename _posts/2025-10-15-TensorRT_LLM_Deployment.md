@@ -7,322 +7,64 @@ tag: 大模型
 
 ---
 
-## TensorRT-LLM概述
+## 先泼冷水
 
-TensorRT-LLM是NVIDIA开发的大语言模型推理优化框架，基于TensorRT技术，针对NVIDIA GPU进行了深度优化，提供了企业级的高性能推理能力。
+TensorRT-LLM 的峰值性能经常很好看，尤其在固定模型、固定形状、NVIDIA 栈可控的时候。但代价也很实在：环境挑、要编译引擎、换模型或改 `max_batch_size` / 序列长度往往得重新 build。  
 
-### TensorRT-LLM的优势
+我把它定位成「延迟抠到极致、模型变更不频繁」的选项，而不是日常试模型的默认项。日常迭代还是 vLLM 省心。
 
-```python
-# TensorRT-LLM的优势
-tensorrt_llm_advantages = {
-    "GPU优化": "针对NVIDIA GPU深度优化",
-    "高性能": "企业级高性能推理",
-    "量化支持": "支持多种量化方法",
-    "生产就绪": "适合生产环境部署"
-}
-```
+## 环境比代码先对齐
 
-## 核心特性
-
-### 1. GPU优化
-
-```yaml
-# GPU优化特性
-优化技术:
-  - TensorRT引擎优化
-  - 自定义Kernel
-  - 内存优化
-  - 并行优化
-
-支持:
-  - 多种NVIDIA GPU
-  - 多GPU并行
-  - 混合精度
-  - 动态形状
-```
-
-### 2. 量化支持
-
-```yaml
-# 量化支持
-量化方法:
-  INT8量化:
-    - 8位整数量化
-    - 减少内存
-    - 加速推理
-  
-  FP8量化:
-    - 8位浮点量化
-    - 更高精度
-    - 最新技术
-  
-  其他量化:
-    - 支持多种量化
-    - 灵活配置
-```
-
-## 安装与配置
-
-### 1. 环境要求
-
-```yaml
-# 环境要求
-要求:
-  - NVIDIA GPU (支持TensorRT)
-  - CUDA 11.8+
-  - TensorRT 9.0+
-  - Python 3.8+
-
-检查:
-  - 检查GPU驱动
-  - 检查CUDA版本
-  - 检查TensorRT版本
-```
-
-### 2. 安装
+大致需要：较新的 NVIDIA 驱动、匹配的 CUDA、TensorRT，以及项目声明的 Python 版本。版号对不上时，报错信息经常很绕。
 
 ```bash
-# TensorRT-LLM安装
-# 从源码安装
-git clone https://github.com/NVIDIA/TensorRT-LLM.git
-cd TensorRT-LLM
-pip install -e .
+nvidia-smi
+nvcc --version
+# TensorRT / TRT-LLM 版本以你选用的发行说明为准
+```
 
-# 或使用Docker
+很多人直接上官方容器，少踩本地编译依赖：
+
+```bash
 docker pull nvcr.io/nvidia/tensorrt-llm:latest
+# 实际 tag 请换成你需要的固定版本，别长期漂在 latest
 ```
 
-## 模型编译
+从源码装可以，但第一次建议容器里把流程跑通，再决定要不要固化到自己的镜像。
 
-### 1. 编译流程
+## 核心心智：先编译引擎，再推理
 
-```yaml
-# 模型编译流程
-流程步骤:
-  1: "加载模型: 加载原始模型"
-  2: "配置优化: 配置优化参数"
-  3: "编译引擎: 编译TensorRT引擎"
-  4: "保存引擎: 保存编译后的引擎"
-  5: "加载推理: 加载引擎进行推理"
+和「加载 HF 权重就能 serve」不同，TRT-LLM 典型路径是：权重 → 转换/构建 → `.engine` → runtime 加载。编译参数写进引擎里，所以：
+
+- `max_batch_size`、`max_input_len`、`max_output_len` 要按生产峰值留余量，又不能无脑开最大（显存和编译时间都会炸）
+- 改了这些上限，旧引擎往往不能直接复用
+- 量化（INT8 / FP8 等）一般在构建阶段就定了
+
+官方仓库的 example / convert 脚本随版本变，这里不贴容易过期的伪 API。实操时以当前文档的 `trtllm-build`（或对应版本命令）为准，把构建参数写进自己的脚本和镜像构建阶段，避免人工点。
+
+示意（命令名随版本可能不同）：
+
+```bash
+# 伪流程：转换检查点 → build 引擎 → 放到固定目录供 runtime 加载
+# trtllm-build --checkpoint_dir ... --output_dir ./engines/qwen7b \
+#   --gemm_plugin float16 --max_batch_size 8 --max_input_len 4096 --max_seq_len 8192
 ```
 
-### 2. 编译示例
+构建尽量在流水线里做，产物当版本产物存起来（按模型名 + 精度 + 形状配置打 tag）。线上只读引擎，不在高峰现场编译。
 
-```python
-# TensorRT-LLM编译示例
-from tensorrt_llm import builder
-from tensorrt_llm import network
-from tensorrt_llm import BuilderConfig
+## 运行时注意点
 
-# 创建构建器
-builder = builder.Builder()
+- **批处理：** 引擎按构建时的 max batch 工作；网关侧并发超过构建上限，行为取决于你怎么包服务，别假设「会自动变大」。
+- **多卡：** 张量并行同样要在构建/启动配置里声明，卡拓扑差会直接反映到延迟。
+- **和业务解耦：** 外面仍建议 OpenAI 兼容或自研网关，引擎升级时只切后端，不改调用方。
+- **监控：** 编译成功 ≠ 服务健康。照样盯显存、TTFT、错误率；引擎加载失败要有明确就绪探针，避免半死不活接流量。
 
-# 创建网络
-net = network.Network()
+## 什么时候值得上
 
-# 配置构建参数
-builder_config = BuilderConfig()
-builder_config.max_batch_size = 1
-builder_config.max_input_len = 2048
-builder_config.max_output_len = 512
+- 模型版本稳定，一周不会换三次权重
+- 延迟 SLO 紧，vLLM 调参后仍差一截，且 profiling 证明瓶颈在引擎侧
+- 团队能接受「构建产物版本化」这套发布方式
 
-# 编译引擎
-engine = builder.build_engine(net, builder_config)
-
-# 保存引擎
-with open("model.engine", "wb") as f:
-    f.write(engine)
-```
-
-## 推理部署
-
-### 1. 基础推理
-
-```python
-# TensorRT-LLM推理示例
-from tensorrt_llm.runtime import ModelConfig, SamplingConfig
-from tensorrt_llm.runtime import PYRuntime
-
-# 加载引擎
-runtime = PYRuntime.from_dir("model_dir")
-
-# 配置采样
-sampling_config = SamplingConfig(
-    num_beams=1,
-    temperature=0.7,
-    top_k=50,
-    top_p=0.9
-)
-
-# 推理
-outputs = runtime.generate(
-    input_ids=input_ids,
-    sampling_config=sampling_config,
-    max_new_tokens=100
-)
-```
-
-### 2. 批处理推理
-
-```python
-# 批处理推理
-batch_inputs = [input1, input2, input3]
-batch_outputs = runtime.generate_batch(
-    batch_inputs,
-    sampling_config=sampling_config,
-    max_new_tokens=100
-)
-```
-
-## 性能优化
-
-### 1. 编译优化
-
-```yaml
-# 编译优化
-优化参数:
-  max_batch_size:
-    - 最大批次大小
-    - 影响内存和性能
-  
-  max_input_len:
-    - 最大输入长度
-    - 影响内存使用
-  
-  max_output_len:
-    - 最大输出长度
-    - 影响内存使用
-  
-  优化级别:
-    - 选择优化级别
-    - 平衡编译时间和性能
-```
-
-### 2. 运行时优化
-
-```yaml
-# 运行时优化
-优化方法:
-  批处理:
-    - 使用批处理
-    - 提高GPU利用率
-    - 降低平均延迟
-  
-  KV缓存:
-    - 启用KV缓存
-    - 减少重复计算
-    - 加速推理
-  
-  并行处理:
-    - 多GPU并行
-    - 提高吞吐量
-```
-
-## 量化部署
-
-### 1. INT8量化
-
-```python
-# INT8量化示例
-from tensorrt_llm.quantization import quantize
-
-# 量化模型
-quantized_model = quantize(
-    model=model,
-    quantization_mode="int8",
-    calibration_data=calibration_data
-)
-
-# 编译量化模型
-engine = builder.build_engine(quantized_model, builder_config)
-```
-
-### 2. FP8量化
-
-```python
-# FP8量化示例
-quantized_model = quantize(
-    model=model,
-    quantization_mode="fp8",
-    calibration_data=calibration_data
-)
-```
-
-## 多GPU部署
-
-### 1. 张量并行
-
-```yaml
-# 张量并行
-配置:
-  - 设置并行GPU数
-  - 模型分片
-  - 通信优化
-
-优势:
-  - 支持大模型
-  - 提高吞吐量
-  - 降低单GPU内存需求
-```
-
-### 2. 流水线并行
-
-```yaml
-# 流水线并行
-配置:
-  - 模型分层
-  - 流水线执行
-  - 提高效率
-
-优势:
-  - 支持超大模型
-  - 提高资源利用率
-```
-
-## 最佳实践
-
-### 1. 部署建议
-
-```yaml
-# 部署建议
-建议:
-  生产环境:
-    - 使用编译后的引擎
-    - 优化编译参数
-    - 配置监控
-  
-  开发测试:
-    - 使用Python API
-    - 快速迭代
-    - 灵活配置
-```
-
-### 2. 性能调优
-
-```yaml
-# 性能调优
-调优方法:
-  - 优化编译参数
-  - 使用量化
-  - 批处理优化
-  - 多GPU并行
-```
-
-## 总结
-
-TensorRT-LLM部署的关键要点：
-
-1. **核心特性**：GPU优化、量化支持
-2. **安装配置**：环境要求、安装
-3. **模型编译**：编译流程、编译示例
-4. **推理部署**：基础推理、批处理推理
-5. **性能优化**：编译优化、运行时优化
-6. **量化部署**：INT8量化、FP8量化
-7. **多GPU部署**：张量并行、流水线并行
-8. **最佳实践**：部署建议、性能调优
-
-掌握TensorRT-LLM部署，可以实现企业级的高性能大模型推理服务。
+如果还在天天换基座、改上下文长度，先用 vLLM/SGLang 把产品和流量形状跑明白，再考虑把热点模型冻成 TRT 引擎。性能数字很好看，但运维节奏跟不上的话，只会变成更难回滚的包袱。
 
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [TensorRT-LLM部署](http://zhouzhiyang.cn/2025/10/TensorRT_LLM_Deployment/)
-

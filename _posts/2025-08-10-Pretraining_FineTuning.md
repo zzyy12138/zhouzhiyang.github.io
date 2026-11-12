@@ -7,421 +7,103 @@ tag: 大模型
 
 ---
 
-## 预训练概述
+预训练把通用语言能力塞进权重；微调（以及对齐）再把它拧到具体任务和说话方式上。自己训基座的机会不多，但理解这两段，读模型卡和调 LoRA 会顺很多。
 
-预训练是大模型训练的第一阶段，通过在大规模无标注数据上学习语言的通用表示。预训练后的模型具备强大的语言理解能力，可以迁移到各种下游任务。
+## 预训练在干什么
 
-### 预训练的作用
+在无标注（或弱标注）语料上做自监督，让模型学会「下一个词大概是什么」或「挖掉的词是什么」。下游分类、对话、写代码，都是在这个表示上接着长。
+
+### 三种常见目标
+
+**自回归（GPT 系）。** 条件是前文，预测下一个 token：
+
+\[
+P(x_t \mid x_{<t})
+\]
+
+单向注意力，天生适合生成。现在主流聊天模型基本都是这条线。
+
+**掩码语言模型（BERT 系）。** 随机盖住约 15% token，用双向上下文还原。经典策略是 80% `[MASK]`、10% 随机词、10% 原样留下——减轻预训练和微调之间的分布差。理解任务强，直接拿来开放生成不合适。
+
+**Seq2Seq（T5 一类）。** 所有任务写成「输入文本 → 输出文本」，比如：
+
+```text
+translate English to German: The house is wonderful.
+→ Das Haus ist wunderbar.
+```
+
+统一格式的代价是数据管线更绕，好处是任务切换干净。
+
+### 数据比模型玄学
+
+Common Crawl 必须狠洗；书和论文质量高但量少；GitHub 要去重、去许可证雷区。实际流水线大致是：收集 → 清洗噪声 → 去重 → 安全过滤 → 分词 → 打包成训练样本。公开技术报告里，数据配方往往比结构改动更影响最终体感。
+
+## 微调：从全量到 LoRA
+
+**全量微调**更新所有参数，上限最高，显存和存储都贵，多任务还容易互相踩。业务里我默认先试参数高效微调（PEFT）。
+
+### LoRA
+
+不直接学 \(\Delta W\)，而是学低秩分解 \(\Delta W = BA\)（\(r \ll \min(d_\mathrm{in},d_\mathrm{out})\)）：
 
 ```python
-# 预训练的作用
-pretraining_purpose = {
-    "学习通用表示": "从大规模数据中学习语言通用模式",
-    "知识获取": "模型学习大量知识",
-    "迁移能力": "预训练模型可迁移到下游任务",
-    "基础能力": "为后续微调提供良好基础"
-}
-```
+class LoRALinear(nn.Module):
+    def __init__(self, base: nn.Linear, r=8, alpha=16):
+        super().__init__()
+        self.base = base
+        for p in self.base.parameters():
+            p.requires_grad = False
+        self.A = nn.Parameter(torch.randn(base.in_features, r) * 0.01)
+        self.B = nn.Parameter(torch.zeros(r, base.out_features))
+        self.scale = alpha / r
 
-## 预训练方法
-
-### 1. 自回归语言模型 (Autoregressive LM)
-
-自回归语言模型通过预测下一个词来学习语言模式，GPT系列模型使用这种方法。
-
-```yaml
-# 自回归语言模型
-训练目标:
-  任务: "给定前文，预测下一个词"
-  公式: "P(x_t | x_1, ..., x_{t-1})"
-  
-训练过程:
-  1: "输入序列: [x_1, x_2, ..., x_{t-1}]"
-  2: "模型预测: P(x_t | context)"
-  3: "计算损失: -log P(x_t | context)"
-  4: "反向传播更新参数"
-
-特点:
-  - 单向注意力（只能看到前面的词）
-  - 适合生成任务
-  - GPT系列使用
-```
-
-### 2. 掩码语言模型 (Masked LM)
-
-掩码语言模型通过预测被掩码的词来学习双向表示，BERT使用这种方法。
-
-```yaml
-# 掩码语言模型
-训练目标:
-  任务: "预测被掩码的词"
-  方法: "随机掩码15%的词，预测这些词"
-  
-掩码策略:
-  - 80%: 用[MASK]替换
-  - 10%: 用随机词替换
-  - 10%: 保持不变
-
-特点:
-  - 双向注意力（可以看到上下文）
-  - 适合理解任务
-  - BERT使用
-```
-
-### 3. 序列到序列预训练
-
-序列到序列模型同时使用编码器和解码器，T5使用这种方法。
-
-```yaml
-# 序列到序列预训练
-训练目标:
-  任务: "将输入序列转换为输出序列"
-  格式: "所有任务都转换为文本到文本格式"
-  
-示例:
-  输入: "translate English to German: The house is wonderful."
-  输出: "Das Haus ist wunderbar."
-
-特点:
-  - 统一的任务格式
-  - 适合多种任务
-  - T5使用
-```
-
-## 预训练数据
-
-### 1. 数据来源
-
-```yaml
-# 预训练数据来源
-数据来源:
-  网页数据:
-    - Common Crawl: "大规模网页爬取数据"
-    - 质量: "需要清洗和过滤"
-    - 规模: "TB级别"
-  
-  书籍数据:
-    - 电子书库
-    - 质量: "高质量文本"
-    - 规模: "GB到TB级别"
-  
-  代码数据:
-    - GitHub代码
-    - 质量: "需要去重和过滤"
-    - 规模: "GB级别"
-  
-  其他数据:
-    - 新闻文章
-    - 学术论文
-    - 百科数据
-```
-
-### 2. 数据预处理
-
-```yaml
-# 数据预处理步骤
-预处理步骤:
-  1: "数据收集: 从多个来源收集数据"
-  2: "数据清洗: 去除噪声和低质量内容"
-  3: "去重: 去除重复内容"
-  4: "过滤: 过滤不当内容"
-  5: "分词: 将文本转换为token"
-  6: "构建数据集: 组织成训练格式"
-```
-
-## 微调技术
-
-### 1. 全量微调 (Full Fine-tuning)
-
-全量微调更新模型的所有参数。
-
-```yaml
-# 全量微调
-特点:
-  - 更新所有参数
-  - 效果最好
-  - 需要大量计算资源
-  - 成本高
-
-适用场景:
-  - 有充足计算资源
-  - 需要最佳性能
-  - 大规模数据集
-```
-
-### 2. 参数高效微调 (PEFT)
-
-参数高效微调只更新少量参数，大幅降低计算成本。
-
-```yaml
-# 参数高效微调方法
-方法类型:
-  LoRA (Low-Rank Adaptation):
-    - 低秩矩阵分解
-    - 只训练少量参数
-    - 效果接近全量微调
-  
-  QLoRA:
-    - 量化 + LoRA
-    - 进一步降低资源需求
-    - 在量化模型上微调
-  
-  Adapter:
-    - 插入适配器层
-    - 只训练适配器参数
-    - 保持原模型不变
-  
-  Prompt Tuning:
-    - 只训练提示词
-    - 参数最少
-    - 效果相对较低
-```
-
-## LoRA详解
-
-### 1. LoRA原理
-
-LoRA通过低秩矩阵分解来近似全量微调的效果。
-
-```python
-# LoRA原理
-# 原始权重更新: W' = W + ΔW
-# LoRA近似: ΔW = BA，其中B和A是低秩矩阵
-
-# LoRA实现
-class LoRALayer:
-    def __init__(self, original_layer, rank=8, alpha=16):
-        self.original_layer = original_layer
-        self.rank = rank
-        self.alpha = alpha
-        
-        # 初始化低秩矩阵
-        d_in = original_layer.weight.shape[0]
-        d_out = original_layer.weight.shape[1]
-        
-        self.A = nn.Parameter(torch.randn(d_in, rank) * 0.01)
-        self.B = nn.Parameter(torch.zeros(rank, d_out))
-    
     def forward(self, x):
-        # 原始输出
-        original_output = self.original_layer(x)
-        
-        # LoRA输出
-        lora_output = x @ self.A @ self.B * (self.alpha / self.rank)
-        
-        # 合并输出
-        return original_output + lora_output
+        return self.base(x) + (x @ self.A @ self.B) * self.scale
 ```
 
-### 2. LoRA优势
+经验：`r` 取 8～32；`alpha` 常设成 `2r`；目标模块优先 `q_proj` / `v_proj`，不够再扩到全部 attention 和 MLP。可训练参数往往只有原模型的千分之几，效果却能贴近全量——前提是数据别太脏、学习率别太野。
 
-```yaml
-# LoRA优势
-优势:
-  参数效率: "只训练0.1%-1%的参数"
-  内存效率: "大幅减少显存占用"
-  训练速度: "训练速度更快"
-  效果接近: "效果接近全量微调"
-  易于部署: "可以合并到原模型"
-```
+### QLoRA
 
-### 3. LoRA配置
-
-```yaml
-# LoRA配置参数
-配置参数:
-  rank (r):
-    - 低秩矩阵的秩
-    - 推荐: 4-32
-    - 越大效果越好但参数越多
-  
-  alpha:
-    - 缩放因子
-    - 推荐: rank的1-2倍
-    - 控制LoRA的影响程度
-  
-  目标层:
-    - 选择要应用LoRA的层
-    - 通常选择注意力层
-    - 可以只微调部分层
-```
-
-## QLoRA详解
-
-### 1. QLoRA原理
-
-QLoRA结合了量化和LoRA，进一步降低资源需求。
-
-```yaml
-# QLoRA特点
-特点:
-  量化: "将模型量化为4-bit"
-  LoRA: "在量化模型上应用LoRA"
-  效果: "效果接近全量微调"
-  资源: "大幅降低资源需求"
-
-量化方法:
-  - 4-bit NormalFloat (NF4)
-  - Double Quantization
-  - Paged Optimizers
-```
-
-### 2. QLoRA使用
+基座用 4-bit（常见 NF4）加载，再挂 LoRA，单卡就能微调 7B～13B 甚至更大：
 
 ```python
-# QLoRA使用示例
 from transformers import AutoModelForCausalLM, BitsAndBytesConfig
 from peft import LoraConfig, get_peft_model
 
-# 配置量化
-bnb_config = BitsAndBytesConfig(
+bnb = BitsAndBytesConfig(
     load_in_4bit=True,
     bnb_4bit_quant_type="nf4",
-    bnb_4bit_compute_dtype=torch.float16
+    bnb_4bit_compute_dtype=torch.bfloat16,
 )
-
-# 加载量化模型
-model = AutoModelForCausalLM.from_pretrained(
-    "model_name",
-    quantization_config=bnb_config
-)
-
-# 配置LoRA
-lora_config = LoraConfig(
-    r=16,
-    lora_alpha=32,
+model = AutoModelForCausalLM.from_pretrained(name, quantization_config=bnb)
+model = get_peft_model(model, LoraConfig(
+    r=16, lora_alpha=32,
     target_modules=["q_proj", "v_proj"],
-    lora_dropout=0.05
-)
-
-# 应用LoRA
-model = get_peft_model(model, lora_config)
+    lora_dropout=0.05,
+))
 ```
 
-## 指令微调
+精度损失通常可接受；若下游极敏感，再考虑更高精度或全量。
 
-### 1. 指令微调概述
+### Adapter / Prompt Tuning
 
-指令微调使用指令-回答对数据训练模型，提高模型的指令遵循能力。
+Adapter 在层间插小模块；Prompt Tuning 几乎只训软提示。参数更省，上限一般不如 LoRA，适合要「同一底座挂很多任务头」的场景。
 
-```yaml
-# 指令微调
-训练数据:
-  格式: "指令-回答对"
-  示例:
-    指令: "解释什么是机器学习"
-    回答: "机器学习是..."
-  
-数据来源:
-  - 人工编写
-  - 模型生成
-  - 任务数据转换
-```
+## 指令微调与 RLHF
 
-### 2. 指令微调方法
+**SFT（监督微调）**吃「指令–回答」对，教模型听格式、跟角色。数据可以人工写、模型合成再人工筛，或从现有任务改写。质量比数量重要——脏指令会把模型带歪。
 
-```yaml
-# 指令微调方法
-方法:
-  监督微调 (SFT):
-    - 使用指令-回答对
-    - 标准监督学习
-    - 提高指令遵循能力
-  
-  指令格式:
-    - 统一指令格式
-    - 清晰的指令描述
-    - 示例演示
-```
+**RLHF** 常见三步：SFT → 用人类排序训奖励模型 → PPO 等算法按奖励继续优化策略。实现重、超参脆。很多新工作改用 **DPO** 等直接偏好优化，少训一个奖励模型，工程上更省心。对齐解决的是「好不好用、安不安全」，不是单纯抬 benchmark。
 
-## RLHF (强化学习人类反馈)
+## 自己微调时的取舍
 
-### 1. RLHF概述
+1. 先把评测集和失败案例定清楚，再开训。
+2. 学习率：底座常见 `1e-5`～`5e-5`；LoRA 可以略大一点，但要盯验证集。
+3. 显存不够就梯度累积，别盲目加大 batch 把梯度噪声打没。
+4. epoch 过多很容易背答案；早停和留一份真实业务样本比刷公开榜有用。
+5. 训完把 LoRA merge 进底座再部署，少一层运行时开销。
 
-RLHF通过人类反馈来优化模型输出，使模型更符合人类偏好。
-
-```yaml
-# RLHF流程
-流程步骤:
-  1: "监督微调 (SFT): 使用人类标注数据微调"
-  2: "奖励模型训练: 训练奖励模型评估回答质量"
-  3: "强化学习优化: 使用PPO等算法优化模型"
-```
-
-### 2. RLHF实现
-
-```python
-# RLHF简化示例
-# 1. 监督微调
-sft_model = fine_tune(base_model, human_preferences)
-
-# 2. 训练奖励模型
-reward_model = train_reward_model(human_rankings)
-
-# 3. 强化学习优化
-def rlhf_optimization():
-    for episode in range(num_episodes):
-        # 生成回答
-        responses = sft_model.generate(prompts)
-        
-        # 计算奖励
-        rewards = reward_model.score(responses)
-        
-        # PPO更新
-        ppo_update(sft_model, rewards)
-```
-
-## 微调实践
-
-### 1. 微调流程
-
-```yaml
-# 微调流程
-流程步骤:
-  1: "准备数据: 准备任务相关数据"
-  2: "数据预处理: 格式化数据"
-  3: "选择方法: 选择微调方法（全量/LoRA等）"
-  4: "配置参数: 设置学习率、批次大小等"
-  5: "训练模型: 执行训练"
-  6: "评估验证: 评估模型性能"
-  7: "模型保存: 保存微调后的模型"
-```
-
-### 2. 微调技巧
-
-```yaml
-# 微调技巧
-技巧:
-  学习率:
-    - 预训练模型: "较小学习率 (1e-5到5e-5)"
-    - 新层: "较大学习率 (1e-4)"
-    - 使用学习率调度
-  
-  批次大小:
-    - 根据显存调整
-    - 使用梯度累积
-    - 平衡速度和稳定性
-  
-  训练轮数:
-    - 避免过拟合
-    - 使用早停
-    - 监控验证集性能
-```
-
-## 总结
-
-大模型预训练与微调的关键要点：
-
-1. **预训练方法**：自回归、掩码语言模型、序列到序列
-2. **预训练数据**：数据来源、数据预处理
-3. **微调技术**：全量微调、参数高效微调
-4. **LoRA**：原理、优势、配置
-5. **QLoRA**：量化+LoRA、使用示例
-6. **指令微调**：概述、方法
-7. **RLHF**：流程、实现
-8. **微调实践**：流程、技巧
-
-掌握预训练与微调技术，可以根据需求训练和优化大模型，实现特定任务的最佳性能。
+预训练决定上限，微调和对齐决定你能不能把上限用在业务上。多数团队的工作量其实在数据和评估，不在改两行 `LoraConfig`。
 
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [大模型预训练与微调](http://zhouzhiyang.cn/2025/08/Pretraining_FineTuning/)
-

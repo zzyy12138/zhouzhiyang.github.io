@@ -7,19 +7,11 @@ tag: ELK
 
 ---
 
-## 查询DSL概述
-
-Elasticsearch提供了强大的查询DSL（Domain Specific Language），允许构建复杂的查询。查询DSL基于JSON格式，提供了丰富的查询类型和组合方式。
-
-### 查询结构
+ES 的查询都是 JSON DSL。骨架大概长这样：
 
 ```json
 {
-  "query": {
-    "查询类型": {
-      "字段": "值"
-    }
-  },
+  "query": { },
   "sort": [],
   "from": 0,
   "size": 10,
@@ -28,169 +20,50 @@ Elasticsearch提供了强大的查询DSL（Domain Specific Language），允许�
 }
 ```
 
-## 基础查询
+下面都是我平时用得最多的几类。
 
-### 1. 匹配所有文档
+## match / term / range
 
-```bash
-# match_all查询
-curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
-{
-  "query": {
-    "match_all": {}
-  }
-}
-'
-```
-
-### 2. 匹配查询（Match Query）
-
-Match查询会对查询字符串进行分词，然后进行匹配：
+`match` 会分词，适合 `text` 字段；`term` 不分词，适合 `keyword`、数字、布尔。**在 text 字段上用 term，十有八九查不到。**
 
 ```bash
-# 基础match查询
-curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
-{
-  "query": {
-    "match": {
-      "title": "Elasticsearch教程"
-    }
-  }
-}
-'
-
-# match查询参数
+# 全文
 curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
 {
   "query": {
     "match": {
       "title": {
         "query": "Elasticsearch教程",
-        "operator": "and",
-        "minimum_should_match": "75%"
+        "operator": "and"
       }
     }
   }
 }
 '
-```
 
-**Match查询参数**：
-- `operator`: `or`（默认）或 `and`
-- `minimum_should_match`: 最小匹配词数
-- `fuzziness`: 模糊匹配
-- `boost`: 提升相关性分数
-
-### 3. 多字段匹配（Multi Match）
-
-```bash
-# 在多个字段中搜索
+# 多字段，title 权重更高
 curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
 {
   "query": {
     "multi_match": {
       "query": "Elasticsearch",
-      "fields": ["title", "content", "description"]
+      "fields": ["title^3", "content^2", "description"],
+      "type": "best_fields"
     }
   }
 }
 '
 
-# 使用通配符提升字段权重
+# 精确值
 curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
 {
   "query": {
-    "multi_match": {
-      "query": "Elasticsearch",
-      "fields": ["title^3", "content^2", "description"]
-    }
+    "terms": { "status": ["published", "draft"] }
   }
 }
 '
 
-# 不同类型的多字段匹配
-curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
-{
-  "query": {
-    "multi_match": {
-      "query": "Elasticsearch教程",
-      "type": "best_fields",
-      "fields": ["title", "content"],
-      "tie_breaker": 0.3
-    }
-  }
-}
-'
-```
-
-**Multi Match类型**：
-- `best_fields`: 最佳字段匹配（默认）
-- `most_fields`: 最多字段匹配
-- `cross_fields`: 跨字段匹配
-- `phrase`: 短语匹配
-- `phrase_prefix`: 短语前缀匹配
-
-### 4. 精确匹配（Term Query）
-
-Term查询用于精确匹配，不会对查询字符串进行分词：
-
-```bash
-# term查询（精确匹配）
-curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
-{
-  "query": {
-    "term": {
-      "status": "published"
-    }
-  }
-}
-'
-
-# terms查询（多值匹配）
-curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
-{
-  "query": {
-    "terms": {
-      "status": ["published", "draft"]
-    }
-  }
-}
-'
-```
-
-### 5. 范围查询（Range Query）
-
-```bash
-# 数值范围查询
-curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
-{
-  "query": {
-    "range": {
-      "price": {
-        "gte": 50,
-        "lte": 200
-      }
-    }
-  }
-}
-'
-
-# 日期范围查询
-curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
-{
-  "query": {
-    "range": {
-      "created_at": {
-        "gte": "2025-01-01",
-        "lte": "2025-12-31",
-        "format": "yyyy-MM-dd"
-      }
-    }
-  }
-}
-'
-
-# 相对时间查询
+# 范围 + 相对时间
 curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
 {
   "query": {
@@ -205,20 +78,11 @@ curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: applicati
 '
 ```
 
-**范围操作符**：
-- `gt`: 大于
-- `gte`: 大于等于
-- `lt`: 小于
-- `lte`: 小于等于
+`multi_match` 的 `type`：`best_fields` 最常用；跨字段拼词用 `cross_fields`；要整句顺序就用 `phrase`。
 
-## 布尔查询（Bool Query）
-
-Bool查询是最常用的组合查询，可以组合多个查询条件：
-
-### 1. 基础布尔查询
+## bool：真正干活的组合
 
 ```bash
-# 基础bool查询
 curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
 {
   "query": {
@@ -226,368 +90,107 @@ curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: applicati
       "must": [
         { "match": { "title": "Elasticsearch" } }
       ],
-      "must_not": [
-        { "match": { "status": "deleted" } }
+      "filter": [
+        { "term": { "status": "published" } },
+        { "range": { "price": { "gte": 50, "lte": 200 } } }
       ],
       "should": [
         { "match": { "tags": "教程" } }
       ],
-      "filter": [
-        { "range": { "price": { "gte": 50, "lte": 200 } } }
-      ]
-    }
-  }
-}
-'
-```
-
-### 2. 布尔查询子句
-
-```python
-# 布尔查询子句说明
-bool_query_clauses = {
-    "must": {
-        "含义": "必须匹配，影响相关性分数",
-        "示例": "标题必须包含'Elasticsearch'"
-    },
-    "must_not": {
-        "含义": "必须不匹配，不影响相关性分数",
-        "示例": "状态不能是'deleted'"
-    },
-    "should": {
-        "含义": "应该匹配，提高相关性分数",
-        "示例": "标签包含'教程'会提高分数"
-    },
-    "filter": {
-        "含义": "必须匹配，但不影响相关性分数",
-        "示例": "价格在50-200之间"
-    }
-}
-```
-
-### 3. 复杂布尔查询示例
-
-```bash
-# 复杂bool查询
-curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
-{
-  "query": {
-    "bool": {
-      "must": [
-        {
-          "match": {
-            "title": {
-              "query": "Elasticsearch",
-              "boost": 2.0
-            }
-          }
-        }
-      ],
-      "should": [
-        {
-          "match": {
-            "content": "教程"
-          }
-        },
-        {
-          "match": {
-            "tags": "入门"
-          }
-        }
-      ],
-      "minimum_should_match": 1,
-      "filter": [
-        {
-          "range": {
-            "created_at": {
-              "gte": "2025-01-01"
-            }
-          }
-        },
-        {
-          "term": {
-            "status": "published"
-          }
-        }
-      ],
       "must_not": [
-        {
-          "term": {
-            "deleted": true
-          }
-        }
-      ]
+        { "term": { "deleted": true } }
+      ],
+      "minimum_should_match": 0
     }
   }
 }
 '
 ```
 
-## 短语查询
+记法：
 
-### 1. 短语匹配（Phrase Query）
+- `must`：必须命中，算分
+- `filter`：必须命中，不算分，能走缓存，**过滤条件尽量丢这里**
+- `should`：加分项；若没有 must，至少要满足 `minimum_should_match`
+- `must_not`：排除
+
+能 filter 就别全塞 must，分数稳、也更快。
+
+## 短语、通配符
 
 ```bash
-# match_phrase查询
+# 短语，词序要一致；slop 允许中间插词
 curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
 {
   "query": {
     "match_phrase": {
-      "title": "Elasticsearch教程"
+      "title": { "query": "Elasticsearch 入门 教程", "slop": 2 }
     }
   }
 }
 '
 
-# 带slop的短语匹配（允许词之间移动）
+# 通配符 / 正则：keyword 上可用，大字段慎用，容易扫爆
 curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
 {
   "query": {
-    "match_phrase": {
-      "title": {
-        "query": "Elasticsearch 入门 教程",
-        "slop": 2
-      }
-    }
+    "wildcard": { "title.keyword": "Elastic*" }
   }
 }
 '
 ```
 
-### 2. 短语前缀匹配
-
-```bash
-# match_phrase_prefix查询（自动补全）
-curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
-{
-  "query": {
-    "match_phrase_prefix": {
-      "title": {
-        "query": "Elasticsearch",
-        "max_expansions": 50
-      }
-    }
-  }
-}
-'
-```
-
-## 通配符和正则查询
-
-### 1. 通配符查询
-
-```bash
-# wildcard查询
-curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
-{
-  "query": {
-    "wildcard": {
-      "title": {
-        "value": "Elastic*",
-        "boost": 1.0
-      }
-    }
-  }
-}
-'
-
-# 通配符说明
-# * 匹配零个或多个字符
-# ? 匹配单个字符
-```
-
-### 2. 正则查询
-
-```bash
-# regexp查询
-curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
-{
-  "query": {
-    "regexp": {
-      "title": {
-        "value": "Elastic.*教程",
-        "flags": "ALL"
-      }
-    }
-  }
-}
-'
-```
+前导通配符（`*abc`）尤其贵，能避免就避免。
 
 ## 排序和分页
 
-### 1. 排序
-
 ```bash
-# 单字段排序
 curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
 {
-  "query": {
-    "match_all": {}
-  },
+  "query": { "match_all": {} },
   "sort": [
-    {
-      "price": {
-        "order": "desc"
-      }
-    }
-  ]
-}
-'
-
-# 多字段排序
-curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
-{
-  "query": {
-    "match_all": {}
-  },
-  "sort": [
-    {
-      "created_at": {
-        "order": "desc"
-      }
-    },
-    {
-      "_score": {
-        "order": "desc"
-      }
-    }
-  ]
-}
-'
-
-# 按距离排序（地理位置）
-curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
-{
-  "query": {
-    "match_all": {}
-  },
-  "sort": [
-    {
-      "_geo_distance": {
-        "location": {
-          "lat": 39.9,
-          "lon": 116.4
-        },
-        "order": "asc",
-        "unit": "km"
-      }
-    }
-  ]
-}
-'
-```
-
-### 2. 分页
-
-```bash
-# 基础分页
-curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
-{
-  "query": {
-    "match_all": {}
-  },
+    { "created_at": "desc" },
+    { "_score": "desc" }
+  ],
   "from": 0,
   "size": 10
 }
 '
-
-# 深度分页问题
-# from + size 方式在深度分页时性能差
-# 建议使用 search_after 或 scroll API
 ```
 
-### 3. Search After（推荐用于深度分页）
+`from + size` 太深会很慢（要协调节点排序大量命中）。深分页用 `search_after`：
 
 ```bash
-# 第一次查询
+# 下一页带上上一页最后一条的 sort 值
 curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
 {
-  "query": {
-    "match_all": {}
-  },
+  "query": { "match_all": {} },
   "sort": [
-    {
-      "created_at": {
-        "order": "desc"
-      }
-    },
-    {
-      "_id": {
-        "order": "asc"
-      }
-    }
+    { "created_at": "desc" },
+    { "_id": "asc" }
   ],
-  "size": 10
-}
-'
-
-# 后续查询（使用上次结果的sort值）
-curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
-{
-  "query": {
-    "match_all": {}
-  },
-  "sort": [
-    {
-      "created_at": {
-        "order": "desc"
-      }
-    },
-    {
-      "_id": {
-        "order": "asc"
-      }
-    }
-  ],
-  "search_after": ["2025-03-15 10:00:00", "doc_id_10"],
+  "search_after": ["2025-03-15T10:00:00", "doc_id_10"],
   "size": 10
 }
 '
 ```
 
-## 高亮显示
+导出全量再用 scroll / PIT，别用超大 `from`。
 
-### 1. 基础高亮
-
-```bash
-# 基础高亮
-curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
-{
-  "query": {
-    "match": {
-      "title": "Elasticsearch"
-    }
-  },
-  "highlight": {
-    "fields": {
-      "title": {},
-      "content": {}
-    }
-  }
-}
-'
-```
-
-### 2. 高亮配置
+## 高亮和 _source
 
 ```bash
-# 自定义高亮标签
 curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
 {
-  "query": {
-    "match": {
-      "content": "Elasticsearch"
-    }
-  },
+  "query": { "match": { "content": "Elasticsearch" } },
+  "_source": ["title", "price", "created_at"],
   "highlight": {
-    "pre_tags": ["<em class='highlight'>"],
+    "pre_tags": ["<em>"],
     "post_tags": ["</em>"],
     "fields": {
       "content": {
         "fragment_size": 150,
-        "number_of_fragments": 3,
-        "fragmenter": "sentence"
+        "number_of_fragments": 3
       }
     }
   }
@@ -595,116 +198,7 @@ curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: applicati
 '
 ```
 
-**高亮参数**：
-- `pre_tags`: 高亮开始标签
-- `post_tags`: 高亮结束标签
-- `fragment_size`: 片段大小
-- `number_of_fragments`: 片段数量
-- `fragmenter`: 片段器类型
-
-## 字段过滤
-
-### 1. Source过滤
-
-```bash
-# 只返回指定字段
-curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
-{
-  "query": {
-    "match_all": {}
-  },
-  "_source": ["title", "price", "created_at"]
-}
-'
-
-# 排除字段
-curl -X GET "localhost:9200/my_index/_search?pretty" -H 'Content-Type: application/json' -d'
-{
-  "query": {
-    "match_all": {}
-  },
-  "_source": {
-    "includes": ["title", "price"],
-    "excludes": ["content"]
-  }
-}
-'
-```
-
-## 实际应用示例
-
-### 1. 综合查询示例
-
-```python
-# Python综合查询示例
-from elasticsearch import Elasticsearch
-
-es = Elasticsearch(['localhost:9200'])
-
-def search_products(keyword, min_price=0, max_price=1000, page=1, size=10):
-    """产品搜索函数"""
-    query = {
-        "query": {
-            "bool": {
-                "must": [
-                    {
-                        "multi_match": {
-                            "query": keyword,
-                            "fields": ["title^3", "description^2", "tags"],
-                            "type": "best_fields"
-                        }
-                    }
-                ],
-                "filter": [
-                    {
-                        "range": {
-                            "price": {
-                                "gte": min_price,
-                                "lte": max_price
-                            }
-                        }
-                    },
-                    {
-                        "term": {
-                            "status": "active"
-                        }
-                    }
-                ]
-            }
-        },
-        "sort": [
-            {"_score": {"order": "desc"}},
-            {"created_at": {"order": "desc"}}
-        ],
-        "from": (page - 1) * size,
-        "size": size,
-        "highlight": {
-            "fields": {
-                "title": {},
-                "description": {}
-            }
-        },
-        "_source": ["title", "price", "image", "created_at"]
-    }
-    
-    result = es.search(index="products", body=query)
-    return result
-```
-
-## 总结
-
-Elasticsearch查询DSL基础的关键要点：
-
-1. **基础查询**：match_all、match、multi_match、term、range
-2. **布尔查询**：must、must_not、should、filter的组合使用
-3. **短语查询**：match_phrase、match_phrase_prefix
-4. **通配符和正则**：wildcard、regexp查询
-5. **排序和分页**：单字段/多字段排序、基础分页、search_after
-6. **高亮显示**：字段高亮、自定义标签、片段配置
-7. **字段过滤**：source过滤、字段包含和排除
-
-掌握这些查询DSL基础，可以构建各种复杂的查询需求，为数据检索和分析提供强大的支持。
+业务查询里把过滤放 filter、关键词放 must/should、只要必要字段、避免深分页，一般就够用了。聚合另开一篇。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Elasticsearch查询DSL基础](http://zhouzhiyang.cn/2025/03/Elasticsearch_Query_DSL_Basics/)
-

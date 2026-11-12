@@ -7,304 +7,96 @@ tag: 大模型
 
 ---
 
-## SGLang概述
+## 什么时候我会想起 SGLang
 
-SGLang（Structured Generation Language）是一个高性能的大语言模型推理框架，专注于结构化生成和复杂工作流。通过RadixAttention等技术，实现了高效的推理性能。
+vLLM 覆盖了大部分「聊天补全」需求。但有一类场景它不那么顺手：多轮里系统提示很长且重复、要按固定结构一段段生成、或者同一前缀被大量请求复用。SGLang 的 RadixAttention（前缀树缓存）在这类流量上收益很明显——缓存命中时，重复前缀不用反复算。
 
-### SGLang的优势
+反过来：纯冷启动、前缀几乎不共享的短请求，它未必比 vLLM 强，还多一层学习成本。我是「有结构化/前缀命中诉求再上」，不是为了换框架而换。
 
-```python
-# SGLang的优势
-sglang_advantages = {
-    "结构化生成": "支持复杂结构化生成",
-    "高性能": "RadixAttention技术，高性能推理",
-    "工作流支持": "支持复杂生成工作流",
-    "易于使用": "简洁的API设计"
-}
-```
-
-## 核心技术
-
-### 1. RadixAttention
-
-RadixAttention是SGLang的核心技术，通过前缀树缓存实现高效的注意力计算。
-
-```yaml
-# RadixAttention原理
-传统方法问题:
-  - 重复计算公共前缀
-  - 内存浪费
-  - 计算效率低
-
-RadixAttention优势:
-  - 前缀树缓存
-  - 共享公共前缀
-  - 减少重复计算
-  - 提高效率
-
-效果:
-  - 吞吐量提升
-  - 延迟降低
-  - 支持更长前缀
-```
-
-### 2. 结构化生成
-
-```yaml
-# 结构化生成
-功能:
-  - 支持复杂生成结构
-  - 条件生成
-  - 循环生成
-  - 并行生成
-
-应用:
-  - 多轮对话
-  - 复杂工作流
-  - 结构化输出
-```
-
-## 安装与配置
-
-### 1. 安装
+## 安装
 
 ```bash
-# SGLang安装
 pip install "sglang[all]"
 
-# 或从源码安装
-git clone https://github.com/sgl-project/sglang.git
-cd sglang
-pip install -e ".[all]"
+# 跟版本或改代码时：
+# git clone https://github.com/sgl-project/sglang.git
+# cd sglang && pip install -e ".[all]"
 ```
 
-### 2. 基础使用
+CUDA / 驱动版本同样要对齐。装完先起一个小模型确认 `nvidia-smi` 里进程正常，再换业务权重。
+
+## 本地试结构化生成
 
 ```python
-# SGLang基础使用
 import sglang as sgl
 
-# 加载模型
-runtime = sgl.Runtime(model_path="meta-llama/Llama-2-7b-chat-hf")
+runtime = sgl.Runtime(model_path="Qwen/Qwen2.5-7B-Instruct")
+sgl.set_default_backend(runtime)
 
-# 定义生成函数
 @sgl.function
-def generate(s, prompt):
-    s += prompt
-    s += sgl.gen("response", max_tokens=100)
+def brief_answer(s, question):
+    s += "你是简洁助手。\n问题：" + question + "\n回答："
+    s += sgl.gen("answer", max_tokens=128, stop=["\n\n"])
 
-# 生成
-state = generate.run(prompt="你好")
-print(state["response"])
+state = brief_answer.run(question="KV cache 是干什么的？")
+print(state["answer"])
 ```
 
-## 结构化生成
-
-### 1. 条件生成
+条件、循环那套 API 适合把「先分析再方案再总结」写进一个 function，而不是在网关里串三次 HTTP。我用过类似编排做内部工具生成；注意每一步的 `max_tokens` 和 `stop`，不然容易拖很长又不好截断。
 
 ```python
-# 条件生成示例
 @sgl.function
-def conditional_generate(s, topic, style):
-    s += f"主题: {topic}\n"
-    s += f"风格: {style}\n"
-    s += "内容: "
-    
-    if style == "正式":
-        s += sgl.gen("content", max_tokens=200, stop="\n\n")
-    else:
-        s += sgl.gen("content", max_tokens=200, stop="\n\n")
-    
-    return s["content"]
-
-# 使用
-result = conditional_generate.run(
-    topic="人工智能",
-    style="正式"
-)
-```
-
-### 2. 循环生成
-
-```python
-# 循环生成示例
-@sgl.function
-def loop_generate(s, items):
-    s += "列表:\n"
-    for i, item in enumerate(items):
-        s += f"{i+1}. "
-        s += sgl.gen(f"item_{i}", max_tokens=50, stop="\n")
-    return s
-
-# 使用
-result = loop_generate.run(items=["AI", "机器学习", "深度学习"])
-```
-
-### 3. 并行生成
-
-```python
-# 并行生成示例
-@sgl.function
-def parallel_generate(s, prompts):
-    results = []
-    for prompt in prompts:
-        s += prompt
-        s += sgl.gen(f"result_{prompt}", max_tokens=100)
-        results.append(s[f"result_{prompt}"])
-    return results
-```
-
-## 部署配置
-
-### 1. 服务器部署
-
-```python
-# SGLang服务器部署
-from sglang.srt.server import launch_server
-
-# 启动服务器
-launch_server(
-    model_path="meta-llama/Llama-2-7b-chat-hf",
-    host="0.0.0.0",
-    port=30000,
-    tp_size=1
-)
-```
-
-### 2. API服务
-
-```python
-# API服务使用
-import requests
-
-# 调用API
-response = requests.post(
-    "http://localhost:30000/v1/chat/completions",
-    json={
-        "model": "meta-llama/Llama-2-7b-chat-hf",
-        "messages": [
-            {"role": "user", "content": "你好"}
-        ]
-    }
-)
-
-print(response.json())
-```
-
-## 性能优化
-
-### 1. RadixAttention优化
-
-```yaml
-# RadixAttention优化
-优化方法:
-  前缀缓存:
-    - 启用RadixAttention
-    - 配置缓存大小
-    - 提高效率
-  
-  批处理:
-    - 使用批处理
-    - 提高吞吐量
-    - 降低延迟
-```
-
-### 2. 内存优化
-
-```yaml
-# 内存优化
-优化方法:
-  - 调整缓存大小
-  - 使用量化模型
-  - 优化批处理大小
-  - 减少内存占用
-```
-
-## 高级特性
-
-### 1. 自定义函数
-
-```python
-# 自定义函数
-@sgl.function
-def custom_function(s, input_text):
-    # 自定义逻辑
-    s += input_text
-    s += sgl.gen("output", max_tokens=100)
-    return s["output"]
-```
-
-### 2. 工作流编排
-
-```python
-# 工作流编排
-@sgl.function
-def workflow(s, task):
-    # 步骤1
-    s += "分析任务: "
-    s += sgl.gen("analysis", max_tokens=100)
-    
-    # 步骤2
-    s += "\n生成方案: "
-    s += sgl.gen("solution", max_tokens=200)
-    
-    # 步骤3
-    s += "\n总结: "
-    s += sgl.gen("summary", max_tokens=50)
-    
+def three_step(s, task):
+    s += f"任务：{task}\n分析："
+    s += sgl.gen("analysis", max_tokens=80, stop="\n")
+    s += "\n方案："
+    s += sgl.gen("solution", max_tokens=160, stop="\n")
+    s += "\n一句话总结："
+    s += sgl.gen("summary", max_tokens=40)
     return {
         "analysis": s["analysis"],
         "solution": s["solution"],
-        "summary": s["summary"]
+        "summary": s["summary"],
     }
 ```
 
-## 最佳实践
+## 当服务起
 
-### 1. 使用建议
+命令行启动（版本不同参数名可能略有差异，以你装的版本文档为准）：
 
-```yaml
-# 使用建议
-建议:
-  结构化任务:
-    - 使用SGLang的结构化生成
-    - 利用工作流功能
-    - 提高效率
-  
-  复杂工作流:
-    - 使用循环和条件
-    - 并行处理
-    - 优化性能
-  
-  简单任务:
-    - 可以使用更简单的框架
-    - 根据需求选择
+```bash
+python -m sglang.launch_server \
+  --model-path Qwen/Qwen2.5-7B-Instruct \
+  --host 0.0.0.0 \
+  --port 30000 \
+  --tp-size 1
 ```
 
-### 2. 性能优化
+OpenAI 风格调用：
 
-```yaml
-# 性能优化建议
-优化建议:
-  - 启用RadixAttention
-  - 使用批处理
-  - 优化工作流
-  - 合理配置资源
+```python
+import requests
+
+r = requests.post(
+    "http://127.0.0.1:30000/v1/chat/completions",
+    json={
+        "model": "Qwen/Qwen2.5-7B-Instruct",
+        "messages": [{"role": "user", "content": "你好"}],
+    },
+    timeout=60,
+)
+print(r.json()["choices"][0]["message"]["content"])
 ```
 
-## 总结
+同样建议前面挂一层自己的网关：鉴权、限流、模型别名，别让业务绑死 `30000`。
 
-SGLang部署与使用的关键要点：
+## 调优和坑
 
-1. **核心技术**：RadixAttention、结构化生成
-2. **安装配置**：安装、基础使用
-3. **结构化生成**：条件生成、循环生成、并行生成
-4. **部署配置**：服务器部署、API服务
-5. **性能优化**：RadixAttention优化、内存优化
-6. **高级特性**：自定义函数、工作流编排
-7. **最佳实践**：使用建议、性能优化
+- **前缀缓存：** 系统提示、工具 schema 尽量稳定且可共享；每次请求都拼一长段独一无二的上下文，Radix 优势就浪费了。
+- **显存：** 缓存本身占显存。命中率高时吞吐好看，但要把缓存规模和并发一起盯，不然和 vLLM 一样会 OOM。
+- **结构化别写太炫：** function 里嵌太深的循环/并行，调试成本高于收益。能拆成网关编排的，不一定非要塞进 SGLang。
+- **和 vLLM 并存：** 我见过团队两个引擎都挂着——通用聊天走 vLLM，高前缀命中的内部 API 走 SGLang。共卡的话记得限显存，别默认「都能跑就行」。
 
-掌握SGLang部署，可以实现高效的结构化生成和复杂工作流处理。
+如果你的流量前缀重复不多，先把 vLLM 吃透更划算；SGLang 是在特定形状的请求上才值得多养一套服务。
 
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [SGLang部署与使用](http://zhouzhiyang.cn/2025/10/SGLang_Deployment/)
-

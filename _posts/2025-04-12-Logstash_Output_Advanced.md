@@ -7,85 +7,35 @@ tag: ELK
 
 ---
 
-## 输出插件概述
+output 决定数据最终去哪。我这边 90% 是 Elasticsearch，偶尔旁路一份 Kafka 或错误文件。
 
-Logstash的输出插件负责将处理后的数据发送到目标系统。合理配置输出插件对于数据流向、性能优化和系统集成至关重要。
-
-### 输出插件分类
-
-```python
-# 输出插件分类
-output_plugins = {
-    "搜索引擎": ["elasticsearch"],
-    "消息队列": ["kafka", "rabbitmq", "redis", "sqs"],
-    "数据库": ["jdbc", "mongodb", "couchdb"],
-    "文件系统": ["file", "s3", "azure_blob_storage"],
-    "监控系统": ["influxdb", "prometheus"],
-    "其他": ["stdout", "http", "tcp", "udp", "email"]
-}
-```
-
-## Elasticsearch输出
-
-### 1. 基础配置
+## Elasticsearch 输出
 
 ```ruby
-# Elasticsearch输出基础配置
 output {
   elasticsearch {
-    hosts => ["http://localhost:9200"]
+    hosts => ["http://node1:9200", "http://node2:9200"]
     index => "logs-%{+YYYY.MM.dd}"
-  }
-}
-```
-
-### 2. 高级配置
-
-```ruby
-# Elasticsearch输出高级配置
-output {
-  elasticsearch {
-    hosts => ["http://node1:9200", "http://node2:9200", "http://node3:9200"]
-    index => "logs-%{+YYYY.MM.dd}"
-    document_type => "_doc"
-    document_id => "%{[@metadata][document_id]}"
-    
-    # 认证
     user => "elastic"
-    password => "password"
-    
-    # 模板
+    password => "${ES_PASSWORD}"
     template_name => "logstash"
     template => "/etc/logstash/templates/logstash.json"
     template_overwrite => true
-    
-    # 性能配置
-    flush_size => 500
-    idle_flush_time => 5
-    
-    # 重试配置
-    retry_on_conflict => 3
-    
-    # 动作
-    action => "index"  # index, create, update, delete
+    # document_id => "%{[@metadata][id]}"
   }
 }
 ```
 
-### 3. 条件输出
+索引名带日期方便删和挂 ILM。密码用环境变量，别写死在仓库里。多节点 hosts 写几个，避免单点。
+
+按级别拆索引（错误单独留更久）时：
 
 ```ruby
-# Elasticsearch条件输出
 output {
   if [level] == "ERROR" {
     elasticsearch {
       hosts => ["http://localhost:9200"]
       index => "error-logs-%{+YYYY.MM.dd}"
-    }
-  } else if [level] == "WARN" {
-    elasticsearch {
-      hosts => ["http://localhost:9200"]
-      index => "warn-logs-%{+YYYY.MM.dd}"
     }
   } else {
     elasticsearch {
@@ -96,332 +46,68 @@ output {
 }
 ```
 
-## 多输出配置
+级别太多别拆太碎，索引数量本身也是负担；更常见是同一模式 + ILM 对不同热度数据不同策略。
 
-### 1. 同时输出到多个目标
+## 多出口与死信
 
 ```ruby
-# 多输出配置
 output {
-  # 输出到Elasticsearch
   elasticsearch {
     hosts => ["http://localhost:9200"]
     index => "logs-%{+YYYY.MM.dd}"
   }
-  
-  # 同时输出到文件
-  file {
-    path => "/var/log/logstash/output.log"
-    codec => line {
-      format => "%{message}"
-    }
-  }
-  
-  # 输出到Kafka
-  kafka {
-    topic_id => "logs"
-    bootstrap_servers => "localhost:9092"
-  }
-}
-```
 
-### 2. 错误处理输出
-
-```ruby
-# 错误处理输出
-output {
-  # 正常输出
-  elasticsearch {
-    hosts => ["http://localhost:9200"]
-    index => "logs-%{+YYYY.MM.dd}"
-  }
-  
-  # 解析错误单独输出
-  if "_grokparsefailure" in [tags] {
+  if "_grokparsefailure" in [tags] or "_jsonparsefailure" in [tags] {
     file {
-      path => "/var/log/logstash/parse_errors.log"
-    }
-  }
-  
-  # JSON解析错误
-  if "_jsonparsefailure" in [tags] {
-    file {
-      path => "/var/log/logstash/json_errors.log"
+      path => "/var/log/logstash/parse_errors-%{+YYYY-MM-dd}.log"
+      codec => json_lines
     }
   }
 }
 ```
 
-## Kafka输出
+解析失败进 ES 会污染字段；先落文件，修完 Grok 再重放。
 
-### 1. 基础配置
+需要下游再处理时可以双写 Kafka：
 
 ```ruby
-# Kafka输出基础配置
 output {
+  elasticsearch {
+    hosts => ["http://localhost:9200"]
+    index => "logs-%{+YYYY.MM.dd}"
+  }
   kafka {
-    topic_id => "logs"
-    bootstrap_servers => "localhost:9092"
+    bootstrap_servers => "kafka1:9092,kafka2:9092"
+    topic_id => "processed-logs"
     codec => json
   }
 }
 ```
 
-### 2. 高级配置
+注意双写的失败语义：一边成功一边失败时要想好，关键链路优先保证 ES 或优先保证队列，别假「两个都强一致」。
 
-```ruby
-# Kafka输出高级配置
-output {
-  kafka {
-    topic_id => "%{[fields][topic]}"
-    bootstrap_servers => "kafka1:9092,kafka2:9092,kafka3:9092"
-    codec => json
-    
-    # 分区策略
-    partition_key => "%{[fields][partition_key]}"
-    
-    # 压缩
-    compression_type => "snappy"
-    
-    # 批量配置
-    batch_size => 16384
-    
-    # 重试配置
-    retries => 3
-  }
-}
+## 管道设计上的取舍
+
+```
+Filebeat → (Kafka) → Logstash → ES
+                └──────────────→ 可选另一消费者
 ```
 
-## 文件输出
+- 流量平稳、解析简单：Filebeat → ES  
+- 要复杂 filter：Filebeat → Logstash → ES  
+- 突发大、多消费者：中间加 Kafka，Logstash 做消费者  
 
-### 1. 基础文件输出
+一台 Logstash 跑多个 pipeline 时，用 `pipelines.yml` 拆开，避免一个 conf 里 if-else 迷宫：
 
-```ruby
-# 文件输出基础配置
-output {
-  file {
-    path => "/var/log/logstash/output.log"
-    codec => line {
-      format => "%{message}"
-    }
-  }
-}
+```yaml
+# pipelines.yml
+- pipeline.id: nginx
+  path.config: "/etc/logstash/conf.d/nginx.conf"
+- pipeline.id: app
+  path.config: "/etc/logstash/conf.d/app.conf"
 ```
 
-### 2. 动态路径
-
-```ruby
-# 动态路径文件输出
-output {
-  file {
-    path => "/var/log/logstash/%{+YYYY-MM-dd}/%{host}.log"
-    codec => line {
-      format => "%{@timestamp} %{message}"
-    }
-    create_if_deleted => true
-  }
-}
-```
-
-## HTTP输出
-
-### 1. HTTP输出配置
-
-```ruby
-# HTTP输出配置
-output {
-  http {
-    url => "http://api.example.com/logs"
-    http_method => "post"
-    format => "json"
-    headers => {
-      "Content-Type" => "application/json"
-      "Authorization" => "Bearer token"
-    }
-  }
-}
-```
-
-## 数据管道设计
-
-### 1. 简单管道
-
-```ruby
-# 简单数据管道
-input {
-  beats {
-    port => 5044
-  }
-}
-
-filter {
-  grok {
-    match => { "message" => "%{GREEDYDATA:parsed_message}" }
-  }
-}
-
-output {
-  elasticsearch {
-    hosts => ["http://localhost:9200"]
-    index => "logs-%{+YYYY.MM.dd}"
-  }
-}
-```
-
-### 2. 复杂管道
-
-```ruby
-# 复杂数据管道
-input {
-  beats {
-    port => 5044
-  }
-  
-  kafka {
-    topics => ["logs"]
-    bootstrap_servers => "localhost:9092"
-  }
-}
-
-filter {
-  # 根据来源不同处理
-  if [fields][source] == "beats" {
-    grok {
-      match => { "message" => "%{GREEDYDATA:parsed_message}" }
-    }
-  }
-  
-  # 统一处理
-  date {
-    match => ["@timestamp", "ISO8601"]
-  }
-  
-  mutate {
-    remove_field => ["host", "agent"]
-  }
-}
-
-output {
-  # 根据类型输出到不同索引
-  if [type] == "application" {
-    elasticsearch {
-      hosts => ["http://localhost:9200"]
-      index => "app-logs-%{+YYYY.MM.dd}"
-    }
-  } else if [type] == "system" {
-    elasticsearch {
-      hosts => ["http://localhost:9200"]
-      index => "system-logs-%{+YYYY.MM.dd}"
-    }
-  }
-  
-  # 错误日志单独处理
-  if [level] == "ERROR" {
-    kafka {
-      topic_id => "error-logs"
-      bootstrap_servers => "localhost:9092"
-    }
-  }
-}
-```
-
-### 3. 多阶段管道
-
-```ruby
-# 多阶段数据管道
-# 阶段1：数据收集
-input {
-  file {
-    path => "/var/log/app.log"
-  }
-}
-
-filter {
-  grok {
-    match => { "message" => "%{GREEDYDATA:parsed_message}" }
-  }
-}
-
-output {
-  kafka {
-    topic_id => "raw-logs"
-    bootstrap_servers => "localhost:9092"
-  }
-}
-
-# 阶段2：数据处理
-input {
-  kafka {
-    topics => ["raw-logs"]
-    bootstrap_servers => "localhost:9092"
-  }
-}
-
-filter {
-  json {
-    source => "message"
-  }
-  
-  geoip {
-    source => "client_ip"
-  }
-}
-
-output {
-  elasticsearch {
-    hosts => ["http://localhost:9200"]
-    index => "processed-logs-%{+YYYY.MM.dd}"
-  }
-}
-```
-
-## 输出性能优化
-
-### 1. 批量输出
-
-```ruby
-# 批量输出配置
-output {
-  elasticsearch {
-    hosts => ["http://localhost:9200"]
-    index => "logs-%{+YYYY.MM.dd}"
-    flush_size => 500
-    idle_flush_time => 5
-  }
-}
-```
-
-### 2. 异步输出
-
-```ruby
-# 异步输出（使用队列）
-# 在logstash.yml中配置
-queue.type: persisted
-queue.max_bytes: 10gb
-
-# 输出配置
-output {
-  elasticsearch {
-    hosts => ["http://localhost:9200"]
-    index => "logs-%{+YYYY.MM.dd}"
-  }
-}
-```
-
-## 总结
-
-Logstash输出插件与数据管道的关键要点：
-
-1. **Elasticsearch输出**：基础配置、高级配置、条件输出
-2. **多输出配置**：同时输出到多个目标、错误处理输出
-3. **Kafka输出**：基础配置、高级配置、分区策略
-4. **文件输出**：基础配置、动态路径
-5. **HTTP输出**：HTTP API集成
-6. **数据管道设计**：简单管道、复杂管道、多阶段管道
-7. **性能优化**：批量输出、异步输出、队列配置
-
-掌握输出插件和数据管道设计，可以构建灵活、高效的数据处理流程，满足各种业务需求。
+输出端批量、压缩、持久化队列（`queue.type: persisted`）能提高抗抖动能力，但磁盘和延迟会上去，按丢数据容忍度选。
 
 <br>
 转载请注明：[周志洋的博客](http://zhouzhiyang.cn) » [Logstash输出插件与数据管道](http://zhouzhiyang.cn/2025/04/Logstash_Output_Advanced/)
-
